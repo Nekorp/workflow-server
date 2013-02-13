@@ -8,17 +8,8 @@
  
 	<http create-session="stateless">
 		<intercept-url pattern="/api/**" access="ROLE_USER" />
-		<http-basic />
-		<custom-filter ref="digestFilter" after="BASIC_AUTH_FILTER" />
+		<http-basic/>
 	</http>
-	<beans:bean id="digestFilter" class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">
-		<beans:property name="userDetailsService" ref="userService" />
-		<beans:property name="authenticationEntryPoint" ref="digestEntryPoint" />
-	</beans:bean>
-	<beans:bean id="digestEntryPoint" class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
-		<beans:property name="realmName" value="Contacts Realm via Digest Authentication"/>
-		<beans:property name="key" value="acegi" />
-	</beans:bean>
 	<authentication-manager>
 		<authentication-provider>
 			<user-service id="userService">

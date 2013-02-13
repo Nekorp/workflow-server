@@ -4,6 +4,14 @@
         xmlns="http://java.sun.com/xml/ns/javaee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    
+    <!-- Optimizaciones para appengine -->
+    <context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.nekorp.workflow.backend.optimization.CustomXmlWebApplicationContext</param-value>
+	</context-param>
+	
+	<!-- Servlet para spring MVC -->
     <servlet>  
    		<servlet-name>api</servlet-name>  
    		<servlet-class>
@@ -17,10 +25,12 @@
    		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping> 
 	
+	<!-- Listener para cargar el contexto de Spring -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>	
+	</listener>
 	
+	<!-- Configuracion de appengine para garantizar que todas las peticiones pasen por https -->
 	<security-constraint>
 		<web-resource-collection>
 	  		<web-resource-name>All API</web-resource-name>
@@ -31,6 +41,7 @@
 	  	</user-data-constraint>
 	</security-constraint>
 	
+	<!-- Filtro para el framework de seguridad de spring -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
