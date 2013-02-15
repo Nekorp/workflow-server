@@ -26,13 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/servicio")
+@RequestMapping("/servicios")
 public class ServicioControllerImp implements ServicioController {
 
     @Override
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public @ResponseBody
-    List<Servicio> getServicios() {
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody List<Servicio> getServicios() {
         List<Servicio> respuesta = new LinkedList<Servicio>();
         Servicio nuevo = new Servicio();
         nuevo.setId("1");

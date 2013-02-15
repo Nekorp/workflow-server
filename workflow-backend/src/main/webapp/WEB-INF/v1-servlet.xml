@@ -12,5 +12,9 @@
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
  
 	<mvc:annotation-driven />
-	<bean id="ServicioControllerImp" class="org.nekorp.workflow.backend.controller.imp.ServicioControllerImp"/>
+	<bean id="ServicioController" class="org.nekorp.workflow.backend.controller.imp.ServicioControllerImp"/>
+	<bean id="ClienteController" class="org.nekorp.workflow.backend.controller.imp.ClienteControllerImp">
+		<property name="pagFactory" ref="PaginationModelFactory"/>
+		<property name="clienteDao" ref="clienteDAO"/>
+	</bean>
 </beans>

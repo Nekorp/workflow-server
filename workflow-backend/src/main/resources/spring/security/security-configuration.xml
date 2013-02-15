@@ -7,7 +7,7 @@
 	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
  
 	<http create-session="stateless">
-		<intercept-url pattern="/api/**" access="ROLE_USER" />
+		<intercept-url pattern="/workflow/**" access="ROLE_USER" />
 		<http-basic/>
 	</http>
 	<authentication-manager>
