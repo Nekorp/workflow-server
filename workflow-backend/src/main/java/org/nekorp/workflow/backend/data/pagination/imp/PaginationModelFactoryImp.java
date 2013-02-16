@@ -36,8 +36,8 @@ public class PaginationModelFactoryImp implements PaginationModelFactory {
      * @see org.nekorp.workflow.backend.data.pagination.PaginationModelFactory#getPaginationData()
      */
     @Override
-    public <T> PaginationData<T> getPaginationData() {
-        return new PaginationData<T>();
+    public PaginationData getPaginationData() {
+        return new PaginationData();
     }
 
 }

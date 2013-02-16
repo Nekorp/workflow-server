@@ -15,23 +15,39 @@
  */
 package org.nekorp.workflow.backend.data.pagination.model;
 
+import javax.validation.constraints.Min;
+
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 
  */
-public class PaginationData<T> {
+public class PaginationData {
 
-    private T offsetRecord;
-    private int maxResult;
-    public T getOffsetRecord() {
-        return offsetRecord;
+    private String sinceId;
+    @Min(0)
+    private int maxResults;
+    private String nextId;
+    
+    public String getSinceId() {
+        return sinceId;
     }
-    public void setOffsetRecordId(T offsetRecord) {
-        this.offsetRecord = offsetRecord;
+    public void setSinceId(String sinceId) {
+        this.sinceId = sinceId;
     }
-    public int getMaxResult() {
-        return maxResult;
+    public int getMaxResults() {
+        return maxResults;
     }
-    public void setMaxResult(int maxResult) {
-        this.maxResult = maxResult;
+    public void setMaxResults(int maxResults) {
+        this.maxResults = maxResults;
+    }
+    public String getNextId() {
+        return nextId;
+    }
+    public void setNextId(String nextId) {
+        this.nextId = nextId;
+    }
+    public boolean hasNext() {
+        return !StringUtils.isEmpty(nextId);
     }
 }

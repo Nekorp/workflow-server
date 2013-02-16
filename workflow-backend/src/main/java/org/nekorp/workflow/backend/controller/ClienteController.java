@@ -16,6 +16,7 @@
 package org.nekorp.workflow.backend.controller;
 
 import org.nekorp.workflow.backend.data.pagination.model.Page;
+import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.cliente.Cliente;
 
 /**
@@ -23,11 +24,7 @@ import org.nekorp.workflow.backend.model.cliente.Cliente;
  */
 public interface ClienteController {
 
-    //List<Cliente> getClientes();
+    Page<Cliente> getClientes(String filtroNombre, PaginationData pagination);
     
-    //List<Cliente> getClientes(String filtroNombre);
     
-    //List<Cliente> getClientesPaginado(String sinceID);
-    
-    Page<Cliente> getClientes(String filtroNombre, String sinceId, int maxResults);
 }

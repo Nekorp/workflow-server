@@ -31,20 +31,31 @@ import org.nekorp.workflow.backend.model.cliente.Telefono;
  */
 public class ClienteDAOMock implements ClienteDAO {
 
+    /**
+     * el numero de registros simulados.
+     */
+    private int numeroDeRegistros = 230;
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.access.util.PaginationData)
      */
     @Override
-    public List<Cliente> getClientes(Map<String, Object> filter, PaginationData<String> pagination) {
+    public List<Cliente> getClientes(final Map<String, Object> filter, final PaginationData pagination) {
         LinkedList<Cliente> datos = new LinkedList<Cliente>();
         int id = 1;
-        if (!StringUtils.isEmpty(pagination.getOffsetRecord())) {
-            id = Integer.parseInt(pagination.getOffsetRecord()); 
-        } 
-        for (int i = 0; i < pagination.getMaxResult(); i++) {
-            if (id < 150) {
+        if (!StringUtils.isEmpty(pagination.getSinceId())) {
+            id = Integer.parseInt(pagination.getSinceId()); 
+        }
+        if (pagination.getMaxResults() == 0) { //TODO
+            for (int i = id; i <= numeroDeRegistros; i++) {
+                datos.add(generaCliente(i + ""));
+            }
+        } else {//limitado
+            for (int i = id; i <= numeroDeRegistros&& datos.size() < pagination.getMaxResults(); i++) {
                 datos.add(generaCliente(id + ""));
                 id = id + 1;
+            }
+            if (datos.size() == pagination.getMaxResults() && id <= numeroDeRegistros) {
+                pagination.setNextId(id + "");
             }
         }
         return datos;

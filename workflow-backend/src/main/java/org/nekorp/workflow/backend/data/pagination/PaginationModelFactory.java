@@ -25,5 +25,5 @@ public interface PaginationModelFactory {
 
     <T> Page<T> getPage();
     
-    <T> PaginationData<T> getPaginationData();
+    PaginationData getPaginationData();
 }
