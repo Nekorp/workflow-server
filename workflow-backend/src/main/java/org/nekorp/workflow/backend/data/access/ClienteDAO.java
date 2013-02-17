@@ -31,4 +31,6 @@ public interface ClienteDAO {
     void nuevoCliente(Cliente nuevo);
     
     Cliente getCliente(String id);
+    
+    boolean actualizaCliente(Cliente cliente);
 }

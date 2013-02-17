@@ -100,6 +100,18 @@ public class ClienteControllerImp implements ClienteController {
         return respuesta;
     }
     
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.controller.ClienteController#actualizarCliente(org.nekorp.workflow.backend.model.cliente.Cliente, javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    @RequestMapping(value="/{id}", method = RequestMethod.POST, consumes = "application/json")
+    public void actualizarCliente(@PathVariable String id, @Valid @RequestBody Cliente datos, HttpServletResponse response) {
+        datos.setId(id);
+        if (!this.clienteDao.actualizaCliente(datos)) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+        }
+    }
+    
     
     private String armaUrl(final String filtroNombre, final String sinceId, final int maxResults) {
         String r = "/cliente";
@@ -131,4 +143,5 @@ public class ClienteControllerImp implements ClienteController {
     public void setPagFactory(PaginationModelFactory pagFactory) {
         this.pagFactory = pagFactory;
     }
+    
 }
