@@ -15,12 +15,18 @@
  */
 package org.nekorp.workflow.backend.model.cliente;
 
+import javax.validation.constraints.NotNull;
+
 
 public class DomicilioFiscal {
+    @NotNull
     private String calle;
+    @NotNull
     private String numInterior;
     private String codigoPostal;
+    @NotNull
     private String colonia;
+    @NotNull
     private String ciudad;
 
     public String getCalle() {

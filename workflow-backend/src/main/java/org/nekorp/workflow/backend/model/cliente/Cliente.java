@@ -17,13 +17,19 @@ package org.nekorp.workflow.backend.model.cliente;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 
 public class Cliente {
     private String id;
+    @NotNull
     private String nombre;
+    @Size(max=13)
     private String rfc;
     private DomicilioFiscal domicilio;
     private String contacto;
+    @Size(max=3)
     private List<Telefono> telefonoContacto;
     
     public String getId() {

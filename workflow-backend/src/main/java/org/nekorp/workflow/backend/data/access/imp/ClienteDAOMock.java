@@ -18,77 +18,56 @@ package org.nekorp.workflow.backend.data.access.imp;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.cliente.Cliente;
-import org.nekorp.workflow.backend.model.cliente.DomicilioFiscal;
-import org.nekorp.workflow.backend.model.cliente.Telefono;
 
 /**
  * 
  */
 public class ClienteDAOMock implements ClienteDAO {
 
-    /**
-     * el numero de registros simulados.
-     */
-    private int numeroDeRegistros = 230;
+    
+    private List<Cliente> clientes;
+    
+    public ClienteDAOMock() {
+        clientes = new LinkedList<Cliente>();
+    }
+    
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.access.util.PaginationData)
      */
     @Override
     public List<Cliente> getClientes(final Map<String, Object> filter, final PaginationData pagination) {
         LinkedList<Cliente> datos = new LinkedList<Cliente>();
-        int id = 1;
-        if (!StringUtils.isEmpty(pagination.getSinceId())) {
-            id = Integer.parseInt(pagination.getSinceId()); 
-        }
-        if (pagination.getMaxResults() == 0) { //TODO
-            for (int i = id; i <= numeroDeRegistros; i++) {
-                datos.add(generaCliente(i + ""));
-            }
+        if (pagination.getMaxResults() == 0) { //todos 
+            return clientes;
         } else {//limitado
-            for (int i = id; i <= numeroDeRegistros&& datos.size() < pagination.getMaxResults(); i++) {
-                datos.add(generaCliente(id + ""));
-                id = id + 1;
+            int index = 0;
+            for (int i = 0; i < clientes.size(); i++) {
+                if (clientes.get(i).getId().equals(pagination.getSinceId())) {
+                    index = i;
+                    break;
+                }
             }
-            if (datos.size() == pagination.getMaxResults() && id <= numeroDeRegistros) {
-                pagination.setNextId(id + "");
+            for (int i = index; i < clientes.size() && datos.size() < pagination.getMaxResults(); i++) {
+                datos.add(clientes.get(i));
+                index = index + 1;
+            }
+            if (datos.size() == pagination.getMaxResults() && index < datos.size() ) {
+                pagination.setNextId(datos.get(index).getId());
             }
         }
         return datos;
     }
     
-    private Cliente generaCliente(String id) {
-        DomicilioFiscal domicilio = new DomicilioFiscal();
-        domicilio.setCalle("la calle");
-        domicilio.setCiudad("la ciudad");
-        domicilio.setCodigoPostal("el codigo postal");
-        domicilio.setColonia("la colonia");
-        domicilio.setNumInterior("el numero interior");
-        Cliente nuevo = new Cliente();
-        nuevo.setId(id);
-        nuevo.setNombre("nombre cliente");
-        nuevo.setRfc("rfc del cliente");
-        nuevo.setDomicilio(domicilio);
-        nuevo.setContacto("datos contacto");
-        List<Telefono> telefonos = new LinkedList<Telefono>();
-        nuevo.setTelefonoContacto(telefonos);
-        Telefono tel = new Telefono();
-        tel.setLabel("Movil");
-        tel.setValor("1234567890");
-        telefonos.add(tel);
-        tel = new Telefono();
-        tel.setLabel("Oficina");
-        tel.setValor("0987654321");
-        telefonos.add(tel);
-        tel = new Telefono();
-        tel.setLabel("Radio");
-        tel.setValor("5555555555");
-        telefonos.add(tel);
-        return nuevo;
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.data.access.ClienteDAO#nuevoCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
+     */
+    @Override
+    public void nuevoCliente(Cliente nuevo) {
+        int id = this.clientes.size() + 1;
+        nuevo.setId(id + "");
+        this.clientes.add(nuevo);
     }
-
 }

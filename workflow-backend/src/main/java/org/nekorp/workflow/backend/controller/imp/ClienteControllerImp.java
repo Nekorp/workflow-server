@@ -18,6 +18,7 @@ package org.nekorp.workflow.backend.controller.imp;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
@@ -28,8 +29,10 @@ import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.cliente.Cliente;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,6 +74,18 @@ public class ClienteControllerImp implements ClienteController {
         return r;
     }
     
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.controller.ClienteController#crearCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
+     */
+    @Override
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+    public void crearCliente(@Valid @RequestBody Cliente cliente, HttpServletResponse  response) {
+        cliente.setRfc(StringUtils.upperCase(cliente.getRfc()));
+        this.clienteDao.nuevoCliente(cliente);
+        response.setStatus(HttpStatus.CREATED.value());
+        response.setHeader("Location", "/cliente/" + cliente.getId());
+    }
+    
     private String armaUrl(final String filtroNombre, final String sinceId, final int maxResults) {
         String r = "/cliente";
         r = addUrlParameter(r,"filtroNombre", filtroNombre);
@@ -100,5 +115,5 @@ public class ClienteControllerImp implements ClienteController {
 
     public void setPagFactory(PaginationModelFactory pagFactory) {
         this.pagFactory = pagFactory;
-    }    
+    }
 }

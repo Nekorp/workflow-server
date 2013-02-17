@@ -27,4 +27,6 @@ import org.nekorp.workflow.backend.model.cliente.Cliente;
 public interface ClienteDAO {
     
     List<Cliente> getClientes(Map<String, Object> filter, PaginationData pagination);
+    
+    void nuevoCliente(Cliente nuevo);
 }
