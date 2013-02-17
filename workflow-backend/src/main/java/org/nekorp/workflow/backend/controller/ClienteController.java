@@ -30,4 +30,5 @@ public interface ClienteController {
     
     void crearCliente(Cliente cliente, HttpServletResponse  response);
     
+    Cliente getCliente(String id, HttpServletResponse  response);
 }

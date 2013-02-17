@@ -32,6 +32,7 @@ import org.nekorp.workflow.backend.model.cliente.Cliente;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -85,6 +86,20 @@ public class ClienteControllerImp implements ClienteController {
         response.setStatus(HttpStatus.CREATED.value());
         response.setHeader("Location", "/cliente/" + cliente.getId());
     }
+    
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.controller.ClienteController#getCliente(java.lang.String)
+     */
+    @Override
+    @RequestMapping(value="/{id}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody Cliente getCliente(@PathVariable String id, HttpServletResponse  response) {
+        Cliente respuesta = this.clienteDao.getCliente(id);
+        if (respuesta == null) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+        }
+        return respuesta;
+    }
+    
     
     private String armaUrl(final String filtroNombre, final String sinceId, final int maxResults) {
         String r = "/cliente";

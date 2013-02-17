@@ -29,4 +29,6 @@ public interface ClienteDAO {
     List<Cliente> getClientes(Map<String, Object> filter, PaginationData pagination);
     
     void nuevoCliente(Cliente nuevo);
+    
+    Cliente getCliente(String id);
 }

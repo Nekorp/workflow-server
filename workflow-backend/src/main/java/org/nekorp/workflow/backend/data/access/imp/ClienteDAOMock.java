@@ -18,6 +18,8 @@ package org.nekorp.workflow.backend.data.access.imp;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.cliente.Cliente;
@@ -69,5 +71,18 @@ public class ClienteDAOMock implements ClienteDAO {
         int id = this.clientes.size() + 1;
         nuevo.setId(id + "");
         this.clientes.add(nuevo);
+    }
+
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getCliente(java.lang.String)
+     */
+    @Override
+    public Cliente getCliente(String id) {
+        for (Cliente x: clientes) {
+            if(StringUtils.equals(id, x.getId())) {
+                return x;
+            }
+        }
+        return null;
     }
 }
