@@ -128,10 +128,23 @@
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
+        <!-- Servicio de validacion -->
         <dependency>
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-validator</artifactId>
 		    <version>4.3.1.Final</version>
+		</dependency>
+		<dependency>
+		<!-- Middle End API para persistir objetos en appengien -->
+		<groupId>com.googlecode.objectify</groupId>
+      		<artifactId>objectify</artifactId>
+			<version>4.0b1</version>
+		</dependency>
+		<!-- Integracion de objectify con spring -->
+		<dependency>
+			<groupId>com.googlecode.objectify-appengine-spring</groupId>
+			<artifactId>objectify-appengine-spring</artifactId>
+			<version>1.1.1</version>
 		</dependency>
     </dependencies>
 

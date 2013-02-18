@@ -13,24 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access;
-
-import java.util.List;
-
-import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+package org.nekorp.workflow.backend.data.access.util;
 
 /**
  * 
  */
-public interface ClienteDAO {
-    
-    List<Cliente> getClientes(FiltroCliente filtro, PaginationData pagination);
-    
-    void nuevoCliente(Cliente nuevo);
-    
-    Cliente getCliente(Long id);
-    
-    boolean actualizaCliente(Cliente cliente);
+public class FiltroCliente {
+
+    private String filtroNombre;
+
+    public String getFiltroNombre() {
+        return filtroNombre;
+    }
+
+    public void setFiltroNombre(String filtroNombre) {
+        this.filtroNombre = filtroNombre;
+    }
+
+    @Override
+    public String toString() {
+        return "FiltroCliente: filtroNombre:" + filtroNombre;
+    }
 }

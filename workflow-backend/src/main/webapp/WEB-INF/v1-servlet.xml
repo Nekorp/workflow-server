@@ -16,5 +16,6 @@
 	<bean id="ClienteController" class="org.nekorp.workflow.backend.controller.imp.ClienteControllerImp">
 		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="clienteDao" ref="clienteDAO"/>
+		<property name="stringStandarizer" ref="stringStandarizer"/>
 	</bean>
 </beans>

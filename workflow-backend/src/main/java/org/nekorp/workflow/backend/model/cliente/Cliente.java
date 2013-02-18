@@ -16,27 +16,44 @@
 package org.nekorp.workflow.backend.model.cliente;
 
 import java.util.List;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.googlecode.objectify.annotation.Embed;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Unindex;
 
+@Entity @Unindex
 public class Cliente {
-    private String id;
+    @Id
+    private Long id;
     @NotNull
     private String nombre;
+    /**
+     * Esta propiedad se usa para pasar el nombre a mayusculas
+     * y quitar caracteres especiales de tal manera que al hacer
+     * busquedas por el nombre se obtengan un mayor numero de ocurrencias.
+     */
+    @JsonIgnore // se ignora por que no se requiere mandar al cliente.
+    @Index //se indexa para realizar busquedas sobre este campo
+    private String nombreEstandar;
     @Size(max=13)
     private String rfc;
+    @Embed
     private DomicilioFiscal domicilio;
     private String contacto;
     @Size(max=3)
+    @Embed
     private List<Telefono> telefonoContacto;
-    
-    public String getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -78,4 +95,13 @@ public class Cliente {
     public void setTelefonoContacto(List<Telefono> telefonoContacto) {
         this.telefonoContacto = telefonoContacto;
     }
+
+    public String getNombreEstandar() {
+        return nombreEstandar;
+    }
+
+    public void setNombreEstandar(String nombreEstandar) {
+        this.nombreEstandar = nombreEstandar;
+    }
+    
 }

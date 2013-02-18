@@ -23,7 +23,7 @@ import java.util.List;
 public class Page<T> {
 
     private String tipoItems;
-    private String siguienteItem;
+    private Long siguienteItem;
     private String linkPaginaActual;
     private String linkSiguientePagina;
     private List<T> items;
@@ -33,10 +33,10 @@ public class Page<T> {
     public void setTipoItems(String tipoItems) {
         this.tipoItems = tipoItems;
     }
-    public String getSiguienteItem() {
+    public Long getSiguienteItem() {
         return siguienteItem;
     }
-    public void setSiguienteItem(String siguienteItem) {
+    public void setSiguienteItem(Long siguienteItem) {
         this.siguienteItem = siguienteItem;
     }
     public String getLinkPaginaActual() {

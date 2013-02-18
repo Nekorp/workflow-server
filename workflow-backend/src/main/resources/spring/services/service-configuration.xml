@@ -8,7 +8,6 @@
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-3.2.xsd">
         
-	<import resource="classpath:/spring/security/security-configuration.xml"/>
-	<import resource="classpath:/spring/dao/data-access.xml"/>
-	<import resource="classpath:/spring/services/service-configuration.xml"/>
+	<bean id="PaginationModelFactory" class="org.nekorp.workflow.backend.data.pagination.imp.PaginationModelFactoryImp"/>
+	<bean id="stringStandarizer" class="org.nekorp.workflow.backend.data.access.util.StringStandarizer"/>
 </beans>

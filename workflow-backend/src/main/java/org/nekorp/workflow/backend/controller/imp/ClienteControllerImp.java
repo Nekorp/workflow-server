@@ -16,15 +16,13 @@
 package org.nekorp.workflow.backend.controller.imp;
 
 import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.controller.ClienteController;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
-import org.nekorp.workflow.backend.data.access.util.FiltroFactory;
+import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
+import org.nekorp.workflow.backend.data.access.util.StringStandarizer;
 import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
@@ -36,7 +34,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -47,31 +44,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ClienteControllerImp implements ClienteController {
 
     private ClienteDAO clienteDao;
+    private StringStandarizer stringStandarizer;
     private PaginationModelFactory pagFactory;
     
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.controller.ClienteController#getClientes(java.lang.String, java.lang.String, int)
      */
     @Override
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody Page<Cliente> getClientes(
-            @RequestParam(value="filtroNombre", required=false) final String filtroNombre, 
-            @Valid @ModelAttribute PaginationData pagination) {
-        //se preparan los datos para el filtrado de informacion
-        Map<String, Object> filter = FiltroFactory.getFilter();
-        if (!StringUtils.isEmpty(filtroNombre)) {
-            filter.put("filtroNombre", filtroNombre);
-        }
-        //se obtienen los datos y se crea la pagina para colocarlos
-        List<Cliente> datos = clienteDao.getClientes(filter, pagination);
+            @ModelAttribute final FiltroCliente filtro, 
+            @Valid @ModelAttribute final PaginationData pagination,
+            HttpServletResponse response) {
+        String filtroOriginal = filtro.getFiltroNombre();
+        filtro.setFiltroNombre(this.stringStandarizer.standarize(filtroOriginal));
+        List<Cliente> datos = clienteDao.getClientes(filtro, pagination);
         Page<Cliente> r = pagFactory.getPage();
         r.setTipoItems("cliente");
-        r.setLinkPaginaActual(armaUrl(filtroNombre, pagination.getSinceId(), pagination.getMaxResults()));
+        r.setLinkPaginaActual(armaUrl(filtroOriginal, pagination.getSinceId(), pagination.getMaxResults()));
         if (pagination.hasNext()) {
-            r.setLinkSiguientePagina(armaUrl(filtroNombre, pagination.getNextId(), pagination.getMaxResults()));
+            r.setLinkSiguientePagina(armaUrl(filtroOriginal, pagination.getNextId(), pagination.getMaxResults()));
             r.setSiguienteItem(pagination.getNextId());
         }
         r.setItems(datos);
+        response.setHeader("Content-Type","application/json;charset=UTF-8");
         return r;
     }
     
@@ -79,9 +75,9 @@ public class ClienteControllerImp implements ClienteController {
      * @see org.nekorp.workflow.backend.controller.ClienteController#crearCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
      */
     @Override
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
-    public void crearCliente(@Valid @RequestBody Cliente cliente, HttpServletResponse  response) {
-        cliente.setRfc(StringUtils.upperCase(cliente.getRfc()));
+    @RequestMapping(method = RequestMethod.POST)
+    public void crearCliente(@Valid @RequestBody Cliente cliente, HttpServletResponse response) {
+        preprocesaCliente(cliente);
         this.clienteDao.nuevoCliente(cliente);
         response.setStatus(HttpStatus.CREATED.value());
         response.setHeader("Location", "/cliente/" + cliente.getId());
@@ -91,12 +87,13 @@ public class ClienteControllerImp implements ClienteController {
      * @see org.nekorp.workflow.backend.controller.ClienteController#getCliente(java.lang.String)
      */
     @Override
-    @RequestMapping(value="/{id}", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody Cliente getCliente(@PathVariable String id, HttpServletResponse  response) {
+    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    public @ResponseBody Cliente getCliente(@PathVariable Long id, HttpServletResponse  response) {
         Cliente respuesta = this.clienteDao.getCliente(id);
         if (respuesta == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
+        response.setHeader("Content-Type","application/json;charset=UTF-8");
         return respuesta;
     }
     
@@ -104,19 +101,32 @@ public class ClienteControllerImp implements ClienteController {
      * @see org.nekorp.workflow.backend.controller.ClienteController#actualizarCliente(org.nekorp.workflow.backend.model.cliente.Cliente, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{id}", method = RequestMethod.POST, consumes = "application/json")
-    public void actualizarCliente(@PathVariable String id, @Valid @RequestBody Cliente datos, HttpServletResponse response) {
+    @RequestMapping(value="/{id}", method = RequestMethod.POST)
+    public void actualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente datos, HttpServletResponse response) {
+        preprocesaCliente(datos);
         datos.setId(id);
         if (!this.clienteDao.actualizaCliente(datos)) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
     }
+    /**
+     * cambios que se aplican a los datos del cliente independientemente de lo que envien los sistemas.
+     * @param cliente el cliente a modificar.
+     */
+    private void preprocesaCliente(final Cliente cliente) {
+        //pasa el rfc a mayusculas
+        cliente.setRfc(StringUtils.upperCase(cliente.getRfc()));
+        //genera el nombre estandar para posteriores busquedas
+        cliente.setNombreEstandar(this.stringStandarizer.standarize(cliente.getNombre()));
+    }
     
     
-    private String armaUrl(final String filtroNombre, final String sinceId, final int maxResults) {
+    private String armaUrl(final String filtroNombre, final Long sinceId, final int maxResults) {
         String r = "/cliente";
         r = addUrlParameter(r,"filtroNombre", filtroNombre);
-        r = addUrlParameter(r,"sinceId", sinceId);
+        if (sinceId != null && sinceId > 0) {
+            r = addUrlParameter(r,"sinceId", sinceId + "");
+        }
         if (maxResults > 0) {
             r = addUrlParameter(r,"maxResults", maxResults + "");
         }
@@ -143,5 +153,8 @@ public class ClienteControllerImp implements ClienteController {
     public void setPagFactory(PaginationModelFactory pagFactory) {
         this.pagFactory = pagFactory;
     }
-    
+
+    public void setStringStandarizer(StringStandarizer stringStandarizer) {
+        this.stringStandarizer = stringStandarizer;
+    }
 }

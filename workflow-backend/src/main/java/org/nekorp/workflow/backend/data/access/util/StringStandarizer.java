@@ -15,17 +15,15 @@
  */
 package org.nekorp.workflow.backend.data.access.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 
  */
-public final class FiltroFactory {
+public class StringStandarizer {
 
-    private FiltroFactory() {
-        super();
-    }
-    public static Map<String, Object> getFilter() {
-        return new HashMap<String, Object>();
+    public String standarize(String input) {
+        //TODO por ahora solo lo pasa a mayusculas. resolver acentos y demas caracteres especiales.
+        return StringUtils.upperCase(input);
     }
 }

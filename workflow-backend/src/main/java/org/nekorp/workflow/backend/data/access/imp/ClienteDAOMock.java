@@ -17,10 +17,8 @@ package org.nekorp.workflow.backend.data.access.imp;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
+import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.cliente.Cliente;
 
@@ -40,7 +38,7 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.access.util.PaginationData)
      */
     @Override
-    public List<Cliente> getClientes(final Map<String, Object> filter, final PaginationData pagination) {
+    public List<Cliente> getClientes(final FiltroCliente filtro, final PaginationData pagination) {
         LinkedList<Cliente> datos = new LinkedList<Cliente>();
         if (pagination.getMaxResults() == 0) { //todos 
             return clientes;
@@ -68,8 +66,8 @@ public class ClienteDAOMock implements ClienteDAO {
      */
     @Override
     public void nuevoCliente(Cliente nuevo) {
-        int id = this.clientes.size() + 1;
-        nuevo.setId(id + "");
+        Long id = this.clientes.size() + 1l;
+        nuevo.setId(id);
         this.clientes.add(nuevo);
     }
 
@@ -77,9 +75,9 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getCliente(java.lang.String)
      */
     @Override
-    public Cliente getCliente(String id) {
+    public Cliente getCliente(Long id) {
         for (Cliente x: clientes) {
-            if(StringUtils.equals(id, x.getId())) {
+            if(id == x.getId()) {
                 return x;
             }
         }
@@ -94,7 +92,7 @@ public class ClienteDAOMock implements ClienteDAO {
         int index = -1;
         for (int i = 0; i < clientes.size(); i++) {
             Cliente x = clientes.get(i);
-            if(StringUtils.equals(cliente.getId(), x.getId())) {
+            if(cliente.getId() == x.getId()) {
                 index = i;
                 break;
             }

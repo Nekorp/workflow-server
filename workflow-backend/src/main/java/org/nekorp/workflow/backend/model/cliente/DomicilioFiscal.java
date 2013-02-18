@@ -17,7 +17,9 @@ package org.nekorp.workflow.backend.model.cliente;
 
 import javax.validation.constraints.NotNull;
 
+import com.googlecode.objectify.annotation.Unindex;
 
+@Unindex
 public class DomicilioFiscal {
     @NotNull
     private String calle;

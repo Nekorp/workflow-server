@@ -17,22 +17,20 @@ package org.nekorp.workflow.backend.data.pagination.model;
 
 import javax.validation.constraints.Min;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * 
  */
 public class PaginationData {
-
-    private String sinceId;
+    @Min(0)
+    private Long sinceId;
     @Min(0)
     private int maxResults;
-    private String nextId;
+    private Long nextId;
     
-    public String getSinceId() {
+    public Long getSinceId() {
         return sinceId;
     }
-    public void setSinceId(String sinceId) {
+    public void setSinceId(Long sinceId) {
         this.sinceId = sinceId;
     }
     public int getMaxResults() {
@@ -41,13 +39,20 @@ public class PaginationData {
     public void setMaxResults(int maxResults) {
         this.maxResults = maxResults;
     }
-    public String getNextId() {
+    public Long getNextId() {
         return nextId;
     }
-    public void setNextId(String nextId) {
+    public void setNextId(Long nextId) {
         this.nextId = nextId;
     }
     public boolean hasNext() {
-        return !StringUtils.isEmpty(nextId);
+        return nextId != null && nextId != 0;
+    }
+    
+    @Override
+    public String toString() {
+        return "PaginationData: sinceId:" + sinceId
+                + " maxResults:" + maxResults
+                + " nextId:" + nextId;
     }
 }

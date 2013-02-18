@@ -15,6 +15,9 @@
  */
 package org.nekorp.workflow.backend.model.cliente;
 
+import com.googlecode.objectify.annotation.Unindex;
+
+@Unindex
 public class Telefono {
     private String label;
     private String valor;
