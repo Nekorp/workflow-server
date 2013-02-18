@@ -17,8 +17,6 @@ package org.nekorp.workflow.backend.data.pagination.imp;
 
 import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
-
 /**
  * 
  */
@@ -28,16 +26,7 @@ public class PaginationModelFactoryImp implements PaginationModelFactory {
      * @see org.nekorp.workflow.backend.data.pagination.PaginationModelFactory#getPage()
      */
     @Override
-    public <T> Page<T> getPage() {
-        return new Page<T>();
+    public <T,K> Page<T,K> getPage() {
+        return new Page<T,K>();
     }
-
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.pagination.PaginationModelFactory#getPaginationData()
-     */
-    @Override
-    public PaginationData getPaginationData() {
-        return new PaginationData();
-    }
-
 }

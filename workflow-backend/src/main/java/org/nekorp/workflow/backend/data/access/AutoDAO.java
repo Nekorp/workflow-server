@@ -13,14 +13,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.pagination;
+package org.nekorp.workflow.backend.data.access;
 
-import org.nekorp.workflow.backend.data.pagination.model.Page;
+import java.util.List;
+
+import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
+import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
+import org.nekorp.workflow.backend.model.auto.Auto;
 
 /**
  * 
  */
-public interface PaginationModelFactory {
-
-    <T,K> Page<T,K> getPage();
+public interface AutoDAO {
+    
+    List<Auto> getAutos(FiltroAuto filtro, PaginationData<String> pagination);
+    
+    void nuevoAuto(Auto nuevo);
+    
+    Auto getAuto(String numerSerie);
+    
+    boolean actualizaAuto(Auto auto);
 }

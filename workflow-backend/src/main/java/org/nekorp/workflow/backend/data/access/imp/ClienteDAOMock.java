@@ -38,7 +38,7 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.access.util.PaginationData)
      */
     @Override
-    public List<Cliente> getClientes(final FiltroCliente filtro, final PaginationData pagination) {
+    public List<Cliente> getClientes(final FiltroCliente filtro, final PaginationData<Long> pagination) {
         LinkedList<Cliente> datos = new LinkedList<Cliente>();
         if (pagination.getMaxResults() == 0) { //todos 
             return clientes;

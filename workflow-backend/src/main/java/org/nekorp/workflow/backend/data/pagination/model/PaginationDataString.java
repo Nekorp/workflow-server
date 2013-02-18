@@ -13,14 +13,21 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.pagination;
+package org.nekorp.workflow.backend.data.pagination.model;
 
-import org.nekorp.workflow.backend.data.pagination.model.Page;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * 
  */
-public interface PaginationModelFactory {
+public class PaginationDataString extends PaginationData<String> {
 
-    <T,K> Page<T,K> getPage();
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.data.pagination.model.PaginationData#hasNext()
+     */
+    @Override
+    public boolean hasNext() {
+        return !StringUtils.isEmpty(this.getNextId());
+    }
+
 }

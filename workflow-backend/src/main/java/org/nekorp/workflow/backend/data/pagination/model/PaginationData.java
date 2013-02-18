@@ -20,17 +20,17 @@ import javax.validation.constraints.Min;
 /**
  * 
  */
-public class PaginationData {
-    @Min(0)
-    private Long sinceId;
+public abstract class PaginationData<T> {
+    
+    private T sinceId;
     @Min(0)
     private int maxResults;
-    private Long nextId;
+    private T nextId;
     
-    public Long getSinceId() {
+    public T getSinceId() {
         return sinceId;
     }
-    public void setSinceId(Long sinceId) {
+    public void setSinceId(T sinceId) {
         this.sinceId = sinceId;
     }
     public int getMaxResults() {
@@ -39,16 +39,13 @@ public class PaginationData {
     public void setMaxResults(int maxResults) {
         this.maxResults = maxResults;
     }
-    public Long getNextId() {
+    public T getNextId() {
         return nextId;
     }
-    public void setNextId(Long nextId) {
+    public void setNextId(T nextId) {
         this.nextId = nextId;
     }
-    public boolean hasNext() {
-        return nextId != null && nextId != 0;
-    }
-    
+    public abstract boolean hasNext();    
     @Override
     public String toString() {
         return "PaginationData: sinceId:" + sinceId

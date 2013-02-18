@@ -13,14 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.pagination;
+package org.nekorp.workflow.backend.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
+import org.nekorp.workflow.backend.data.pagination.model.PaginationDataString;
+import org.nekorp.workflow.backend.model.auto.Auto;
 
 /**
  * 
  */
-public interface PaginationModelFactory {
+public interface AutoController {
 
-    <T,K> Page<T,K> getPage();
+    Page<Auto, String> getAutos(FiltroAuto filtro, PaginationDataString pagination, HttpServletResponse response);
+
+    void crearAuto(Auto auto, HttpServletResponse response);
+
+    Auto getAuto(String numeroSerie, HttpServletResponse response);
+
+    void actualizarAuto(String numeroSerie, Auto datos, HttpServletResponse response);
 }

@@ -12,11 +12,16 @@
 		<property name="classes">
     		<list>
 				<value>org.nekorp.workflow.backend.model.cliente.Cliente</value>
+				<value>org.nekorp.workflow.backend.model.auto.Auto</value>
 			</list>
 		</property>
 	</bean>
     
     <bean id="clienteDAO" class="org.nekorp.workflow.backend.data.access.imp.ClienteDAOImp">
+    	<property name="objectifyFactory" ref="objectifyFactory"/>
+    </bean>
+    
+     <bean id="autoDAO" class="org.nekorp.workflow.backend.data.access.imp.AutoDAOImp">
     	<property name="objectifyFactory" ref="objectifyFactory"/>
     </bean>
 	

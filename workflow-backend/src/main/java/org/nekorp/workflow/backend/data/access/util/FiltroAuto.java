@@ -13,14 +13,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.pagination;
-
-import org.nekorp.workflow.backend.data.pagination.model.Page;
+package org.nekorp.workflow.backend.data.access.util;
 
 /**
  * 
  */
-public interface PaginationModelFactory {
+public class FiltroAuto {
 
-    <T,K> Page<T,K> getPage();
+    private String filtroNumeroSerie;    
+
+    public String getFiltroNumeroSerie() {
+        return filtroNumeroSerie;
+    }
+    public void setFiltroNumeroSerie(String filtroNumeroSerie) {
+        this.filtroNumeroSerie = filtroNumeroSerie;
+    }
+    @Override
+    public String toString() {
+        return "FiltroCliente: filtroNumeroSerie:" + filtroNumeroSerie;
+    }
 }

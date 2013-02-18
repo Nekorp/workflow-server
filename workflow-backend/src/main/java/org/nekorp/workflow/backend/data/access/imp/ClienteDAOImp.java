@@ -37,7 +37,7 @@ public class ClienteDAOImp implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Cliente> getClientes(final FiltroCliente filtro, final PaginationData pagination) {
+    public List<Cliente> getClientes(final FiltroCliente filtro, final PaginationData<Long> pagination) {
         List<Cliente> result;
         Objectify ofy = objectifyFactory.begin();
         Query<Cliente> query =  ofy.load().type(Cliente.class);

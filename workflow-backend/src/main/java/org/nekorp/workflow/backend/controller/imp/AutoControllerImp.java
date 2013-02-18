@@ -19,14 +19,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
-import org.nekorp.workflow.backend.controller.ClienteController;
-import org.nekorp.workflow.backend.data.access.ClienteDAO;
-import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
+import org.nekorp.workflow.backend.controller.AutoController;
+import org.nekorp.workflow.backend.data.access.AutoDAO;
+import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
 import org.nekorp.workflow.backend.data.access.util.StringStandarizer;
 import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+import org.nekorp.workflow.backend.data.pagination.model.PaginationDataString;
+import org.nekorp.workflow.backend.model.auto.Auto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,27 +40,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  */
 @Controller
-@RequestMapping("/cliente")
-public class ClienteControllerImp implements ClienteController {
+@RequestMapping("/auto")
+public class AutoControllerImp implements AutoController {
 
-    private ClienteDAO clienteDao;
+    private AutoDAO autoDAO;
     private StringStandarizer stringStandarizer;
     private PaginationModelFactory pagFactory;
     
     /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ClienteController#getClientes(java.lang.String, java.lang.String, int)
+     * @see org.nekorp.workflow.backend.controller.AutoController#getAutos(org.nekorp.workflow.backend.data.pagination.model.PaginationDataString, javax.servlet.http.HttpServletResponse)
      */
     @Override
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody Page<Cliente, Long> getClientes(
-            @ModelAttribute final FiltroCliente filtro, 
-            @Valid @ModelAttribute final PaginationDataLong pagination,
+    public @ResponseBody Page<Auto, String> getAutos(
+            @ModelAttribute final FiltroAuto filtro, 
+            @Valid @ModelAttribute PaginationDataString pagination,
             HttpServletResponse response) {
-        String filtroOriginal = filtro.getFiltroNombre();
-        filtro.setFiltroNombre(this.stringStandarizer.standarize(filtroOriginal));
-        List<Cliente> datos = clienteDao.getClientes(filtro, pagination);
-        Page<Cliente, Long> r = pagFactory.getPage();
-        r.setTipoItems("cliente");
+        String filtroOriginal = filtro.getFiltroNumeroSerie();
+        filtro.setFiltroNumeroSerie(this.stringStandarizer.standarize(filtroOriginal));
+        List<Auto> datos = autoDAO.getAutos(filtro, pagination);
+        Page<Auto, String> r = pagFactory.getPage();
+        r.setTipoItems("auto");
         r.setLinkPaginaActual(armaUrl(filtroOriginal, pagination.getSinceId(), pagination.getMaxResults()));
         if (pagination.hasNext()) {
             r.setLinkSiguientePagina(armaUrl(filtroOriginal, pagination.getNextId(), pagination.getMaxResults()));
@@ -70,63 +70,64 @@ public class ClienteControllerImp implements ClienteController {
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return r;
     }
-    
+
     /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ClienteController#crearCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
+     * @see org.nekorp.workflow.backend.controller.AutoController#crearAuto(org.nekorp.workflow.backend.model.auto.DatosAuto, javax.servlet.http.HttpServletResponse)
      */
     @Override
     @RequestMapping(method = RequestMethod.POST)
-    public void crearCliente(@Valid @RequestBody Cliente cliente, HttpServletResponse response) {
-        preprocesaCliente(cliente);
-        this.clienteDao.nuevoCliente(cliente);
+    public void crearAuto(@Valid @RequestBody Auto auto, HttpServletResponse response) {
+        preprocesaAuto(auto);
+        this.autoDAO.nuevoAuto(auto);
         response.setStatus(HttpStatus.CREATED.value());
-        response.setHeader("Location", "/cliente/" + cliente.getId());
+        response.setHeader("Location", "/auto/" + auto.getNumeroSerie());
     }
-    
+
     /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ClienteController#getCliente(java.lang.String)
+     * @see org.nekorp.workflow.backend.controller.AutoController#getAuto(java.lang.String, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
-    public @ResponseBody Cliente getCliente(@PathVariable Long id, HttpServletResponse  response) {
-        Cliente respuesta = this.clienteDao.getCliente(id);
+    @RequestMapping(value="/{numeroSerie}", method = RequestMethod.GET)
+    public @ResponseBody Auto getAuto(@PathVariable String numeroSerie, HttpServletResponse response) {
+        Auto respuesta = this.autoDAO.getAuto(numeroSerie);
         if (respuesta == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return respuesta;
     }
-    
+
     /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ClienteController#actualizarCliente(org.nekorp.workflow.backend.model.cliente.Cliente, javax.servlet.http.HttpServletResponse)
+     * @see org.nekorp.workflow.backend.controller.AutoController#actualizarAuto(java.lang.Long, org.nekorp.workflow.backend.model.auto.DatosAuto, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{id}", method = RequestMethod.POST)
-    public void actualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente datos, HttpServletResponse response) {
-        preprocesaCliente(datos);
-        datos.setId(id);
-        if (!this.clienteDao.actualizaCliente(datos)) {
+    @RequestMapping(value="/{numeroSerie}", method = RequestMethod.POST)
+    public void actualizarAuto(
+            @PathVariable String numeroSerie, 
+            @Valid @RequestBody Auto datos,
+            HttpServletResponse response) {
+        //no me importa lo que manden lo que vale es lo que viene en el path
+        datos.setNumeroSerie(numeroSerie);
+        preprocesaAuto(datos);
+        if (!this.autoDAO.actualizaAuto(datos)) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
     }
+    
     /**
-     * cambios que se aplican a los datos del cliente independientemente de lo que envien los sistemas.
-     * @param cliente el cliente a modificar.
+     * cambios que se aplican a los datos del auto independientemente de lo que envien los sistemas.
+     * @param auto el auto a modificar.
      */
-    private void preprocesaCliente(final Cliente cliente) {
-        //pasa el rfc a mayusculas
-        cliente.setRfc(StringUtils.upperCase(cliente.getRfc()));
-        //genera el nombre estandar para posteriores busquedas
-        cliente.setNombreEstandar(this.stringStandarizer.standarize(cliente.getNombre()));
+    private void preprocesaAuto(final Auto auto) {
+        //ajusta el numero de serie
+        auto.setNumeroSerie(this.stringStandarizer.standarize(auto.getNumeroSerie()));
+        auto.setVin(auto.getNumeroSerie());
     }
     
-    
-    private String armaUrl(final String filtroNombre, final Long sinceId, final int maxResults) {
-        String r = "/cliente";
-        r = addUrlParameter(r,"filtroNombre", filtroNombre);
-        if (sinceId != null && sinceId > 0) {
-            r = addUrlParameter(r,"sinceId", sinceId + "");
-        }
+    private String armaUrl(final String filtroNumeroSerie, final String sinceId, final int maxResults) {
+        String r = "/auto";
+        r = addUrlParameter(r, "filtroNumeroSerie", filtroNumeroSerie);
+        r = addUrlParameter(r, "sinceId", sinceId);
         if (maxResults > 0) {
             r = addUrlParameter(r,"maxResults", maxResults + "");
         }
@@ -146,8 +147,8 @@ public class ClienteControllerImp implements ClienteController {
         return response;
     }
 
-    public void setClienteDao(ClienteDAO clienteDao) {
-        this.clienteDao = clienteDao;
+    public void setAutoDAO(AutoDAO autoDAO) {
+        this.autoDAO = autoDAO;
     }
 
     public void setPagFactory(PaginationModelFactory pagFactory) {
@@ -157,4 +158,5 @@ public class ClienteControllerImp implements ClienteController {
     public void setStringStandarizer(StringStandarizer stringStandarizer) {
         this.stringStandarizer = stringStandarizer;
     }
+    
 }

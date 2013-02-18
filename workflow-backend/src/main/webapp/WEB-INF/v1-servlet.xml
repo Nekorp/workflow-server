@@ -18,4 +18,9 @@
 		<property name="clienteDao" ref="clienteDAO"/>
 		<property name="stringStandarizer" ref="stringStandarizer"/>
 	</bean>
+	<bean id="AutoController" class="org.nekorp.workflow.backend.controller.imp.AutoControllerImp">
+		<property name="pagFactory" ref="PaginationModelFactory"/>
+		<property name="autoDAO" ref="autoDAO"/>
+		<property name="stringStandarizer" ref="stringStandarizer"/>
+	</bean>
 </beans>

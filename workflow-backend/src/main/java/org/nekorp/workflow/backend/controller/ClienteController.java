@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
+import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.cliente.Cliente;
 
 /**
@@ -27,7 +27,7 @@ import org.nekorp.workflow.backend.model.cliente.Cliente;
  */
 public interface ClienteController {
 
-    Page<Cliente> getClientes(FiltroCliente filtro, PaginationData pagination, HttpServletResponse response);
+    Page<Cliente, Long> getClientes(FiltroCliente filtro, PaginationDataLong pagination, HttpServletResponse response);
 
     void crearCliente(Cliente cliente, HttpServletResponse response);
 
