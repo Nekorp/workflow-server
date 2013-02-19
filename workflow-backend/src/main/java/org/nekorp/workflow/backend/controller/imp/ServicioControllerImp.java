@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.controller.ServicioController;
+import org.nekorp.workflow.backend.data.access.CostoDAO;
 import org.nekorp.workflow.backend.data.access.EventoDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
@@ -27,6 +28,7 @@ import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,6 +44,7 @@ public class ServicioControllerImp implements ServicioController {
 
     private ServicioDAO servicioDAO;
     private EventoDAO eventoDAO;
+    private CostoDAO costoDAO;
     private PaginationModelFactory pagFactory;
     
     /* (non-Javadoc)
@@ -104,7 +107,7 @@ public class ServicioControllerImp implements ServicioController {
      * @see org.nekorp.workflow.backend.controller.ServicioController#getEventos(java.lang.Long, org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{idServicio}/evento", method = RequestMethod.GET)
+    @RequestMapping(value="/{idServicio}/eventos", method = RequestMethod.GET)
     public @ResponseBody List<Evento> getEventos(@PathVariable final Long idServicio, final HttpServletResponse response) {
         Servicio servicio = this.servicioDAO.getServicio(idServicio);
         if (servicio == null) {
@@ -120,7 +123,7 @@ public class ServicioControllerImp implements ServicioController {
      * @see org.nekorp.workflow.backend.controller.ServicioController#saveEventos(java.lang.Long, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{idServicio}/evento", method = RequestMethod.POST)
+    @RequestMapping(value="/{idServicio}/eventos", method = RequestMethod.POST)
     public @ResponseBody List<Evento> saveEventos(@PathVariable final Long idServicio,
         @Valid @RequestBody final List<Evento> eventos, final HttpServletResponse response) {
         Servicio servicio = this.servicioDAO.getServicio(idServicio);
@@ -129,6 +132,39 @@ public class ServicioControllerImp implements ServicioController {
             return null;
         }
         List<Evento> datos = eventoDAO.saveEventos(idServicio, eventos);
+        response.setHeader("Content-Type","application/json;charset=UTF-8");
+        return datos;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.controller.ServicioController#getCostos(java.lang.Long, javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    @RequestMapping(value="/{idServicio}/costos", method = RequestMethod.GET)
+    public @ResponseBody List<RegistroCosto> getCostos(@PathVariable final Long idServicio, final HttpServletResponse response) {
+        Servicio servicio = this.servicioDAO.getServicio(idServicio);
+        if (servicio == null) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
+        List<RegistroCosto> r = costoDAO.getCostos(idServicio);
+        response.setHeader("Content-Type","application/json;charset=UTF-8");
+        return r;
+    }
+
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.controller.ServicioController#saveCostos(java.lang.Long, java.util.List, javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    @RequestMapping(value="/{idServicio}/costos", method = RequestMethod.POST)
+    public @ResponseBody List<RegistroCosto> saveCostos(@PathVariable final Long idServicio, 
+        @Valid @RequestBody final List<RegistroCosto> costos, final HttpServletResponse response) {
+        Servicio servicio = this.servicioDAO.getServicio(idServicio);
+        if (servicio == null) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
+        List<RegistroCosto> datos = costoDAO.saveCostos(idServicio, costos);
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return datos;
     }
@@ -169,4 +205,7 @@ public class ServicioControllerImp implements ServicioController {
         this.pagFactory = pagFactory;
     }
 
+    public void setCostoDAO(CostoDAO costoDAO) {
+        this.costoDAO = costoDAO;
+    }
 }

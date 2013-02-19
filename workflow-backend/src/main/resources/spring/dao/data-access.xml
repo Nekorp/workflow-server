@@ -15,6 +15,7 @@
 				<value>org.nekorp.workflow.backend.model.auto.Auto</value>
 				<value>org.nekorp.workflow.backend.model.servicio.Servicio</value>
 				<value>org.nekorp.workflow.backend.model.servicio.bitacora.Evento</value>
+				<value>org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto</value>
 			</list>
 		</property>
 	</bean>
@@ -32,6 +33,10 @@
 	</bean>
 	
 	<bean id="eventoDAO" class="org.nekorp.workflow.backend.data.access.imp.EventoDAOImp">
+		<property name="objectifyFactory" ref="objectifyFactory"/>
+	</bean>
+	
+	<bean id="costoDAO" class="org.nekorp.workflow.backend.data.access.imp.CostoDAOImp">
 		<property name="objectifyFactory" ref="objectifyFactory"/>
 	</bean>
 	

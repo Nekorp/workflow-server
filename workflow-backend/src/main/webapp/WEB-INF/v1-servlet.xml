@@ -26,5 +26,6 @@
 		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="eventoDAO" ref="eventoDAO"/>
+		<property name="costoDAO" ref="costoDAO"/>
 	</bean>
 </beans>

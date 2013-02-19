@@ -23,6 +23,7 @@ import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 
 public interface ServicioController {
 
@@ -37,4 +38,8 @@ public interface ServicioController {
     List<Evento> getEventos(Long idServicio, HttpServletResponse response);
     
     List<Evento> saveEventos(Long idServicio, List<Evento> eventos, HttpServletResponse response);
+    
+    List<RegistroCosto> getCostos(Long idServicio, HttpServletResponse response);
+    
+    List<RegistroCosto> saveCostos(Long idServicio, List<RegistroCosto> costos, HttpServletResponse response);
 }
