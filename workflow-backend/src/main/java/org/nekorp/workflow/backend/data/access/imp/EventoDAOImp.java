@@ -18,7 +18,6 @@ package org.nekorp.workflow.backend.data.access.imp;
 import java.util.LinkedList;
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.EventoDAO;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 import com.googlecode.objectify.Key;
@@ -37,26 +36,13 @@ public class EventoDAOImp implements EventoDAO {
      * @see org.nekorp.workflow.backend.data.access.EventoDAO#getEventos(java.lang.Long, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Evento> getEventos(final Long idServicio, final PaginationData<Long> pagination) {
+    public List<Evento> getEventos(final Long idServicio) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         List<Evento> result;
         Objectify ofy = objectifyFactory.begin();
         Query<Evento> query =  ofy.load().type(Evento.class);
         query = query.ancestor(parentKey);
-        if (pagination.getSinceId() != null) {
-            Key<Evento> key = Key.create(parentKey, Evento.class, pagination.getSinceId());
-            query = query.filterKey(">=", key);
-        }
-        if (pagination.getMaxResults() != 0) {
-            //se trae uno de mas para indicar cual es la siguiente pagina
-            query = query.limit(pagination.getMaxResults() + 1);
-        }
         result = query.list();
-        if (pagination.getMaxResults() != 0 && result.size() > pagination.getMaxResults()) {
-            Evento ultimo = result.get(pagination.getMaxResults());
-            pagination.setNextId(ultimo.getId());
-            result.remove(pagination.getMaxResults());
-        }
         return result;
     }
 
@@ -65,25 +51,32 @@ public class EventoDAOImp implements EventoDAO {
      */
     @Override
     public List<Evento> saveEventos(final Long idServicio, final List<Evento> eventos) {
+        List<Evento> oldEventos = this.getEventos(idServicio);
+        for (Evento x: oldEventos) {
+            if (!eventos.contains(x)) {
+                borrarEvento(x);
+            }
+        }
         List<Result<Key<Evento>>> nuevos = new LinkedList<Result<Key<Evento>>>();
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
-        try {
-            Result<Key<Evento>> result;
-            for (Evento x: eventos) {
-                Objectify ofy = objectifyFactory.begin();
-                x.setParent(parentKey);
-                result = ofy.save().entity(x);
-                if (x.getId() == null) {
-                    nuevos.add(result);
-                }
+        Result<Key<Evento>> result;
+        Objectify ofy = objectifyFactory.begin();
+        for (Evento x: eventos) {
+            x.setParent(parentKey);
+            result = ofy.save().entity(x);
+            if (x.getId() == null) {
+                nuevos.add(result);
             }
-            for (Result<Key<Evento>> x: nuevos) {
-                x.now();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        for (Result<Key<Evento>> x: nuevos) {
+            x.now();
         }
         return eventos;
+    }
+    
+    public void borrarEvento(final Evento evento) {
+        Objectify ofy = objectifyFactory.begin();
+        ofy.delete().entity(evento);
     }
 
     public void setObjectifyFactory(ObjectifyFactory objectifyFactory) {

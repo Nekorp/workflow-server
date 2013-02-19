@@ -34,7 +34,7 @@ public interface ServicioController {
 
     void actualizarServicio(Long id, Servicio datos, HttpServletResponse response);
     
-    Page<Evento, Long> getEventos(Long idServicio, PaginationDataLong pagination, HttpServletResponse response);
+    List<Evento> getEventos(Long idServicio, HttpServletResponse response);
     
     List<Evento> saveEventos(Long idServicio, List<Evento> eventos, HttpServletResponse response);
 }

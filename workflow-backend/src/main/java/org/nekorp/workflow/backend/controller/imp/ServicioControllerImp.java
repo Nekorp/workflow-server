@@ -105,22 +105,13 @@ public class ServicioControllerImp implements ServicioController {
      */
     @Override
     @RequestMapping(value="/{idServicio}/evento", method = RequestMethod.GET)
-    public @ResponseBody Page<Evento, Long> getEventos(@PathVariable final Long idServicio,
-        @Valid @ModelAttribute final PaginationDataLong pagination, final HttpServletResponse response) {
+    public @ResponseBody List<Evento> getEventos(@PathVariable final Long idServicio, final HttpServletResponse response) {
         Servicio servicio = this.servicioDAO.getServicio(idServicio);
         if (servicio == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
-        Page<Evento, Long> r = pagFactory.getPage();
-        List<Evento> datos = eventoDAO.getEventos(idServicio, pagination);
-        r.setTipoItems("evento");
-        r.setLinkPaginaActual(armaUrl("/servicio/" + idServicio + "/evento", pagination.getSinceId(), pagination.getMaxResults()));
-        if (pagination.hasNext()) {
-            r.setLinkSiguientePagina(armaUrl("/servicio/" + idServicio + "/evento", pagination.getNextId(), pagination.getMaxResults()));
-            r.setSiguienteItem(pagination.getNextId());
-        }
-        r.setItems(datos);
+        List<Evento> r = eventoDAO.getEventos(idServicio);
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return r;
     }

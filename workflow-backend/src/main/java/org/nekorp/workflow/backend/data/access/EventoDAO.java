@@ -16,14 +16,14 @@
 package org.nekorp.workflow.backend.data.access;
 
 import java.util.List;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 
 /**
  * 
  */
 public interface EventoDAO {
-    List<Evento> getEventos(Long idServicio, PaginationData<Long> pagination);
-    
+
+    List<Evento> getEventos(Long idServicio);
+
     List<Evento> saveEventos(Long idServicio, List<Evento> eventos);
 }
