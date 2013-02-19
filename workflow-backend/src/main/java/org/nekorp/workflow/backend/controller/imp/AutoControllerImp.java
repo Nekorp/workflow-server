@@ -52,10 +52,8 @@ public class AutoControllerImp implements AutoController {
      */
     @Override
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody Page<Auto, String> getAutos(
-            @ModelAttribute final FiltroAuto filtro, 
-            @Valid @ModelAttribute PaginationDataString pagination,
-            HttpServletResponse response) {
+    public @ResponseBody Page<Auto, String> getAutos(@ModelAttribute final FiltroAuto filtro, 
+            @Valid @ModelAttribute PaginationDataString pagination, HttpServletResponse response) {
         String filtroOriginal = filtro.getFiltroNumeroSerie();
         filtro.setFiltroNumeroSerie(this.stringStandarizer.standarize(filtroOriginal));
         List<Auto> datos = autoDAO.getAutos(filtro, pagination);
@@ -122,6 +120,8 @@ public class AutoControllerImp implements AutoController {
         //ajusta el numero de serie
         auto.setNumeroSerie(this.stringStandarizer.standarize(auto.getNumeroSerie()));
         auto.setVin(auto.getNumeroSerie());
+        //pasa las placas a mayusculas
+        auto.setPlacas(StringUtils.upperCase(auto.getPlacas()));
     }
     
     private String armaUrl(final String filtroNumeroSerie, final String sinceId, final int maxResults) {

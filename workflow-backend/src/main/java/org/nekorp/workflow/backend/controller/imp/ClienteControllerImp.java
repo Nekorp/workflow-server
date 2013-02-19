@@ -52,10 +52,8 @@ public class ClienteControllerImp implements ClienteController {
      */
     @Override
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody Page<Cliente, Long> getClientes(
-            @ModelAttribute final FiltroCliente filtro, 
-            @Valid @ModelAttribute final PaginationDataLong pagination,
-            HttpServletResponse response) {
+    public @ResponseBody Page<Cliente, Long> getClientes(@ModelAttribute final FiltroCliente filtro, 
+            @Valid @ModelAttribute final PaginationDataLong pagination, HttpServletResponse response) {
         String filtroOriginal = filtro.getFiltroNombre();
         filtro.setFiltroNombre(this.stringStandarizer.standarize(filtroOriginal));
         List<Cliente> datos = clienteDao.getClientes(filtro, pagination);

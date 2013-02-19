@@ -13,29 +13,48 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.model;
+package org.nekorp.workflow.backend.model.servicio;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Unindex;
+
+@Entity @Unindex
 public class Servicio {
-
-    private String id;
-    
-    private String descripcion;
-
-    public String getId() {
+    @Id
+    private Long id;
+    private String idCliente;
+    private String idAuto;
+    private String descripcion; 
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
+    public String getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(String idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public String getIdAuto() {
+        return idAuto;
+    }
+
+    public void setIdAuto(String idAuto) {
+        this.idAuto = idAuto;
+    }   
+    
     public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-    
-    
+    }    
 }

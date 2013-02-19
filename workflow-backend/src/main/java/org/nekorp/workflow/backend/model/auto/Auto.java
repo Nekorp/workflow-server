@@ -15,6 +15,7 @@
  */
 package org.nekorp.workflow.backend.model.auto;
 
+import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
@@ -31,15 +32,24 @@ public class Auto {
     @Id
     private String vin;
     //se duplica la propiedad vin con numeroSerie para hacer busquedas, muahahahahahaha
+    @Size(min=1, max=17)
     @Index //se indexa para realizar busquedas sobre este campo
     private String numeroSerie;
+    @Size(min=1)
     private String marca;
+    @Size(min=1)
     private String tipo;
+    @Size(min=1)
     private String version;
+    @Size(min=1)
     private String modelo;
+    @Size(min=1)
     private String color;
+    @Size(min=1, max=10)
     private String placas;
+    @Size(min=1)
     private String kilometraje;
+    @Size(min=1)
     private String combustible;
     @Embed
     private Equipamiento equipamiento;

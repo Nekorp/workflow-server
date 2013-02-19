@@ -13,6 +13,8 @@
     		<list>
 				<value>org.nekorp.workflow.backend.model.cliente.Cliente</value>
 				<value>org.nekorp.workflow.backend.model.auto.Auto</value>
+				<value>org.nekorp.workflow.backend.model.servicio.Servicio</value>
+				<value>org.nekorp.workflow.backend.model.servicio.bitacora.Evento</value>
 			</list>
 		</property>
 	</bean>
@@ -21,8 +23,16 @@
     	<property name="objectifyFactory" ref="objectifyFactory"/>
     </bean>
     
-     <bean id="autoDAO" class="org.nekorp.workflow.backend.data.access.imp.AutoDAOImp">
-    	<property name="objectifyFactory" ref="objectifyFactory"/>
-    </bean>
+	<bean id="autoDAO" class="org.nekorp.workflow.backend.data.access.imp.AutoDAOImp">
+		<property name="objectifyFactory" ref="objectifyFactory"/>
+	</bean>
+	
+	<bean id="servicioDAO" class="org.nekorp.workflow.backend.data.access.imp.ServicioDAOImp">
+		<property name="objectifyFactory" ref="objectifyFactory"/>
+	</bean>
+	
+	<bean id="eventoDAO" class="org.nekorp.workflow.backend.data.access.imp.EventoDAOImp">
+		<property name="objectifyFactory" ref="objectifyFactory"/>
+	</bean>
 	
 </beans>

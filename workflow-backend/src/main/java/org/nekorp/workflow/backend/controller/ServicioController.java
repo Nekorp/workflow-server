@@ -17,9 +17,24 @@
 package org.nekorp.workflow.backend.controller;
 
 import java.util.List;
-import org.nekorp.workflow.backend.model.Servicio;
+
+import javax.servlet.http.HttpServletResponse;
+import org.nekorp.workflow.backend.data.pagination.model.Page;
+import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
+import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 
 public interface ServicioController {
 
-    List<Servicio> getServicios();
+    Page<Servicio, Long> getServicios(PaginationDataLong pagination, HttpServletResponse response);
+    
+    void crearServicio(Servicio servicio, HttpServletResponse response);
+
+    Servicio getServicio(Long id, HttpServletResponse response);
+
+    void actualizarServicio(Long id, Servicio datos, HttpServletResponse response);
+    
+    Page<Evento, Long> getEventos(Long idServicio, PaginationDataLong pagination, HttpServletResponse response);
+    
+    List<Evento> saveEventos(Long idServicio, List<Evento> eventos, HttpServletResponse response);
 }

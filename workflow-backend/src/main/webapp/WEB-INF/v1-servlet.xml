@@ -12,7 +12,6 @@
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
  
 	<mvc:annotation-driven />
-	<bean id="ServicioController" class="org.nekorp.workflow.backend.controller.imp.ServicioControllerImp"/>
 	<bean id="ClienteController" class="org.nekorp.workflow.backend.controller.imp.ClienteControllerImp">
 		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="clienteDao" ref="clienteDAO"/>
@@ -22,5 +21,10 @@
 		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="autoDAO" ref="autoDAO"/>
 		<property name="stringStandarizer" ref="stringStandarizer"/>
+	</bean>
+	<bean id="ServicioController" class="org.nekorp.workflow.backend.controller.imp.ServicioControllerImp">
+		<property name="pagFactory" ref="PaginationModelFactory"/>
+		<property name="servicioDAO" ref="servicioDAO"/>
+		<property name="eventoDAO" ref="eventoDAO"/>
 	</bean>
 </beans>
