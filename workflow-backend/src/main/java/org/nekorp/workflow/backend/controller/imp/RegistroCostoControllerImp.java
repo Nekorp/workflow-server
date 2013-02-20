@@ -133,7 +133,13 @@ public class RegistroCostoControllerImp implements RegistroCostoController {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return;
         }
-        registroCostoDAO.borrar(idServicio, registroCostoDAO.consultar(idServicio, idRegistro));
+        RegistroCosto dato = registroCostoDAO.consultar(idServicio, idRegistro);
+        if (dato == null) {
+            //no hay nada que responder
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            return;
+        }
+        registroCostoDAO.borrar(idServicio, dato);
         //se acepto la peticion de borrado, no quiere decir que sucede de inmediato.
         response.setStatus(HttpStatus.ACCEPTED.value());
     }

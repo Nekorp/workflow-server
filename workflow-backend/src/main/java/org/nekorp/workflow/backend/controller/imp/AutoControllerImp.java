@@ -92,7 +92,7 @@ public class AutoControllerImp implements AutoController {
     @Override
     @RequestMapping(value="/{numeroSerie}", method = RequestMethod.GET)
     public @ResponseBody Auto getAuto(@PathVariable String numeroSerie, HttpServletResponse response) {
-        Auto respuesta = this.autoDAO.consultar(numeroSerie);
+        Auto respuesta = this.autoDAO.consultar(this.stringStandarizer.standarize(numeroSerie));
         if (respuesta == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
@@ -105,16 +105,31 @@ public class AutoControllerImp implements AutoController {
      */
     @Override
     @RequestMapping(value="/{numeroSerie}", method = RequestMethod.POST)
-    public void actualizarAuto(
-            @PathVariable String numeroSerie, 
-            @Valid @RequestBody Auto datos,
-            HttpServletResponse response) {
+    public void actualizarAuto(@PathVariable final String numeroSerie, @Valid @RequestBody final Auto datos,
+        final HttpServletResponse response) {
         //no me importa lo que manden lo que vale es lo que viene en el path
         datos.setNumeroSerie(numeroSerie);
         preprocesaAuto(datos);
         if (!this.autoDAO.actualizar(datos)) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.controller.AutoController#borrarAuto(java.lang.String, javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    @RequestMapping(value="/{numeroSerie}", method = RequestMethod.DELETE)
+    public void borrarAuto(@PathVariable final String numeroSerie, final HttpServletResponse response) {
+        Auto dato = this.autoDAO.consultar(this.stringStandarizer.standarize(numeroSerie));
+        if (dato == null) {
+            //no hay nada que responder
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            return;
+        }
+        autoDAO.borrar(dato);
+        //se acepto la peticion de borrado, no quiere decir que sucede de inmediato.
+        response.setStatus(HttpStatus.ACCEPTED.value());
     }
     
     /**
@@ -163,5 +178,4 @@ public class AutoControllerImp implements AutoController {
     public void setStringStandarizer(StringStandarizer stringStandarizer) {
         this.stringStandarizer = stringStandarizer;
     }
-    
 }

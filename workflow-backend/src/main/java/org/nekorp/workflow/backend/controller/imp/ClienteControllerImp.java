@@ -107,6 +107,23 @@ public class ClienteControllerImp implements ClienteController {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
     }
+    
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.controller.ClienteController#borrarCliente(java.lang.Long, javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    public void borrarCliente(@PathVariable final Long id, final HttpServletResponse response) {
+        Cliente respuesta = this.clienteDao.consultar(id);
+        if (respuesta == null) {
+            //no hay nada que responder
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            return;
+        }
+        clienteDao.borrar(respuesta);
+        //se acepto la peticion de borrado, no quiere decir que sucede de inmediato.
+        response.setStatus(HttpStatus.ACCEPTED.value());
+    }
     /**
      * cambios que se aplican a los datos del cliente independientemente de lo que envien los sistemas.
      * @param cliente el cliente a modificar.

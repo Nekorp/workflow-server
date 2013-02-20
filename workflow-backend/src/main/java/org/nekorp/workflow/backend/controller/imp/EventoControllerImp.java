@@ -132,7 +132,13 @@ public class EventoControllerImp implements EventoController {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return;
         }
-        eventoDAO.borrar(idServicio, eventoDAO.consultar(idServicio, idEvento));
+        Evento dato = eventoDAO.consultar(idServicio, idEvento);
+        if (dato == null) {
+            //no hay nada que responder
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            return;
+        }
+        eventoDAO.borrar(idServicio, dato);
         //se acepto la peticion de borrado, no quiere decir que sucede de inmediato.
         response.setStatus(HttpStatus.ACCEPTED.value());
     }

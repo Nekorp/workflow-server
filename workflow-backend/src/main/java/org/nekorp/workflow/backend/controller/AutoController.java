@@ -34,4 +34,6 @@ public interface AutoController {
     Auto getAuto(String numeroSerie, HttpServletResponse response);
 
     void actualizarAuto(String numeroSerie, Auto datos, HttpServletResponse response);
+    
+    void borrarAuto(String numeroSerie, HttpServletResponse response);
 }

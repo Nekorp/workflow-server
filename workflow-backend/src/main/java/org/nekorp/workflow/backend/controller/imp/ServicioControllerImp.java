@@ -15,6 +15,7 @@
  */
 package org.nekorp.workflow.backend.controller.imp;
 
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -102,6 +103,27 @@ public class ServicioControllerImp implements ServicioController {
         if (!this.servicioDAO.actualizar(datos)) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
+    }
+
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.controller.ServicioController#borrarServicio(java.lang.Long, javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    public void borrarServicio(@PathVariable final Long id, final HttpServletResponse response) {
+        Servicio dato = this.servicioDAO.consultar(id);
+        if (dato == null) {
+            //no hay nada que responder
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            return;
+        }
+        //hay que borrar costos y bitacora primero
+        this.saveBitacora(id, new LinkedList<Evento>(), response);
+        this.saveCosto(id, new LinkedList<RegistroCosto>(), response);
+        //se borra servicio y listo
+        servicioDAO.borrar(dato);
+        //se acepto la peticion de borrado, no quiere decir que sucede de inmediato.
+        response.setStatus(HttpStatus.ACCEPTED.value());
     }
     
     /* (non-Javadoc)

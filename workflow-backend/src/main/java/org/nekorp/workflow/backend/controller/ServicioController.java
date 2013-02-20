@@ -50,6 +50,7 @@ public interface ServicioController {
     void crearServicio(Servicio servicio, HttpServletResponse response);
     Servicio getServicio(Long id, HttpServletResponse response);
     void actualizarServicio(Long id, Servicio datos, HttpServletResponse response);
+    void borrarServicio(Long id, HttpServletResponse response);
     
     /**
      * Consulta la bitacora del servicio, es decir la coleccion de todos los eventos,

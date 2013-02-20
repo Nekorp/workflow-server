@@ -34,4 +34,6 @@ public interface ClienteController {
     Cliente getCliente(Long id, HttpServletResponse response);
 
     void actualizarCliente(Long id, Cliente datos, HttpServletResponse response);
+    
+    void borrarCliente(Long id, HttpServletResponse response);
 }
