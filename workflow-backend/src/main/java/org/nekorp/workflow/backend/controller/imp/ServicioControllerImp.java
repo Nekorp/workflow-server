@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.controller.ServicioController;
 import org.nekorp.workflow.backend.data.access.CostoDAO;
-import org.nekorp.workflow.backend.data.access.EventoDAO;
+import org.nekorp.workflow.backend.data.access.BitacoraDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
@@ -39,11 +39,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/servicio")
+@RequestMapping("/servicios")
 public class ServicioControllerImp implements ServicioController {
 
     private ServicioDAO servicioDAO;
-    private EventoDAO eventoDAO;
+    private BitacoraDAO bitacoraDAO;
     private CostoDAO costoDAO;
     private PaginationModelFactory pagFactory;
     
@@ -53,12 +53,12 @@ public class ServicioControllerImp implements ServicioController {
     @Override
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody Page<Servicio, Long> getServicios(@Valid @ModelAttribute final PaginationDataLong pagination, final HttpServletResponse response) {
-        List<Servicio> datos = servicioDAO.getServicios(pagination);
+        List<Servicio> datos = servicioDAO.consultarTodos(null, pagination);
         Page<Servicio, Long> r = pagFactory.getPage();
         r.setTipoItems("servicio");
-        r.setLinkPaginaActual(armaUrl("/servicio", pagination.getSinceId(), pagination.getMaxResults()));
+        r.setLinkPaginaActual(armaUrl("/servicios", pagination.getSinceId(), pagination.getMaxResults()));
         if (pagination.hasNext()) {
-            r.setLinkSiguientePagina(armaUrl("/servicio", pagination.getNextId(), pagination.getMaxResults()));
+            r.setLinkSiguientePagina(armaUrl("/servicios", pagination.getNextId(), pagination.getMaxResults()));
             r.setSiguienteItem(pagination.getNextId());
         }
         r.setItems(datos);
@@ -72,9 +72,10 @@ public class ServicioControllerImp implements ServicioController {
     @Override
     @RequestMapping(method = RequestMethod.POST)
     public void crearServicio(@Valid @RequestBody final Servicio servicio, final HttpServletResponse response) {
-        this.servicioDAO.nuevoServicio(servicio);
+        servicio.setId(null);
+        this.servicioDAO.guardar(servicio);
         response.setStatus(HttpStatus.CREATED.value());
-        response.setHeader("Location", "/servicio/" + servicio.getId());
+        response.setHeader("Location", "/servicios/" + servicio.getId());
     }
 
     /* (non-Javadoc)
@@ -83,7 +84,7 @@ public class ServicioControllerImp implements ServicioController {
     @Override
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public @ResponseBody Servicio getServicio(@PathVariable final Long id, final HttpServletResponse response) {
-        Servicio respuesta = this.servicioDAO.getServicio(id);
+        Servicio respuesta = this.servicioDAO.consultar(id);
         if (respuesta == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
@@ -98,7 +99,7 @@ public class ServicioControllerImp implements ServicioController {
     @RequestMapping(value="/{id}", method = RequestMethod.POST)
     public void actualizarServicio(@PathVariable final Long id, @Valid @RequestBody final Servicio datos, final HttpServletResponse response) {
         datos.setId(id);
-        if (!this.servicioDAO.actualizaServicio(datos)) {
+        if (!this.servicioDAO.actualizar(datos)) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
     }
@@ -107,14 +108,14 @@ public class ServicioControllerImp implements ServicioController {
      * @see org.nekorp.workflow.backend.controller.ServicioController#getEventos(java.lang.Long, org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{idServicio}/eventos", method = RequestMethod.GET)
-    public @ResponseBody List<Evento> getEventos(@PathVariable final Long idServicio, final HttpServletResponse response) {
-        Servicio servicio = this.servicioDAO.getServicio(idServicio);
+    @RequestMapping(value="/{idServicio}/bitacora", method = RequestMethod.GET)
+    public @ResponseBody List<Evento> getBitacora(@PathVariable final Long idServicio, final HttpServletResponse response) {
+        Servicio servicio = this.servicioDAO.consultar(idServicio);
         if (servicio == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
-        List<Evento> r = eventoDAO.getEventos(idServicio);
+        List<Evento> r = bitacoraDAO.consultar(idServicio);
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return r;
     }
@@ -123,15 +124,15 @@ public class ServicioControllerImp implements ServicioController {
      * @see org.nekorp.workflow.backend.controller.ServicioController#saveEventos(java.lang.Long, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{idServicio}/eventos", method = RequestMethod.POST)
-    public @ResponseBody List<Evento> saveEventos(@PathVariable final Long idServicio,
+    @RequestMapping(value="/{idServicio}/bitacora", method = RequestMethod.POST)
+    public @ResponseBody List<Evento> saveBitacora(@PathVariable final Long idServicio,
         @Valid @RequestBody final List<Evento> eventos, final HttpServletResponse response) {
-        Servicio servicio = this.servicioDAO.getServicio(idServicio);
+        Servicio servicio = this.servicioDAO.consultar(idServicio);
         if (servicio == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
-        List<Evento> datos = eventoDAO.saveEventos(idServicio, eventos);
+        List<Evento> datos = bitacoraDAO.guardar(idServicio, eventos);
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return datos;
     }
@@ -140,14 +141,14 @@ public class ServicioControllerImp implements ServicioController {
      * @see org.nekorp.workflow.backend.controller.ServicioController#getCostos(java.lang.Long, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{idServicio}/costos", method = RequestMethod.GET)
-    public @ResponseBody List<RegistroCosto> getCostos(@PathVariable final Long idServicio, final HttpServletResponse response) {
-        Servicio servicio = this.servicioDAO.getServicio(idServicio);
+    @RequestMapping(value="/{idServicio}/costo", method = RequestMethod.GET)
+    public @ResponseBody List<RegistroCosto> getCosto(@PathVariable final Long idServicio, final HttpServletResponse response) {
+        Servicio servicio = this.servicioDAO.consultar(idServicio);
         if (servicio == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
-        List<RegistroCosto> r = costoDAO.getCostos(idServicio);
+        List<RegistroCosto> r = costoDAO.consultar(idServicio);
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return r;
     }
@@ -156,15 +157,15 @@ public class ServicioControllerImp implements ServicioController {
      * @see org.nekorp.workflow.backend.controller.ServicioController#saveCostos(java.lang.Long, java.util.List, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{idServicio}/costos", method = RequestMethod.POST)
-    public @ResponseBody List<RegistroCosto> saveCostos(@PathVariable final Long idServicio, 
-        @Valid @RequestBody final List<RegistroCosto> costos, final HttpServletResponse response) {
-        Servicio servicio = this.servicioDAO.getServicio(idServicio);
+    @RequestMapping(value="/{idServicio}/costo", method = RequestMethod.POST)
+    public @ResponseBody List<RegistroCosto> saveCosto(@PathVariable final Long idServicio, 
+        @Valid @RequestBody final List<RegistroCosto> registros, final HttpServletResponse response) {
+        Servicio servicio = this.servicioDAO.consultar(idServicio);
         if (servicio == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
-        List<RegistroCosto> datos = costoDAO.saveCostos(idServicio, costos);
+        List<RegistroCosto> datos = costoDAO.guardar(idServicio, registros);
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return datos;
     }
@@ -197,15 +198,15 @@ public class ServicioControllerImp implements ServicioController {
         this.servicioDAO = servicioDAO;
     }
 
-    public void setEventoDAO(EventoDAO eventoDAO) {
-        this.eventoDAO = eventoDAO;
-    }
-
-    public void setPagFactory(PaginationModelFactory pagFactory) {
-        this.pagFactory = pagFactory;
+    public void setBitacoraDAO(BitacoraDAO bitacoraDAO) {
+        this.bitacoraDAO = bitacoraDAO;
     }
 
     public void setCostoDAO(CostoDAO costoDAO) {
         this.costoDAO = costoDAO;
+    }
+
+    public void setPagFactory(PaginationModelFactory pagFactory) {
+        this.pagFactory = pagFactory;
     }
 }

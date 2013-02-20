@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.imp;
+package org.nekorp.workflow.backend.data.access.mock;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.access.util.PaginationData)
      */
     @Override
-    public List<Cliente> getClientes(final FiltroCliente filtro, final PaginationData<Long> pagination) {
+    public List<Cliente> consultarTodos(final FiltroCliente filtro, final PaginationData<Long> pagination) {
         LinkedList<Cliente> datos = new LinkedList<Cliente>();
         if (pagination.getMaxResults() == 0) { //todos 
             return clientes;
@@ -65,7 +65,7 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#nuevoCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
      */
     @Override
-    public void nuevoCliente(Cliente nuevo) {
+    public void guardar(Cliente nuevo) {
         Long id = this.clientes.size() + 1l;
         nuevo.setId(id);
         this.clientes.add(nuevo);
@@ -75,7 +75,7 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getCliente(java.lang.String)
      */
     @Override
-    public Cliente getCliente(Long id) {
+    public Cliente consultar(Long id) {
         for (Cliente x: clientes) {
             if(id == x.getId()) {
                 return x;
@@ -88,7 +88,7 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#actualizaCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
      */
     @Override
-    public boolean actualizaCliente(Cliente cliente) {
+    public boolean actualizar(Cliente cliente) {
         int index = -1;
         for (int i = 0; i < clientes.size(); i++) {
             Cliente x = clientes.get(i);
@@ -102,6 +102,15 @@ public class ClienteDAOMock implements ClienteDAO {
             clientes.add(index, cliente);
             return true;
         }
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
+     */
+    @Override
+    public boolean borrar(Cliente dato) {
+        // TODO Auto-generated method stub
         return false;
     }
 }

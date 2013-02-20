@@ -24,22 +24,65 @@ import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
-
+/**
+ * Para la parte de los eventos y los registos de costos se plantea verlos
+ * desde dos puntos de vista diferente
+ * El primero es verlos como una unidad
+ *      La bitacora como la coleccion de todos los eventos, de esto se desprenden los metodos
+ *          getBitacora
+ *          saveBitacora
+ *      El costo como la coleccion de todos los registros de costo, de esto se desprenden los metodos
+ *          getCosto
+ *          saveCosto
+ * El segundo es ver cada elemento de manera individual
+ *      Eventos cada suceso parte de la bitacora, de esto se desprende el control de eventos.
+ *      Registro Costo una parte del costo total, de esto se desprende el control de registros del costo.
+ *      
+ * Desde el punto de vista de REST se tienen uri diferentes para estos cuatro recursos
+ *      bitacora
+ *      costo
+ *      bitacora/eventos
+ *      costo/registros
+ */
 public interface ServicioController {
 
     Page<Servicio, Long> getServicios(PaginationDataLong pagination, HttpServletResponse response);
-    
     void crearServicio(Servicio servicio, HttpServletResponse response);
-
     Servicio getServicio(Long id, HttpServletResponse response);
-
     void actualizarServicio(Long id, Servicio datos, HttpServletResponse response);
     
-    List<Evento> getEventos(Long idServicio, HttpServletResponse response);
+    /**
+     * Consulta la bitacora del servicio, es decir la coleccion de todos los eventos,
+     * los eventos no estan necesariamente ordenados cronologicamente, estan ordenados por ID.
+     * @param idServicio el id del servicio del cual se consulta la bitacora.
+     * @param response se requiere para colocar informacion adicional.
+     * @return La lista de los eventos que conforman la bitacora del servicio.
+     */
+    List<Evento> getBitacora(Long idServicio, HttpServletResponse response);
+    /**
+     * Guarda la bitacora del servicio, si hay eventos nuevos se crean, los eventos ya existentes
+     * se actualizan y los eventos que ya no se recivan se borran.
+     * @param idServicio el id del servicio al que se quiere actualizar su bitacora.
+     * @param eventos los eventos que conforman la bitacora.
+     * @param response se requiere para colocar informacion adicional.
+     * @return La lista de eventos, los eventos nuevos se regresan con el ID generado.
+     */
+    List<Evento> saveBitacora(Long idServicio, List<Evento> eventos, HttpServletResponse response);
+    /**
+     * Consulta el costo del servicio, es decir la coleccion de todos los registros de costo.
+     * @param idServicio el id del servicio del cual se consulta el costo.
+     * @param response se requiere para colocar informacion adicional.
+     * @return La lista de registros que forman el costo del servicio.
+     */
+    List<RegistroCosto> getCosto(Long idServicio, HttpServletResponse response);
+    /**
+     * Guarda el costo del servicio, si hay registros nuevos se crean, los registros ya existentes
+     * se actualizan y los registros que ya no se recivan se borran.
+     * @param idServicio el id del servicio del cual se consulta el costo.
+     * @param registros los registros que producen el costo.
+     * @param response se requiere para colocar informacion adicional.
+     * @return La lista de registros, los registros nuevos se regresan con el ID generado.
+     */
+    List<RegistroCosto> saveCosto(Long idServicio, List<RegistroCosto> registros, HttpServletResponse response);
     
-    List<Evento> saveEventos(Long idServicio, List<Evento> eventos, HttpServletResponse response);
-    
-    List<RegistroCosto> getCostos(Long idServicio, HttpServletResponse response);
-    
-    List<RegistroCosto> saveCostos(Long idServicio, List<RegistroCosto> costos, HttpServletResponse response);
 }

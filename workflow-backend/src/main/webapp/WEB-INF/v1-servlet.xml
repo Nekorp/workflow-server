@@ -11,7 +11,19 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
  
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper" ref="jacksonObjectMapper"/>
+			</bean>
+    	</mvc:message-converters>
+	</mvc:annotation-driven>
+	<!-- customizacion de jackson -->
+	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+	<bean id="JacksonConfiguration" class="org.nekorp.workflow.backend.util.JacksonConfiguration" init-method="init">
+		<property name="objectMapper" ref="jacksonObjectMapper"/>
+	</bean>
+	
 	<bean id="ClienteController" class="org.nekorp.workflow.backend.controller.imp.ClienteControllerImp">
 		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="clienteDao" ref="clienteDAO"/>
@@ -25,7 +37,17 @@
 	<bean id="ServicioController" class="org.nekorp.workflow.backend.controller.imp.ServicioControllerImp">
 		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="servicioDAO" ref="servicioDAO"/>
-		<property name="eventoDAO" ref="eventoDAO"/>
+		<property name="bitacoraDAO" ref="bitacoraDAO"/>
 		<property name="costoDAO" ref="costoDAO"/>
+	</bean>
+	<bean id="EventoController" class="org.nekorp.workflow.backend.controller.imp.EventoControllerImp">
+		<property name="pagFactory" ref="PaginationModelFactory"/>
+		<property name="servicioDAO" ref="servicioDAO"/>
+		<property name="eventoDAO" ref="eventoDAO"/>
+	</bean>
+	<bean id="RegistroCostoController" class="org.nekorp.workflow.backend.controller.imp.RegistroCostoControllerImp">
+		<property name="pagFactory" ref="PaginationModelFactory"/>
+		<property name="servicioDAO" ref="servicioDAO"/>
+		<property name="registroCostoDAO" ref="registroCostoDAO"/>
 	</bean>
 </beans>

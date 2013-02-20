@@ -15,15 +15,13 @@
  */
 package org.nekorp.workflow.backend.data.access;
 
-import java.util.List;
+import org.nekorp.workflow.backend.data.access.template.ChildEntityDAO;
+import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 
 /**
  * 
  */
-public interface EventoDAO {
+public interface EventoDAO extends ChildEntityDAO<Evento,Long,Long,FiltroBusqueda>{
 
-    List<Evento> getEventos(Long idServicio);
-
-    List<Evento> saveEventos(Long idServicio, List<Evento> eventos);
 }

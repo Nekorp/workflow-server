@@ -22,7 +22,7 @@
     
 	<servlet-mapping>  
    		<servlet-name>v1</servlet-name>  
-   		<url-pattern>/workflow/v1/*</url-pattern>
+   		<url-pattern>/api/v1/*</url-pattern>
 	</servlet-mapping> 
 	
 	<!-- Listener para cargar el contexto de Spring -->
@@ -34,7 +34,7 @@
 	<security-constraint>
 		<web-resource-collection>
 	  		<web-resource-name>All API</web-resource-name>
-    		<url-pattern>/workflow/*</url-pattern>
+    		<url-pattern>/api/*</url-pattern>
 	  	</web-resource-collection>
 	  	<user-data-constraint>
 		    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
@@ -48,6 +48,6 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/workflow/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 </web-app>

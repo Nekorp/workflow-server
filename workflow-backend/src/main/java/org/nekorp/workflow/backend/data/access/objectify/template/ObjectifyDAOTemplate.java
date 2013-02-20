@@ -13,14 +13,21 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access;
+package org.nekorp.workflow.backend.data.access.objectify.template;
 
-import org.nekorp.workflow.backend.data.access.template.EntityDAO;
-import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
-
+import com.googlecode.objectify.ObjectifyFactory;
 /**
  * 
  */
-public interface ClienteDAO extends EntityDAO<Cliente, Long, FiltroCliente> {
+public abstract class ObjectifyDAOTemplate {
+
+    private ObjectifyFactory objectifyFactory;
+    
+    public ObjectifyFactory getObjectifyFactory() {
+        return objectifyFactory;
+    }
+
+    public void setObjectifyFactory(ObjectifyFactory objectifyFactory) {
+        this.objectifyFactory = objectifyFactory;
+    }
 }

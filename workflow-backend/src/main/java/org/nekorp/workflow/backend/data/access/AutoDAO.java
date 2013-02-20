@@ -15,22 +15,12 @@
  */
 package org.nekorp.workflow.backend.data.access;
 
-import java.util.List;
-
+import org.nekorp.workflow.backend.data.access.template.EntityDAO;
 import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.auto.Auto;
 
 /**
  * 
  */
-public interface AutoDAO {
-    
-    List<Auto> getAutos(FiltroAuto filtro, PaginationData<String> pagination);
-    
-    void nuevoAuto(Auto nuevo);
-    
-    Auto getAuto(String numerSerie);
-    
-    boolean actualizaAuto(Auto auto);
+public interface AutoDAO extends EntityDAO<Auto, String, FiltroAuto> {
 }

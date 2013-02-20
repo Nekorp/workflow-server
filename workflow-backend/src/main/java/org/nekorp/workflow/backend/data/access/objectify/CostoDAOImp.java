@@ -13,34 +13,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.imp;
+package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.LinkedList;
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.CostoDAO;
+import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.Result;
 import com.googlecode.objectify.cmd.Query;
 
 /**
  * 
  */
-public class CostoDAOImp implements CostoDAO {
-
-    private ObjectifyFactory objectifyFactory;
+public class CostoDAOImp extends ObjectifyDAOTemplate implements CostoDAO {
 
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.CostoDAO#getEventos(java.lang.Long)
      */
     @Override
-    public List<RegistroCosto> getCostos(Long idServicio) {
+    public List<RegistroCosto> consultar(Long idServicio) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         List<RegistroCosto> result;
-        Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = getObjectifyFactory().begin();
         Query<RegistroCosto> query =  ofy.load().type(RegistroCosto.class);
         query = query.ancestor(parentKey);
         result = query.list();
@@ -51,8 +49,8 @@ public class CostoDAOImp implements CostoDAO {
      * @see org.nekorp.workflow.backend.data.access.CostoDAO#saveEventos(java.lang.Long, java.util.List)
      */
     @Override
-    public List<RegistroCosto> saveCostos(final Long idServicio, final List<RegistroCosto> registros) {
-        List<RegistroCosto> oldRegistros = this.getCostos(idServicio);
+    public List<RegistroCosto> guardar(final Long idServicio, final List<RegistroCosto> registros) {
+        List<RegistroCosto> oldRegistros = this.consultar(idServicio);
         for (RegistroCosto x: oldRegistros) {
             if (!registros.contains(x)) {
                 borrarRegistro(x);
@@ -61,7 +59,7 @@ public class CostoDAOImp implements CostoDAO {
         List<Result<Key<RegistroCosto>>> nuevos = new LinkedList<Result<Key<RegistroCosto>>>();
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         Result<Key<RegistroCosto>> result;
-        Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = getObjectifyFactory().begin();
         for (RegistroCosto x: registros) {
             x.setParent(parentKey);
             result = ofy.save().entity(x);
@@ -75,12 +73,8 @@ public class CostoDAOImp implements CostoDAO {
         return registros;
     }   
     
-    public void borrarRegistro(final RegistroCosto registro) {
-        Objectify ofy = objectifyFactory.begin();
+    private void borrarRegistro(final RegistroCosto registro) {
+        Objectify ofy = getObjectifyFactory().begin();
         ofy.delete().entity(registro);
-    }
-
-    public void setObjectifyFactory(ObjectifyFactory objectifyFactory) {
-        this.objectifyFactory = objectifyFactory;
     }
 }

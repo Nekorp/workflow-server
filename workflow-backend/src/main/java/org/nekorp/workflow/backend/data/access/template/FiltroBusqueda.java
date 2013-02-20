@@ -13,14 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access;
-
-import org.nekorp.workflow.backend.data.access.template.EntityDAO;
-import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+package org.nekorp.workflow.backend.data.access.template;
 
 /**
  * 
  */
-public interface ClienteDAO extends EntityDAO<Cliente, Long, FiltroCliente> {
+public interface FiltroBusqueda {
+
 }

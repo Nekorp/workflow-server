@@ -15,12 +15,15 @@
  */
 package org.nekorp.workflow.backend.data.access;
 
-import org.nekorp.workflow.backend.data.access.template.EntityDAO;
-import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+import java.util.List;
+import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 
 /**
  * 
  */
-public interface ClienteDAO extends EntityDAO<Cliente, Long, FiltroCliente> {
+public interface BitacoraDAO {
+
+    List<Evento> consultar(Long idServicio);
+
+    List<Evento> guardar(Long idServicio, List<Evento> eventos);
 }

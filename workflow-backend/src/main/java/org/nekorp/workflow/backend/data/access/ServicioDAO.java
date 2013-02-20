@@ -15,20 +15,12 @@
  */
 package org.nekorp.workflow.backend.data.access;
 
-import java.util.List;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
+import org.nekorp.workflow.backend.data.access.template.EntityDAO;
+import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 
 /**
  * 
  */
-public interface ServicioDAO {
-    
-    List<Servicio> getServicios(PaginationData<Long> pagination);
-    
-    void nuevoServicio(Servicio nuevo);
-    
-    Servicio getServicio(Long id);
-    
-    boolean actualizaServicio(Servicio servicio);
+public interface ServicioDAO extends EntityDAO<Servicio, Long, FiltroBusqueda> {
 }

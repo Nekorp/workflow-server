@@ -15,12 +15,12 @@
  */
 package org.nekorp.workflow.backend.data.access;
 
-import org.nekorp.workflow.backend.data.access.template.EntityDAO;
-import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+import org.nekorp.workflow.backend.data.access.template.ChildEntityDAO;
+import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 
 /**
  * 
  */
-public interface ClienteDAO extends EntityDAO<Cliente, Long, FiltroCliente> {
+public interface RegistroCostoDAO extends ChildEntityDAO<RegistroCosto, Long, Long, FiltroBusqueda> {
 }

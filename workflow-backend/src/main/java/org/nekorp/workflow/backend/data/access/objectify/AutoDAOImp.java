@@ -13,32 +13,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.imp;
+package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
+import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.auto.Auto;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.cmd.Query;
 
 /**
  * 
  */
-public class AutoDAOImp implements AutoDAO {
-
-    private ObjectifyFactory objectifyFactory;
+public class AutoDAOImp extends ObjectifyDAOTemplate implements AutoDAO {
+    
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#getAutos(org.nekorp.workflow.backend.data.access.util.FiltroAuto, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Auto> getAutos(FiltroAuto filtro, PaginationData<String> pagination) {
+    public List<Auto> consultarTodos(FiltroAuto filtro, PaginationData<String> pagination) {
         List<Auto> result;
-        Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = getObjectifyFactory().begin();
         Query<Auto> query =  ofy.load().type(Auto.class);
         if (!StringUtils.isEmpty(filtro.getFiltroNumeroSerie())) {
             String serieBuscado = filtro.getFiltroNumeroSerie();
@@ -69,9 +68,9 @@ public class AutoDAOImp implements AutoDAO {
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#nuevoAuto(org.nekorp.workflow.backend.model.auto.Auto)
      */
     @Override
-    public void nuevoAuto(Auto nuevo) {
+    public void guardar(Auto nuevo) {
         try {
-            Objectify ofy = objectifyFactory.begin();
+            Objectify ofy = getObjectifyFactory().begin();
             ofy.save().entity(nuevo).now();
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,8 +81,8 @@ public class AutoDAOImp implements AutoDAO {
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#getAuto(java.lang.String)
      */
     @Override
-    public Auto getAuto(String numerSerie) {
-        Objectify ofy = objectifyFactory.begin();
+    public Auto consultar(String numerSerie) {
+        Objectify ofy = getObjectifyFactory().begin();
         Key<Auto> key = Key.create(Auto.class, numerSerie);
         Auto respuesta = ofy.load().key(key).get();
         return respuesta;
@@ -93,20 +92,26 @@ public class AutoDAOImp implements AutoDAO {
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#actualizaAuto(org.nekorp.workflow.backend.model.auto.Auto)
      */
     @Override
-    public boolean actualizaAuto(Auto auto) {
-        if (getAuto(auto.getVin()) == null) {
+    public boolean actualizar(Auto auto) {
+        if (consultar(auto.getVin()) == null) {
             return false;
         }
         try {
-            Objectify ofy = objectifyFactory.begin();
+            Objectify ofy = getObjectifyFactory().begin();
             ofy.save().entity(auto).now();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
     }
-
-    public void setObjectifyFactory(ObjectifyFactory objectifyFactory) {
-        this.objectifyFactory = objectifyFactory;
+    
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
+     */
+    @Override
+    public boolean borrar(Auto dato) {
+        Objectify ofy = getObjectifyFactory().begin();
+        ofy.delete().entity(dato);
+        return true;
     }
 }

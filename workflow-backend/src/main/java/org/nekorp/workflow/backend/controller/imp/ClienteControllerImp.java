@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  */
 @Controller
-@RequestMapping("/cliente")
+@RequestMapping("/clientes")
 public class ClienteControllerImp implements ClienteController {
 
     private ClienteDAO clienteDao;
@@ -54,14 +54,13 @@ public class ClienteControllerImp implements ClienteController {
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody Page<Cliente, Long> getClientes(@ModelAttribute final FiltroCliente filtro, 
             @Valid @ModelAttribute final PaginationDataLong pagination, HttpServletResponse response) {
-        String filtroOriginal = filtro.getFiltroNombre();
-        filtro.setFiltroNombre(this.stringStandarizer.standarize(filtroOriginal));
-        List<Cliente> datos = clienteDao.getClientes(filtro, pagination);
+        filtro.setFiltroNombre(this.stringStandarizer.standarize(filtro.getFiltroNombre()));
+        List<Cliente> datos = clienteDao.consultarTodos(filtro, pagination);
         Page<Cliente, Long> r = pagFactory.getPage();
         r.setTipoItems("cliente");
-        r.setLinkPaginaActual(armaUrl(filtroOriginal, pagination.getSinceId(), pagination.getMaxResults()));
+        r.setLinkPaginaActual(armaUrl(filtro.getFiltroNombre(), pagination.getSinceId(), pagination.getMaxResults()));
         if (pagination.hasNext()) {
-            r.setLinkSiguientePagina(armaUrl(filtroOriginal, pagination.getNextId(), pagination.getMaxResults()));
+            r.setLinkSiguientePagina(armaUrl(filtro.getFiltroNombre(), pagination.getNextId(), pagination.getMaxResults()));
             r.setSiguienteItem(pagination.getNextId());
         }
         r.setItems(datos);
@@ -75,10 +74,11 @@ public class ClienteControllerImp implements ClienteController {
     @Override
     @RequestMapping(method = RequestMethod.POST)
     public void crearCliente(@Valid @RequestBody Cliente cliente, HttpServletResponse response) {
+        cliente.setId(null);
         preprocesaCliente(cliente);
-        this.clienteDao.nuevoCliente(cliente);
+        this.clienteDao.guardar(cliente);
         response.setStatus(HttpStatus.CREATED.value());
-        response.setHeader("Location", "/cliente/" + cliente.getId());
+        response.setHeader("Location", "/clientes/" + cliente.getId());
     }
     
     /* (non-Javadoc)
@@ -87,7 +87,7 @@ public class ClienteControllerImp implements ClienteController {
     @Override
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public @ResponseBody Cliente getCliente(@PathVariable Long id, HttpServletResponse  response) {
-        Cliente respuesta = this.clienteDao.getCliente(id);
+        Cliente respuesta = this.clienteDao.consultar(id);
         if (respuesta == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
@@ -103,7 +103,7 @@ public class ClienteControllerImp implements ClienteController {
     public void actualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente datos, HttpServletResponse response) {
         preprocesaCliente(datos);
         datos.setId(id);
-        if (!this.clienteDao.actualizaCliente(datos)) {
+        if (!this.clienteDao.actualizar(datos)) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
     }
@@ -120,7 +120,7 @@ public class ClienteControllerImp implements ClienteController {
     
     
     private String armaUrl(final String filtroNombre, final Long sinceId, final int maxResults) {
-        String r = "/cliente";
+        String r = "/clientes";
         r = addUrlParameter(r,"filtroNombre", filtroNombre);
         if (sinceId != null && sinceId > 0) {
             r = addUrlParameter(r,"sinceId", sinceId + "");

@@ -13,32 +13,30 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.imp;
+package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
+import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
+import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.cmd.Query;
 
 /**
  * 
  */
-public class ServicioDAOImp implements ServicioDAO {
-    
-    //private static Logger LOGGER = Logger.getAnonymousLogger();
-    private ObjectifyFactory objectifyFactory;
+public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO {
 
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.ServicioDAO#getServicios(org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Servicio> getServicios(PaginationData<Long> pagination) {
+    public List<Servicio> consultarTodos(FiltroBusqueda filtro, PaginationData<Long> pagination) {
         List<Servicio> result;
-        Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = getObjectifyFactory().begin();
         Query<Servicio> query =  ofy.load().type(Servicio.class);
         if (pagination.getSinceId() != null) {
             Key<Servicio> key = Key.create(Servicio.class, pagination.getSinceId());
@@ -61,9 +59,9 @@ public class ServicioDAOImp implements ServicioDAO {
      * @see org.nekorp.workflow.backend.data.access.ServicioDAO#nuevoServicio(org.nekorp.workflow.backend.model.servicio.Servicio)
      */
     @Override
-    public void nuevoServicio(Servicio nuevo) {
+    public void guardar(Servicio nuevo) {
         try {
-            Objectify ofy = objectifyFactory.begin();
+            Objectify ofy = getObjectifyFactory().begin();
             ofy.save().entity(nuevo).now();
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,8 +72,8 @@ public class ServicioDAOImp implements ServicioDAO {
      * @see org.nekorp.workflow.backend.data.access.ServicioDAO#getServicio(java.lang.Long)
      */
     @Override
-    public Servicio getServicio(Long id) {
-        Objectify ofy = objectifyFactory.begin();
+    public Servicio consultar(Long id) {
+        Objectify ofy = getObjectifyFactory().begin();
         Key<Servicio> key = Key.create(Servicio.class, id);
         Servicio respuesta = ofy.load().key(key).get();
         return respuesta;
@@ -85,12 +83,12 @@ public class ServicioDAOImp implements ServicioDAO {
      * @see org.nekorp.workflow.backend.data.access.ServicioDAO#actualizaServicio(org.nekorp.workflow.backend.model.servicio.Servicio)
      */
     @Override
-    public boolean actualizaServicio(Servicio servicio) {
-        if (getServicio(servicio.getId()) == null) {
+    public boolean actualizar(Servicio servicio) {
+        if (consultar(servicio.getId()) == null) {
             return false;
         }
         try {
-            Objectify ofy = objectifyFactory.begin();
+            Objectify ofy = getObjectifyFactory().begin();
             ofy.save().entity(servicio).now();
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,7 +96,13 @@ public class ServicioDAOImp implements ServicioDAO {
         return true;
     }
     
-    public void setObjectifyFactory(ObjectifyFactory objectifyFactory) {
-        this.objectifyFactory = objectifyFactory;
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
+     */
+    @Override
+    public boolean borrar(Servicio dato) {
+        Objectify ofy = getObjectifyFactory().begin();
+        ofy.delete().entity(dato);
+        return true;
     }
 }

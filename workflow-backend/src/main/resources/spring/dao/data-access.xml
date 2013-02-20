@@ -20,23 +20,31 @@
 		</property>
 	</bean>
     
-    <bean id="clienteDAO" class="org.nekorp.workflow.backend.data.access.imp.ClienteDAOImp">
+    <bean id="clienteDAO" class="org.nekorp.workflow.backend.data.access.objectify.ClienteDAOImp">
     	<property name="objectifyFactory" ref="objectifyFactory"/>
     </bean>
     
-	<bean id="autoDAO" class="org.nekorp.workflow.backend.data.access.imp.AutoDAOImp">
+	<bean id="autoDAO" class="org.nekorp.workflow.backend.data.access.objectify.AutoDAOImp">
 		<property name="objectifyFactory" ref="objectifyFactory"/>
 	</bean>
 	
-	<bean id="servicioDAO" class="org.nekorp.workflow.backend.data.access.imp.ServicioDAOImp">
+	<bean id="servicioDAO" class="org.nekorp.workflow.backend.data.access.objectify.ServicioDAOImp">
 		<property name="objectifyFactory" ref="objectifyFactory"/>
 	</bean>
 	
-	<bean id="eventoDAO" class="org.nekorp.workflow.backend.data.access.imp.EventoDAOImp">
+	<bean id="bitacoraDAO" class="org.nekorp.workflow.backend.data.access.objectify.BitacoraDAOImp">
 		<property name="objectifyFactory" ref="objectifyFactory"/>
 	</bean>
 	
-	<bean id="costoDAO" class="org.nekorp.workflow.backend.data.access.imp.CostoDAOImp">
+	<bean id="costoDAO" class="org.nekorp.workflow.backend.data.access.objectify.CostoDAOImp">
+		<property name="objectifyFactory" ref="objectifyFactory"/>
+	</bean>
+	
+	<bean id="eventoDAO" class="org.nekorp.workflow.backend.data.access.objectify.EventoDAOImp">
+		<property name="objectifyFactory" ref="objectifyFactory"/>
+	</bean>
+	
+	<bean id="registroCostoDAO" class="org.nekorp.workflow.backend.data.access.objectify.RegistroCostoDAOImp">
 		<property name="objectifyFactory" ref="objectifyFactory"/>
 	</bean>
 	

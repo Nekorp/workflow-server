@@ -13,33 +13,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.imp;
+package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.nekorp.workflow.backend.data.access.EventoDAO;
+import org.nekorp.workflow.backend.data.access.BitacoraDAO;
+import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.Result;
 import com.googlecode.objectify.cmd.Query;
 
 /**
  * 
  */
-public class EventoDAOImp implements EventoDAO {
+public class BitacoraDAOImp extends ObjectifyDAOTemplate implements BitacoraDAO {
 
-    private ObjectifyFactory objectifyFactory;
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.EventoDAO#getEventos(java.lang.Long, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Evento> getEventos(final Long idServicio) {
+    public List<Evento> consultar(final Long idServicio) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         List<Evento> result;
-        Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = getObjectifyFactory().begin();
         Query<Evento> query =  ofy.load().type(Evento.class);
         query = query.ancestor(parentKey);
         result = query.list();
@@ -50,8 +49,8 @@ public class EventoDAOImp implements EventoDAO {
      * @see org.nekorp.workflow.backend.data.access.EventoDAO#saveEventos(java.lang.Long, java.util.List)
      */
     @Override
-    public List<Evento> saveEventos(final Long idServicio, final List<Evento> eventos) {
-        List<Evento> oldEventos = this.getEventos(idServicio);
+    public List<Evento> guardar(final Long idServicio, final List<Evento> eventos) {
+        List<Evento> oldEventos = this.consultar(idServicio);
         for (Evento x: oldEventos) {
             if (!eventos.contains(x)) {
                 borrarEvento(x);
@@ -60,7 +59,7 @@ public class EventoDAOImp implements EventoDAO {
         List<Result<Key<Evento>>> nuevos = new LinkedList<Result<Key<Evento>>>();
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         Result<Key<Evento>> result;
-        Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = getObjectifyFactory().begin();
         for (Evento x: eventos) {
             x.setParent(parentKey);
             result = ofy.save().entity(x);
@@ -75,12 +74,7 @@ public class EventoDAOImp implements EventoDAO {
     }
     
     public void borrarEvento(final Evento evento) {
-        Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = getObjectifyFactory().begin();
         ofy.delete().entity(evento);
     }
-
-    public void setObjectifyFactory(ObjectifyFactory objectifyFactory) {
-        this.objectifyFactory = objectifyFactory;
-    }
-
 }

@@ -13,33 +13,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.imp;
+package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
+import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.cliente.Cliente;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.cmd.Query;
 
 /**
  * 
  */
-public class ClienteDAOImp implements ClienteDAO {
+public class ClienteDAOImp extends ObjectifyDAOTemplate implements ClienteDAO {
     
-    //private static Logger LOGGER = Logger.getAnonymousLogger();
-    private ObjectifyFactory objectifyFactory;
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Cliente> getClientes(final FiltroCliente filtro, final PaginationData<Long> pagination) {
+    public List<Cliente> consultarTodos(final FiltroCliente filtro, final PaginationData<Long> pagination) {
         List<Cliente> result;
-        Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = getObjectifyFactory().begin();
         Query<Cliente> query =  ofy.load().type(Cliente.class);
         //Por limitaciones de appengine no se pueden hacer queries con desigualdades en dos propiedades
         if (!StringUtils.isEmpty(filtro.getFiltroNombre())) {
@@ -73,9 +71,9 @@ public class ClienteDAOImp implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#nuevoCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
      */
     @Override
-    public void nuevoCliente(final Cliente nuevo) {
+    public void guardar(final Cliente nuevo) {
         try {
-            Objectify ofy = objectifyFactory.begin();
+            Objectify ofy = getObjectifyFactory().begin();
             ofy.save().entity(nuevo).now();
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,8 +84,8 @@ public class ClienteDAOImp implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getCliente(java.lang.String)
      */
     @Override
-    public Cliente getCliente(final Long id) {
-        Objectify ofy = objectifyFactory.begin();
+    public Cliente consultar(final Long id) {
+        Objectify ofy = getObjectifyFactory().begin();
         Key<Cliente> key = Key.create(Cliente.class, id);
         Cliente respuesta = ofy.load().key(key).get();
         return respuesta;
@@ -97,20 +95,26 @@ public class ClienteDAOImp implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#actualizaCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
      */
     @Override
-    public boolean actualizaCliente(final Cliente cliente) {
-        if (getCliente(cliente.getId()) == null) {
+    public boolean actualizar(final Cliente cliente) {
+        if (consultar(cliente.getId()) == null) {
             return false;
         }
         try {
-            Objectify ofy = objectifyFactory.begin();
+            Objectify ofy = getObjectifyFactory().begin();
             ofy.save().entity(cliente).now();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
     }
-
-    public void setObjectifyFactory(ObjectifyFactory objectifyFactory) {
-        this.objectifyFactory = objectifyFactory;
+    
+    /* (non-Javadoc)
+     * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
+     */
+    @Override
+    public boolean borrar(Cliente dato) {
+        Objectify ofy = getObjectifyFactory().begin();
+        ofy.delete().entity(dato);
+        return true;
     }
 }

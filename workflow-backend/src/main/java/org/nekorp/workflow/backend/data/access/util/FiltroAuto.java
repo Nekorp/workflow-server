@@ -15,10 +15,12 @@
  */
 package org.nekorp.workflow.backend.data.access.util;
 
+import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
+
 /**
  * 
  */
-public class FiltroAuto {
+public class FiltroAuto implements FiltroBusqueda {
 
     private String filtroNumeroSerie;    
 

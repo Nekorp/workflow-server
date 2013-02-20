@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  */
 @Controller
-@RequestMapping("/auto")
+@RequestMapping("/autos")
 public class AutoControllerImp implements AutoController {
 
     private AutoDAO autoDAO;
@@ -54,14 +54,14 @@ public class AutoControllerImp implements AutoController {
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody Page<Auto, String> getAutos(@ModelAttribute final FiltroAuto filtro, 
             @Valid @ModelAttribute PaginationDataString pagination, HttpServletResponse response) {
-        String filtroOriginal = filtro.getFiltroNumeroSerie();
-        filtro.setFiltroNumeroSerie(this.stringStandarizer.standarize(filtroOriginal));
-        List<Auto> datos = autoDAO.getAutos(filtro, pagination);
+        filtro.setFiltroNumeroSerie(this.stringStandarizer.standarize(filtro.getFiltroNumeroSerie()));
+        pagination.setSinceId(this.stringStandarizer.standarize(pagination.getSinceId()));
+        List<Auto> datos = autoDAO.consultarTodos(filtro, pagination);
         Page<Auto, String> r = pagFactory.getPage();
         r.setTipoItems("auto");
-        r.setLinkPaginaActual(armaUrl(filtroOriginal, pagination.getSinceId(), pagination.getMaxResults()));
+        r.setLinkPaginaActual(armaUrl(filtro.getFiltroNumeroSerie(), pagination.getSinceId(), pagination.getMaxResults()));
         if (pagination.hasNext()) {
-            r.setLinkSiguientePagina(armaUrl(filtroOriginal, pagination.getNextId(), pagination.getMaxResults()));
+            r.setLinkSiguientePagina(armaUrl(filtro.getFiltroNumeroSerie(), pagination.getNextId(), pagination.getMaxResults()));
             r.setSiguienteItem(pagination.getNextId());
         }
         r.setItems(datos);
@@ -76,9 +76,14 @@ public class AutoControllerImp implements AutoController {
     @RequestMapping(method = RequestMethod.POST)
     public void crearAuto(@Valid @RequestBody Auto auto, HttpServletResponse response) {
         preprocesaAuto(auto);
-        this.autoDAO.nuevoAuto(auto);
+        Auto respuesta = this.autoDAO.consultar(auto.getNumeroSerie());
+        if (respuesta != null) { //el auto ya existe
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return;
+        }
+        this.autoDAO.guardar(auto);
         response.setStatus(HttpStatus.CREATED.value());
-        response.setHeader("Location", "/auto/" + auto.getNumeroSerie());
+        response.setHeader("Location", "/autos/" + auto.getNumeroSerie());
     }
 
     /* (non-Javadoc)
@@ -87,7 +92,7 @@ public class AutoControllerImp implements AutoController {
     @Override
     @RequestMapping(value="/{numeroSerie}", method = RequestMethod.GET)
     public @ResponseBody Auto getAuto(@PathVariable String numeroSerie, HttpServletResponse response) {
-        Auto respuesta = this.autoDAO.getAuto(numeroSerie);
+        Auto respuesta = this.autoDAO.consultar(numeroSerie);
         if (respuesta == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
@@ -107,7 +112,7 @@ public class AutoControllerImp implements AutoController {
         //no me importa lo que manden lo que vale es lo que viene en el path
         datos.setNumeroSerie(numeroSerie);
         preprocesaAuto(datos);
-        if (!this.autoDAO.actualizaAuto(datos)) {
+        if (!this.autoDAO.actualizar(datos)) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
     }
@@ -125,7 +130,7 @@ public class AutoControllerImp implements AutoController {
     }
     
     private String armaUrl(final String filtroNumeroSerie, final String sinceId, final int maxResults) {
-        String r = "/auto";
+        String r = "/autos";
         r = addUrlParameter(r, "filtroNumeroSerie", filtroNumeroSerie);
         r = addUrlParameter(r, "sinceId", sinceId);
         if (maxResults > 0) {

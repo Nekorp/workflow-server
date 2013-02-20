@@ -13,19 +13,27 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access;
+package org.nekorp.workflow.backend.data.access.template;
 
 import java.util.List;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
+import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 
 /**
- * 
+ * Template para los daos.
+ * @param <T> el tipo de entidad que maneja el dao.
+ * @param <K> el tipo de la llave de la entidad que maneja el dao.
+ * @param <P> el tipo de la llave del padre.
+ * @param <F> el tipo del filtro.
  */
-public interface CostoDAO {
+public interface ChildEntityDAO<T,K,P,F> {
 
-    List<RegistroCosto> consultar(Long idServicio);
-
-    List<RegistroCosto> guardar(Long idServicio, List<RegistroCosto> registros);
+    List<T> consultarTodos(P idParent, F filtro, PaginationData<K> pagination);
     
+    void guardar(P idParent, T nuevo);
     
+    T consultar(P idParent, K id);
+    
+    boolean actualizar(P idParent, T dato);
+    
+    boolean borrar(P idParent, T dato);
 }
