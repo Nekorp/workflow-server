@@ -76,11 +76,11 @@ public class AutoControllerImp implements AutoController {
     @RequestMapping(method = RequestMethod.POST)
     public void crearAuto(@Valid @RequestBody Auto auto, HttpServletResponse response) {
         preprocesaAuto(auto);
-        Auto respuesta = this.autoDAO.consultar(auto.getNumeroSerie());
-        if (respuesta != null) { //el auto ya existe
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            return;
-        }
+        //Auto respuesta = this.autoDAO.consultar(auto.getNumeroSerie());
+        //if (respuesta != null) { //el auto ya existe
+            //response.setStatus(HttpStatus.BAD_REQUEST.value());
+            //return;
+        //}
         this.autoDAO.guardar(auto);
         response.setStatus(HttpStatus.CREATED.value());
         response.setHeader("Location", "/autos/" + auto.getNumeroSerie());

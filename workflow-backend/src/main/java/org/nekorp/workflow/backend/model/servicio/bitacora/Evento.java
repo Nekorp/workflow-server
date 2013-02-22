@@ -43,7 +43,7 @@ public class Evento implements Comparable<Evento> {
     /**
      * el nombre del evento.
      */
-    private String nombre;
+    private String etiqueta;
     /**
      * la fecha en la que fue creado el evento.
      */
@@ -61,6 +61,10 @@ public class Evento implements Comparable<Evento> {
      * la fecha en la que sucedio el evento.
      */
     private Date fecha;
+    /**
+     * descripcion del evento.
+     */
+    private String descripcion;
     
     public Key<Servicio> getParent() {
         return parent;
@@ -86,12 +90,12 @@ public class Evento implements Comparable<Evento> {
         this.tipo = tipo;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getEtiqueta() {
+        return etiqueta;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setEtiqueta(String nombre) {
+        this.etiqueta = nombre;
     }
 
     public Date getFechaCreacion() {
@@ -124,6 +128,14 @@ public class Evento implements Comparable<Evento> {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     @Override

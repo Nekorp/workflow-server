@@ -23,11 +23,6 @@ public class Evidencia {
 
     private String thumbnail;
     private String image;
-    
-    public Evidencia() {
-        thumbnail = "";
-        image = "";
-    }
 
     public String getThumbnail() {
         return thumbnail;

@@ -23,7 +23,7 @@ import com.googlecode.objectify.annotation.Unindex;
 public class Servicio {
     @Id
     private Long id;
-    private String idCliente;
+    private Long idCliente;
     private String idAuto;
     private String descripcion; 
     public Long getId() {
@@ -34,11 +34,11 @@ public class Servicio {
         this.id = id;
     }
 
-    public String getIdCliente() {
+    public Long getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(String idCliente) {
+    public void setIdCliente(Long idCliente) {
         this.idCliente = idCliente;
     }
 
