@@ -24,6 +24,10 @@
 		<property name="objectMapper" ref="jacksonObjectMapper"/>
 	</bean>
 	
+	<bean id="SecurityController" class="org.nekorp.workflow.backend.security.controller.SecurityController">
+		<property name="userSecurityDAO" ref="userSecurityDAO"/>
+	</bean>
+	
 	<bean id="ClienteController" class="org.nekorp.workflow.backend.controller.imp.ClienteControllerImp">
 		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="clienteDao" ref="clienteDAO"/>
