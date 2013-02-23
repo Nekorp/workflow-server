@@ -45,6 +45,9 @@
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
+                <configuration>
+                	<noCookies>true</noCookies>
+                </configuration>
             </plugin>
         </plugins>
     </build>
