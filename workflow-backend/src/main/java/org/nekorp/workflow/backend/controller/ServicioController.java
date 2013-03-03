@@ -17,7 +17,6 @@
 package org.nekorp.workflow.backend.controller;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;

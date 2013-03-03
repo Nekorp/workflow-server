@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/batch/actualizarServicioMetadata</url>
+    <description>Recalcula los metadatos de los servicios</description>
+	<schedule>every day 00:00</schedule> 
+    <timezone>America/Mexico_City</timezone>
+  </cron>
+</cronentries>

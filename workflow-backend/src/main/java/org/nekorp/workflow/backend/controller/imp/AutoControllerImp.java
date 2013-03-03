@@ -107,11 +107,14 @@ public class AutoControllerImp implements AutoController {
     @RequestMapping(value="/{numeroSerie}", method = RequestMethod.POST)
     public void actualizarAuto(@PathVariable final String numeroSerie, @Valid @RequestBody final Auto datos,
         final HttpServletResponse response) {
-        //no me importa lo que manden lo que vale es lo que viene en el path
-        datos.setNumeroSerie(numeroSerie);
-        preprocesaAuto(datos);
-        if (!this.autoDAO.actualizar(datos)) {
+        if (autoDAO.consultar(this.stringStandarizer.standarize(numeroSerie)) == null) {
+            //no existe el auto que quiere actualizar
             response.setStatus(HttpStatus.NOT_FOUND.value());
+        } else {
+            //no me importa lo que manden lo que vale es lo que viene en el path
+            datos.setNumeroSerie(numeroSerie);
+            preprocesaAuto(datos);
+            autoDAO.guardar(datos);
         }
     }
     

@@ -92,23 +92,6 @@ public class ClienteDAOImp extends ObjectifyDAOTemplate implements ClienteDAO {
     }
 
     /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.ClienteDAO#actualizaCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
-     */
-    @Override
-    public boolean actualizar(final Cliente cliente) {
-        if (consultar(cliente.getId()) == null) {
-            return false;
-        }
-        try {
-            Objectify ofy = getObjectifyFactory().begin();
-            ofy.save().entity(cliente).now();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-    
-    /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
      */
     @Override

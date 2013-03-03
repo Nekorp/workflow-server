@@ -15,6 +15,8 @@
  */
 package org.nekorp.workflow.backend.model.auto;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,7 +30,8 @@ import com.googlecode.objectify.annotation.Unindex;
  * para el tema de datos del auto en un servicio en especifico se usara el termino datos auto.
  */
 @Entity @Unindex
-public class Auto {
+public class Auto implements Serializable {
+    private static final long serialVersionUID = 1L;
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.
     @Id
     private String vin;

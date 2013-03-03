@@ -11,7 +11,7 @@
 		<param-value>org.nekorp.workflow.backend.optimization.CustomXmlWebApplicationContext</param-value>
 	</context-param>
 	
-	<!-- Servlet para spring MVC -->
+	<!-- Servlet para la api con spring MVC -->
     <servlet>  
    		<servlet-name>v1</servlet-name>  
    		<servlet-class>
@@ -23,6 +23,20 @@
 	<servlet-mapping>  
    		<servlet-name>v1</servlet-name>  
    		<url-pattern>/api/v1/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Servlet para los procesos batch con spring MVC -->
+    <servlet>  
+   		<servlet-name>batch</servlet-name>  
+   		<servlet-class>
+   			org.springframework.web.servlet.DispatcherServlet  
+   		</servlet-class>  
+		<load-on-startup>1</load-on-startup>  
+	</servlet>  
+    
+	<servlet-mapping>  
+   		<servlet-name>batch</servlet-name>  
+   		<url-pattern>/batch/*</url-pattern>
 	</servlet-mapping> 
 	
 	<!-- Listener para cargar el contexto de Spring -->
@@ -39,6 +53,17 @@
 	  	<user-data-constraint>
 		    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
 	  	</user-data-constraint>
+	</security-constraint>
+	
+	<!-- Configuracion de appengine para garantizar que solo la aplicacion o el administrador tiene acceso al batch -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Batch resources</web-resource-name>
+			<url-pattern>/batch/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
 	</security-constraint>
 	
 	<!-- Filtro para el framework de seguridad de spring -->

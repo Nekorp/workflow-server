@@ -1,5 +1,5 @@
 /**
- *   Copyright 2012-2013 Nekorp
+ *   Copyright 2013 Nekorp
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,32 +13,33 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.model.cliente;
+package org.nekorp.workflow.backend.model.servicio.metadata;
 
-import java.io.Serializable;
+import java.util.Date;
 
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Unindex;
 
+/**
+ * 
+ */
 @Unindex
-public class Telefono implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private String label;
-    private String valor;
+public class ServicioMetadata {
 
-    public String getLabel() {
-        return label;
+    private Date fechaInicio;
+    @Index
+    private String status;
+    public Date getFechaInicio() {
+        return fechaInicio;
     }
-
-    public void setLabel(String label) {
-        this.label = label;
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
-
-    public String getValor() {
-        return valor;
+    public String getStatus() {
+        return status;
     }
-
-    public void setValor(String valor) {
-        this.valor = valor;
+    public void setStatus(String status) {
+        this.status = status;
     }
-
+    
 }

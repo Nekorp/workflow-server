@@ -15,11 +15,13 @@
  */
 package org.nekorp.workflow.backend.model.auto;
 
+import java.io.Serializable;
 import java.util.List;
 import com.googlecode.objectify.annotation.Unindex;
 
 @Unindex
-public class Equipamiento {
+public class Equipamiento implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String transmision;
     private String elevadores;
     private String bolsasDeAire;

@@ -13,25 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.template;
+package org.nekorp.workflow.backend.memcache.pojo;
 
+import java.io.Serializable;
 import java.util.List;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
+
+import org.nekorp.workflow.backend.model.cliente.Cliente;
 
 /**
- * Template para los daos.
- * @param <T> el tipo de entidad que maneja el dao.
- * @param <K> el tipo de la llave de la entidad que maneja el dao.
- * @param <P> el tipo de la llave del padre.
- * @param <F> el tipo del filtro.
+ * 
  */
-public interface ChildEntityDAO<T,K,P,F> {
+public class ClienteFiltroCacheData implements Serializable {
 
-    List<T> consultarTodos(P idParent, F filtro, PaginationData<K> pagination);
+    private static final long serialVersionUID = 1L;
+    private List<Cliente> data;
+    public List<Cliente> getData() {
+        return data;
+    }
+    public void setData(List<Cliente> data) {
+        this.data = data;
+    }
     
-    void guardar(P idParent, T nuevo);
-    
-    T consultar(P idParent, K id);
-
-    boolean borrar(P idParent, T dato);
 }

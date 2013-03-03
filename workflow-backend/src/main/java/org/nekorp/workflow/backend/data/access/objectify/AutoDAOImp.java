@@ -86,24 +86,7 @@ public class AutoDAOImp extends ObjectifyDAOTemplate implements AutoDAO {
         Key<Auto> key = Key.create(Auto.class, numerSerie);
         Auto respuesta = ofy.load().key(key).get();
         return respuesta;
-    }
-
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.AutoDAO#actualizaAuto(org.nekorp.workflow.backend.model.auto.Auto)
-     */
-    @Override
-    public boolean actualizar(Auto auto) {
-        if (consultar(auto.getVin()) == null) {
-            return false;
-        }
-        try {
-            Objectify ofy = getObjectifyFactory().begin();
-            ofy.save().entity(auto).now();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
+    }    
     
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)

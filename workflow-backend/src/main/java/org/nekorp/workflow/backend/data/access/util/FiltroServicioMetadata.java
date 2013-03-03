@@ -13,15 +13,29 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access;
+package org.nekorp.workflow.backend.data.access.util;
 
-import org.nekorp.workflow.backend.data.access.template.EntityDAO;
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
 
 /**
  * 
  */
-public interface ServicioDAO extends EntityDAO<Servicio, Long, FiltroBusqueda> {
-    void actualizarMetadata(Servicio servicio);
+public class FiltroServicioMetadata implements FiltroBusqueda {
+
+    private String statusServicio;
+    private String numeroSerieAuto;
+    public String getStatusServicio() {
+        return statusServicio;
+    }
+    public void setStatusServicio(String statusServicio) {
+        this.statusServicio = statusServicio;
+    }
+    public String getNumeroSerieAuto() {
+        return numeroSerieAuto;
+    }
+    public void setNumeroSerieAuto(String numeroSerieAuto) {
+        this.numeroSerieAuto = numeroSerieAuto;
+    }
+    
+    
 }

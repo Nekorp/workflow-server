@@ -116,8 +116,10 @@ public class EventoControllerImp implements EventoController {
             return;
         }
         dato.setId(idEvento);
-        if (!this.eventoDAO.actualizar(idServicio, dato)) {
+        if (eventoDAO.consultar(idServicio, idEvento) == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
+        } else {
+            eventoDAO.guardar(idServicio, dato);
         }
     }
 

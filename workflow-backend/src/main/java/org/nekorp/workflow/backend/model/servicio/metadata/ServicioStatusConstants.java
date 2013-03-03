@@ -13,23 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.template;
+package org.nekorp.workflow.backend.model.servicio.metadata;
 
-import java.util.List;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 /**
  * 
- * 
- * @param <T> el tipo de entidad que maneja el dao.
- * @param <K> el tipo de la llave de la entidad que maneja el dao.
  */
-public interface EntityDAO<T,K,F extends FiltroBusqueda> {
+public class ServicioStatusConstants {
 
-    List<T> consultarTodos(F filtro, PaginationData<K> pagination);
-    
-    void guardar(T nuevo);
-    
-    T consultar(K id);
-
-    boolean borrar(T dato);
+    public static final String activo = "Activo";
+    public static final String terminado = "Terminado";
+    public static final String vencido = "Vencido";
+    public static final String cancelado = "Cancelado";
 }

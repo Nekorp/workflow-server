@@ -13,15 +13,27 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access;
+package org.nekorp.workflow.backend.service;
 
-import org.nekorp.workflow.backend.data.access.template.EntityDAO;
-import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
+import java.util.List;
+
 import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 
 /**
- * 
+ * En algunas ocaciones se tiene que recalcular el metadata del servicio.
  */
-public interface ServicioDAO extends EntityDAO<Servicio, Long, FiltroBusqueda> {
-    void actualizarMetadata(Servicio servicio);
+public interface ServicioMetadataAutoRefresh {
+    
+    void actualizarUsandoId(Long idServicio);
+    
+    void actualizarUsandoIdEventos(Long idServicio, List<Evento> eventos);
+    
+    /**
+     * cambia el contenido del metadata, con un valor calculado en ese momento.
+     * @param servicio
+     */
+    void actualizarServicioMetadataInterceptor(Servicio servicio);
+    
+    void actualizarUsandoServicioEventos(Servicio servicio, List<Evento> eventos);
 }

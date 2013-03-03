@@ -83,21 +83,6 @@ public class EventoDAOImp extends ObjectifyDAOTemplate implements EventoDAO {
     }
 
     /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#actualizar(java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public boolean actualizar(Long idParent, Evento dato) {
-        if (consultar(idParent, dato.getId()) == null) {
-            return false;
-        }
-        Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
-        dato.setParent(parentKey);
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.save().entity(dato);
-        return true;
-    }
-
-    /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#borrar(java.lang.Object, java.lang.Object)
      */
     @Override

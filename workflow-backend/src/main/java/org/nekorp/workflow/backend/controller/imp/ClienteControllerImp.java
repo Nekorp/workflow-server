@@ -101,10 +101,12 @@ public class ClienteControllerImp implements ClienteController {
     @Override
     @RequestMapping(value="/{id}", method = RequestMethod.POST)
     public void actualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente datos, HttpServletResponse response) {
-        preprocesaCliente(datos);
-        datos.setId(id);
-        if (!this.clienteDao.actualizar(datos)) {
+        if (clienteDao.consultar(id) == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
+        } else {
+            preprocesaCliente(datos);
+            datos.setId(id);
+            clienteDao.guardar(datos);
         }
     }
     

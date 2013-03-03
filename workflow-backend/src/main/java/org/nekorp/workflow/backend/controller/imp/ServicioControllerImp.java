@@ -47,10 +47,7 @@ public class ServicioControllerImp implements ServicioController {
     private BitacoraDAO bitacoraDAO;
     private CostoDAO costoDAO;
     private PaginationModelFactory pagFactory;
-    
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#getServicios(org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong, javax.servlet.http.HttpServletResponse)
-     */
+
     @Override
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody Page<Servicio, Long> getServicios(@Valid @ModelAttribute final PaginationDataLong pagination, final HttpServletResponse response) {
@@ -67,21 +64,17 @@ public class ServicioControllerImp implements ServicioController {
         return r;
     }
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#crearServicio(org.nekorp.workflow.backend.model.servicio.Servicio, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     @RequestMapping(method = RequestMethod.POST)
     public void crearServicio(@Valid @RequestBody final Servicio servicio, final HttpServletResponse response) {
         servicio.setId(null);
         this.servicioDAO.guardar(servicio);
+        //TODO el evento que marca la hora en la que se creo el servicio podria generarse aqui y no en el cliente.
+        //bitacoraDAO.guardar(servicio.getId(), new LinkedList<Evento>());
         response.setStatus(HttpStatus.CREATED.value());
         response.setHeader("Location", "/servicios/" + servicio.getId());
     }
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#getServicio(java.lang.Long, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public @ResponseBody Servicio getServicio(@PathVariable final Long id, final HttpServletResponse response) {
@@ -93,21 +86,17 @@ public class ServicioControllerImp implements ServicioController {
         return respuesta;
     }
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#actualizarServicio(java.lang.Long, org.nekorp.workflow.backend.model.servicio.Servicio, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     @RequestMapping(value="/{id}", method = RequestMethod.POST)
     public void actualizarServicio(@PathVariable final Long id, @Valid @RequestBody final Servicio datos, final HttpServletResponse response) {
         datos.setId(id);
-        if (!this.servicioDAO.actualizar(datos)) {
+        if (servicioDAO.consultar(id) == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
+        } else {
+            servicioDAO.guardar(datos);
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#borrarServicio(java.lang.Long, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public void borrarServicio(@PathVariable final Long id, final HttpServletResponse response) {
@@ -126,9 +115,6 @@ public class ServicioControllerImp implements ServicioController {
         response.setStatus(HttpStatus.ACCEPTED.value());
     }
     
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#getEventos(java.lang.Long, org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     @RequestMapping(value="/{idServicio}/bitacora", method = RequestMethod.GET)
     public @ResponseBody List<Evento> getBitacora(@PathVariable final Long idServicio, final HttpServletResponse response) {
@@ -142,9 +128,6 @@ public class ServicioControllerImp implements ServicioController {
         return r;
     }
     
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#saveEventos(java.lang.Long, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     @RequestMapping(value="/{idServicio}/bitacora", method = RequestMethod.POST)
     public @ResponseBody List<Evento> saveBitacora(@PathVariable final Long idServicio,
@@ -159,9 +142,6 @@ public class ServicioControllerImp implements ServicioController {
         return datos;
     }
     
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#getCostos(java.lang.Long, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     @RequestMapping(value="/{idServicio}/costo", method = RequestMethod.GET)
     public @ResponseBody List<RegistroCosto> getCosto(@PathVariable final Long idServicio, final HttpServletResponse response) {
@@ -175,9 +155,6 @@ public class ServicioControllerImp implements ServicioController {
         return r;
     }
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.controller.ServicioController#saveCostos(java.lang.Long, java.util.List, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     @RequestMapping(value="/{idServicio}/costo", method = RequestMethod.POST)
     public @ResponseBody List<RegistroCosto> saveCosto(@PathVariable final Long idServicio, 
@@ -191,7 +168,7 @@ public class ServicioControllerImp implements ServicioController {
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return datos;
     }
-
+    
     private String armaUrl(final String base, final Long sinceId, final int maxResults) {
         String r = base;
         if (sinceId != null && sinceId > 0) {

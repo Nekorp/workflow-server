@@ -16,9 +16,12 @@
 package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
+import org.nekorp.workflow.backend.data.access.util.FiltroServicioMetadata;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import com.googlecode.objectify.Key;
@@ -30,11 +33,8 @@ import com.googlecode.objectify.cmd.Query;
  */
 public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO {
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.ServicioDAO#getServicios(org.nekorp.workflow.backend.data.pagination.model.PaginationData)
-     */
     @Override
-    public List<Servicio> consultarTodos(FiltroBusqueda filtro, PaginationData<Long> pagination) {
+    public List<Servicio> consultarTodos(FiltroBusqueda filtroRaw, PaginationData<Long> pagination) {
         List<Servicio> result;
         Objectify ofy = getObjectifyFactory().begin();
         Query<Servicio> query =  ofy.load().type(Servicio.class);
@@ -46,6 +46,15 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
             //se trae uno de mas para indicar cual es la siguiente pagina
             query = query.limit(pagination.getMaxResults() + 1);
         }
+        if (filtroRaw instanceof FiltroServicioMetadata) {
+            FiltroServicioMetadata filtro = (FiltroServicioMetadata) filtroRaw;
+            if (!StringUtils.isEmpty(filtro.getStatusServicio())) {
+                query = query.filter("metadata.status =", filtro.getStatusServicio());
+            }
+            if (!StringUtils.isEmpty(filtro.getNumeroSerieAuto())) {
+                query = query.filter("idAuto =", filtro.getNumeroSerieAuto());
+            }
+        }
         result = query.list();
         if (pagination.getMaxResults() != 0 && result.size() > pagination.getMaxResults()) {
             Servicio ultimo = result.get(pagination.getMaxResults());
@@ -55,9 +64,6 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.ServicioDAO#nuevoServicio(org.nekorp.workflow.backend.model.servicio.Servicio)
-     */
     @Override
     public void guardar(Servicio nuevo) {
         try {
@@ -68,9 +74,6 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.ServicioDAO#getServicio(java.lang.Long)
-     */
     @Override
     public Servicio consultar(Long id) {
         Objectify ofy = getObjectifyFactory().begin();
@@ -79,30 +82,16 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
         return respuesta;
     }
 
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.ServicioDAO#actualizaServicio(org.nekorp.workflow.backend.model.servicio.Servicio)
-     */
-    @Override
-    public boolean actualizar(Servicio servicio) {
-        if (consultar(servicio.getId()) == null) {
-            return false;
-        }
-        try {
-            Objectify ofy = getObjectifyFactory().begin();
-            ofy.save().entity(servicio).now();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
-     */
     @Override
     public boolean borrar(Servicio dato) {
         Objectify ofy = getObjectifyFactory().begin();
         ofy.delete().entity(dato);
         return true;
+    }
+
+    /**{@inheritDoc}*/
+    @Override
+    public void actualizarMetadata(Servicio servicio) {
+        this.guardar(servicio);
     }
 }

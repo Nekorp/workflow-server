@@ -13,25 +13,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.data.access.template;
-
-import java.util.List;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
+package org.nekorp.workflow.backend.model.servicio.bitacora;
 
 /**
- * Template para los daos.
- * @param <T> el tipo de entidad que maneja el dao.
- * @param <K> el tipo de la llave de la entidad que maneja el dao.
- * @param <P> el tipo de la llave del padre.
- * @param <F> el tipo del filtro.
+ * 
  */
-public interface ChildEntityDAO<T,K,P,F> {
+public class EventoConstants {
 
-    List<T> consultarTodos(P idParent, F filtro, PaginationData<K> pagination);
+    public static final String inicioServicio = "Inicio del Servicio";
     
-    void guardar(P idParent, T nuevo);
+    public static final String terminoServicio = "Termino de servicio";
     
-    T consultar(P idParent, K id);
-
-    boolean borrar(P idParent, T dato);
+    public static final String entradaAuto = "Entrada de Auto";
+    
+    public static final String cancelacion = "Cancelar Servicio";
 }

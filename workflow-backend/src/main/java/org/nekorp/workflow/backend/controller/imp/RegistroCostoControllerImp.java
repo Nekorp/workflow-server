@@ -117,8 +117,10 @@ public class RegistroCostoControllerImp implements RegistroCostoController {
             return;
         }
         datos.setId(idRegistro);
-        if (!this.registroCostoDAO.actualizar(idServicio, datos)) {
+        if (registroCostoDAO.consultar(idServicio, idRegistro) == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
+        } else {
+            this.registroCostoDAO.guardar(idServicio, datos);
         }
     }
 

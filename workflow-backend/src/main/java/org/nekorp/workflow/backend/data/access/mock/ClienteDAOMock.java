@@ -82,28 +82,7 @@ public class ClienteDAOMock implements ClienteDAO {
             }
         }
         return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.nekorp.workflow.backend.data.access.ClienteDAO#actualizaCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
-     */
-    @Override
-    public boolean actualizar(Cliente cliente) {
-        int index = -1;
-        for (int i = 0; i < clientes.size(); i++) {
-            Cliente x = clientes.get(i);
-            if(cliente.getId() == x.getId()) {
-                index = i;
-                break;
-            }
-        }
-        if (index != -1) {
-            clientes.remove(index);
-            clientes.add(index, cliente);
-            return true;
-        }
-        return false;
-    }
+    }    
 
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)

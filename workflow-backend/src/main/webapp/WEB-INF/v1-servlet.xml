@@ -54,4 +54,11 @@
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="registroCostoDAO" ref="registroCostoDAO"/>
 	</bean>
+	<bean id="ServicioIndexController" class="org.nekorp.workflow.backend.controller.imp.ServicioIndexControllerImp">
+		<property name="pagFactory" ref="PaginationModelFactory"/>
+		<property name="servicioDAO" ref="servicioDAO"/>
+		<property name="autoDAO" ref="autoDAO"/>
+		<property name="clienteDao" ref="clienteDAO"/>
+		<property name="stringStandarizer" ref="stringStandarizer"/>
+	</bean>
 </beans>
