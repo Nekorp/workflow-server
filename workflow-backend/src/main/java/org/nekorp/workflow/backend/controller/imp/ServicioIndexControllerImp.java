@@ -26,7 +26,7 @@ import org.nekorp.workflow.backend.controller.ServicioIndexController;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
-import org.nekorp.workflow.backend.data.access.util.FiltroServicioMetadata;
+import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
 import org.nekorp.workflow.backend.data.access.util.StringStandarizer;
 import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
@@ -58,7 +58,7 @@ public class ServicioIndexControllerImp implements ServicioIndexController {
     /**{@inheritDoc}*/
     @Override
     @RequestMapping(value = "/servicio", method = RequestMethod.GET)
-    public @ResponseBody Page<ServicioIndex, Long> getServicioMetadata(@ModelAttribute final FiltroServicioMetadata filtro, 
+    public @ResponseBody Page<ServicioIndex, Long> getServicioIndex(@ModelAttribute final FiltroServicioIndex filtro, 
             @Valid @ModelAttribute final PaginationDataLong pagination, final HttpServletResponse response) {
         filtro.setNumeroSerieAuto(stringStandarizer.standarize(filtro.getNumeroSerieAuto()));
         Page<ServicioIndex, Long> r = pagFactory.getPage();
@@ -68,9 +68,9 @@ public class ServicioIndexControllerImp implements ServicioIndexController {
             datosRespuesta.add(crearServicioIndex(x));
         }
         r.setItems(datosRespuesta);
-        r.setLinkPaginaActual(armaUrl("/index/servicio", pagination.getSinceId(), pagination.getMaxResults()));
+        r.setLinkPaginaActual(armaUrl("/index/servicio", filtro, pagination.getSinceId(), pagination.getMaxResults()));
         if (pagination.hasNext()) {
-            r.setLinkSiguientePagina(armaUrl("/index/servicio", pagination.getNextId(), pagination.getMaxResults()));
+            r.setLinkSiguientePagina(armaUrl("/index/servicio", filtro, pagination.getNextId(), pagination.getMaxResults()));
             r.setSiguienteItem(pagination.getNextId());
         }
         response.setHeader("Content-Type","application/json;charset=UTF-8");
@@ -108,8 +108,10 @@ public class ServicioIndexControllerImp implements ServicioIndexController {
         return nuevo;
     }
     
-    private String armaUrl(final String base, final Long sinceId, final int maxResults) {
+    private String armaUrl(final String base, final FiltroServicioIndex filtro, final Long sinceId, final int maxResults) {
         String r = base;
+        r = addUrlParameter(r,"numeroSerieAuto", filtro.getNumeroSerieAuto());
+        r = addUrlParameter(r,"statusServicio", filtro.getStatusServicio());
         if (sinceId != null && sinceId > 0) {
             r = addUrlParameter(r,"sinceId", sinceId + "");
         }

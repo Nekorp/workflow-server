@@ -20,7 +20,7 @@ import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 /**
  * 
  */
-public class FiltroServicioMetadata implements FiltroBusqueda {
+public class FiltroServicioIndex implements FiltroBusqueda {
 
     private String statusServicio;
     private String numeroSerieAuto;

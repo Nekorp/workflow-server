@@ -17,7 +17,7 @@ package org.nekorp.workflow.backend.controller;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.nekorp.workflow.backend.data.access.util.FiltroServicioMetadata;
+import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.index.servicio.ServicioIndex;
@@ -27,5 +27,5 @@ import org.nekorp.workflow.backend.model.index.servicio.ServicioIndex;
  */
 public interface ServicioIndexController {
 
-    Page<ServicioIndex, Long> getServicioMetadata(FiltroServicioMetadata filtro, PaginationDataLong pagination, HttpServletResponse response);
+    Page<ServicioIndex, Long> getServicioIndex(FiltroServicioIndex filtro, PaginationDataLong pagination, HttpServletResponse response);
 }

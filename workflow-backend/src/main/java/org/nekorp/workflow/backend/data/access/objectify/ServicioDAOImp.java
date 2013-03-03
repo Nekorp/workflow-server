@@ -21,7 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
-import org.nekorp.workflow.backend.data.access.util.FiltroServicioMetadata;
+import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import com.googlecode.objectify.Key;
@@ -46,8 +46,8 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
             //se trae uno de mas para indicar cual es la siguiente pagina
             query = query.limit(pagination.getMaxResults() + 1);
         }
-        if (filtroRaw instanceof FiltroServicioMetadata) {
-            FiltroServicioMetadata filtro = (FiltroServicioMetadata) filtroRaw;
+        if (filtroRaw instanceof FiltroServicioIndex) {
+            FiltroServicioIndex filtro = (FiltroServicioIndex) filtroRaw;
             if (!StringUtils.isEmpty(filtro.getStatusServicio())) {
                 query = query.filter("metadata.status =", filtro.getStatusServicio());
             }
