@@ -12,6 +12,6 @@
 	<bean id="stringStandarizer" class="org.nekorp.workflow.backend.data.access.util.StringStandarizer"/>
 	<bean id="servicioMetadataFactory" class="org.nekorp.workflow.backend.service.imp.ServicioMetadataFactoryImp">
 		<property name="bitacoraDAO" ref="bitacoraDAO"/>
-		<property name="diasCaducidad" value="15"/>
+		<property name="diasCaducidad" value="30"/>
 	</bean>
 </beans>

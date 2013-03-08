@@ -26,5 +26,5 @@ public class EventoConstants {
     
     public static final String entradaAuto = "Entrada de Auto";
     
-    public static final String cancelacion = "Cancelar Servicio";
+    public static final String cancelacion = "Cancelación";
 }
