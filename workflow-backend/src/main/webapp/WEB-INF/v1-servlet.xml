@@ -43,6 +43,7 @@
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="bitacoraDAO" ref="bitacoraDAO"/>
 		<property name="costoDAO" ref="costoDAO"/>
+		<property name="damageDetailDAO" ref="damageDetailDAO"/>
 	</bean>
 	<bean id="EventoController" class="org.nekorp.workflow.backend.controller.imp.EventoControllerImp">
 		<property name="pagFactory" ref="PaginationModelFactory"/>

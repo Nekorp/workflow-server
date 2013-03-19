@@ -23,11 +23,13 @@ import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.controller.ServicioController;
 import org.nekorp.workflow.backend.data.access.CostoDAO;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
+import org.nekorp.workflow.backend.data.access.DamageDetailDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetail;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 import org.springframework.http.HttpStatus;
@@ -46,6 +48,7 @@ public class ServicioControllerImp implements ServicioController {
     private ServicioDAO servicioDAO;
     private BitacoraDAO bitacoraDAO;
     private CostoDAO costoDAO;
+    private DamageDetailDAO damageDetailDAO;
     private PaginationModelFactory pagFactory;
 
     @Override
@@ -169,6 +172,35 @@ public class ServicioControllerImp implements ServicioController {
         return datos;
     }
     
+    /**{@inheritDoc}*/
+    @Override
+    @RequestMapping(value="/{idServicio}/damage", method = RequestMethod.GET)
+    public @ResponseBody List<DamageDetail> getInventarioDamage(@PathVariable final Long idServicio, final HttpServletResponse response) {
+        Servicio servicio = this.servicioDAO.consultar(idServicio);
+        if (servicio == null) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
+        List<DamageDetail> r = damageDetailDAO.consultar(idServicio);
+        response.setHeader("Content-Type","application/json;charset=UTF-8");
+        return r;
+    }
+
+    /**{@inheritDoc}*/
+    @Override
+    @RequestMapping(value="/{idServicio}/damage", method = RequestMethod.POST)
+    public @ResponseBody List<DamageDetail> saveInventarioDamage(@PathVariable final Long idServicio,
+        @Valid @RequestBody final List<DamageDetail> registros, final HttpServletResponse response) {
+        Servicio servicio = this.servicioDAO.consultar(idServicio);
+        if (servicio == null) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
+        List<DamageDetail> datos = damageDetailDAO.guardar(idServicio, registros);
+        response.setHeader("Content-Type","application/json;charset=UTF-8");
+        return datos;
+    }
+    
     private String armaUrl(final String base, final Long sinceId, final int maxResults) {
         String r = base;
         if (sinceId != null && sinceId > 0) {
@@ -203,6 +235,10 @@ public class ServicioControllerImp implements ServicioController {
 
     public void setCostoDAO(CostoDAO costoDAO) {
         this.costoDAO = costoDAO;
+    }
+
+    public void setDamageDetailDAO(DamageDetailDAO damageDetailDAO) {
+        this.damageDetailDAO = damageDetailDAO;
     }
 
     public void setPagFactory(PaginationModelFactory pagFactory) {

@@ -46,6 +46,7 @@ public class Cliente implements Serializable {
     private String rfc;
     @Embed
     private DomicilioFiscal domicilio;
+    private String email;
     private String contacto;
     @Size(max=3)
     @Embed
@@ -82,6 +83,15 @@ public class Cliente implements Serializable {
     public void setDomicilio(DomicilioFiscal domicilio) {
         this.domicilio = domicilio;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getContacto() {
         return contacto;
     }

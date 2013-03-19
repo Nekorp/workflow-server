@@ -58,12 +58,6 @@ public class Auto implements Serializable {
     @Size(min=1, max=10)
     @NotNull
     private String placas;
-    @Size(min=1)
-    @NotNull
-    private String kilometraje;
-    @Size(min=1)
-    @NotNull
-    private String combustible;
     @Embed
     private Equipamiento equipamiento;
     
@@ -129,22 +123,6 @@ public class Auto implements Serializable {
 
     public void setPlacas(String placas) {
         this.placas = placas;
-    }
-
-    public String getKilometraje() {
-        return kilometraje;
-    }
-
-    public void setKilometraje(String kilometraje) {
-        this.kilometraje = kilometraje;
-    }
-
-    public String getCombustible() {
-        return combustible;
-    }
-
-    public void setCombustible(String combustible) {
-        this.combustible = combustible;
     }
 
     public Equipamiento getEquipamiento() {

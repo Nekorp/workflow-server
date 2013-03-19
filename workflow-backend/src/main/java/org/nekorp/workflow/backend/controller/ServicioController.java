@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetail;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 /**
@@ -84,5 +85,22 @@ public interface ServicioController {
      * @return La lista de registros, los registros nuevos se regresan con el ID generado.
      */
     List<RegistroCosto> saveCosto(Long idServicio, List<RegistroCosto> registros, HttpServletResponse response);
+    
+    /**
+     * Consulta los danios del auto.
+     * @param idServicio el id del servicio del cual se consulta el inventario de danios.
+     * @param response se requiere para colocar informacion adicional.
+     * @return La lista de registros que forman el inventario de danios.
+     */
+    List<DamageDetail> getInventarioDamage(Long idServicio, HttpServletResponse response);
+    /**
+     * Guarda el inventario de danios del auto, si hay registros nuevos se crean, los registros ya existentes
+     * se actualizan y los registros que ya no se recivan se borran.
+     * @param idServicio el id del servicio del cual se modeifica el inventario.
+     * @param registros los registros que forman el inventario.
+     * @param response se requiere para colocar informacion adicional.
+     * @return La lista de registros, los registros nuevos se regresan con el ID generado.
+     */
+    List<DamageDetail> saveInventarioDamage(Long idServicio, List<DamageDetail> registros, HttpServletResponse response);
     
 }

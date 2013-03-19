@@ -15,6 +15,7 @@
  */
 package org.nekorp.workflow.backend.model.servicio;
 
+import org.nekorp.workflow.backend.model.servicio.auto.DatosAuto;
 import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadata;
 
 import com.googlecode.objectify.annotation.Embed;
@@ -31,6 +32,8 @@ public class Servicio {
     @Index
     private String idAuto;
     private String descripcion;
+    @Embed
+    private DatosAuto datosAuto;
     @Embed
     private ServicioMetadata metadata;
     public Long getId() {
@@ -63,6 +66,14 @@ public class Servicio {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public DatosAuto getDatosAuto() {
+        return datosAuto;
+    }
+
+    public void setDatosAuto(DatosAuto datosAuto) {
+        this.datosAuto = datosAuto;
     }
 
     public ServicioMetadata getMetadata() {
