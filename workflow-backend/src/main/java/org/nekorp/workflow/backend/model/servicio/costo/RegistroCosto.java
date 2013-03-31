@@ -39,8 +39,10 @@ public class RegistroCosto {
     private Integer cantidad;
     @Embed
     private Moneda precioUnitario;
+    private boolean precioUnitarioConIVA;
     @Embed
-    private Moneda precioCliente;    
+    private Moneda precioCliente;
+    private boolean subtotalConIVA;
     
     public Key<Servicio> getParent() {
         return parent;
@@ -104,6 +106,22 @@ public class RegistroCosto {
 
     public void setPrecioCliente(Moneda precioCliente) {
         this.precioCliente = precioCliente;
+    }    
+
+    public boolean isPrecioUnitarioConIVA() {
+        return precioUnitarioConIVA;
+    }
+
+    public void setPrecioUnitarioConIVA(boolean precioUnitarioConIVA) {
+        this.precioUnitarioConIVA = precioUnitarioConIVA;
+    }
+
+    public boolean isSubtotalConIVA() {
+        return subtotalConIVA;
+    }
+
+    public void setSubtotalConIVA(boolean subtotalConIVA) {
+        this.subtotalConIVA = subtotalConIVA;
     }
 
     @Override
