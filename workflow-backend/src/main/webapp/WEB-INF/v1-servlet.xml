@@ -62,4 +62,6 @@
 		<property name="clienteDao" ref="clienteDAO"/>
 		<property name="stringStandarizer" ref="stringStandarizer"/>
 	</bean>
+	<bean id="UploadController" class="org.nekorp.workflow.backend.controller.imp.UploadControllerImp">
+	</bean>
 </beans>
