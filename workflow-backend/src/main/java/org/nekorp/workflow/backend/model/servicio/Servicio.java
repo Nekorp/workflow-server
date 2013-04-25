@@ -32,6 +32,7 @@ public class Servicio {
     @Index
     private String idAuto;
     private String descripcion;
+    private String observaciones;
     @Embed
     private DatosAuto datosAuto;
     @Embed
@@ -66,6 +67,14 @@ public class Servicio {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public DatosAuto getDatosAuto() {
