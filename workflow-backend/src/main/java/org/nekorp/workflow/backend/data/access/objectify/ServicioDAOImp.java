@@ -23,9 +23,11 @@ import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTe
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
+import org.nekorp.workflow.backend.model.secuencia.DatosFoliadorServicio;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
 
 /**
@@ -33,6 +35,8 @@ import com.googlecode.objectify.cmd.Query;
  */
 public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO {
 
+    private String idFoliador;
+    
     @Override
     public List<Servicio> consultarTodos(FiltroBusqueda filtroRaw, PaginationData<Long> pagination) {
         List<Servicio> result;
@@ -67,11 +71,32 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
     @Override
     public void guardar(Servicio nuevo) {
         try {
+            if (nuevo.getId() == null) {
+                nuevo.setId(obtenerNuevoFolio());
+            }
             Objectify ofy = getObjectifyFactory().begin();
             ofy.save().entity(nuevo).now();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+    }
+    
+    private Long obtenerNuevoFolio() {
+        final Objectify ofy = getObjectifyFactory().begin();
+        Long folio = ofy.transact(new Work<Long>() {
+            @Override
+            public Long run() {
+                Key<DatosFoliadorServicio> key = Key.create(DatosFoliadorServicio.class, idFoliador);
+                DatosFoliadorServicio datFolio = ofy.load().key(key).get();
+                if (datFolio == null) {
+                    datFolio = new DatosFoliadorServicio(idFoliador, Long.valueOf(1));
+                }
+                Long r = datFolio.usarSiguienteFolio();
+                ofy.save().entity(datFolio);
+                return r;
+            }
+        });
+        return folio;
     }
 
     @Override
@@ -93,5 +118,9 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
     @Override
     public void actualizarMetadata(Servicio servicio) {
         this.guardar(servicio);
+    }
+
+    public void setIdFoliador(String idFoliador) {
+        this.idFoliador = idFoliador;
     }
 }

@@ -18,6 +18,7 @@
 				<value>org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto</value>
 				<value>org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetail</value>
 				<value>org.nekorp.workflow.backend.security.model.WorkflowUserDetails</value>
+				<value>org.nekorp.workflow.backend.model.secuencia.DatosFoliadorServicio</value>
 			</list>
 		</property>
 	</bean>
@@ -36,6 +37,7 @@
 	
 	<bean id="servicioDAO" class="org.nekorp.workflow.backend.data.access.objectify.ServicioDAOImp">
 		<property name="objectifyFactory" ref="objectifyFactory"/>
+		<property name="idFoliador" value="foliadorServicio"/>
 	</bean>
 	
 	<bean id="bitacoraDAO" class="org.nekorp.workflow.backend.data.access.objectify.BitacoraDAOImp">
