@@ -20,20 +20,22 @@ import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 /**
  * 
  */
-public class FiltroServicioIndex implements FiltroBusqueda {
+public class FiltroServicio implements FiltroBusqueda {
 
-    private String statusServicio;
-    private String numeroSerieAuto;
-    public String getStatusServicio() {
-        return statusServicio;
+    //formato iso ISO8601
+    private String fechaInicial;
+    //formato iso ISO8601
+    private String fechaFinal;
+    public String getFechaInicial() {
+        return fechaInicial;
     }
-    public void setStatusServicio(String statusServicio) {
-        this.statusServicio = statusServicio;
+    public void setFechaInicial(String fechaInicial) {
+        this.fechaInicial = fechaInicial;
     }
-    public String getNumeroSerieAuto() {
-        return numeroSerieAuto;
+    public String getFechaFinal() {
+        return fechaFinal;
     }
-    public void setNumeroSerieAuto(String numeroSerieAuto) {
-        this.numeroSerieAuto = numeroSerieAuto;
+    public void setFechaFinal(String fechaFinal) {
+        this.fechaFinal = fechaFinal;
     }
 }

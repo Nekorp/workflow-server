@@ -25,6 +25,7 @@ import org.nekorp.workflow.backend.data.access.CostoDAO;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
 import org.nekorp.workflow.backend.data.access.DamageDetailDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
+import org.nekorp.workflow.backend.data.access.util.FiltroServicio;
 import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
@@ -53,13 +54,14 @@ public class ServicioControllerImp implements ServicioController {
 
     @Override
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody Page<Servicio, Long> getServicios(@Valid @ModelAttribute final PaginationDataLong pagination, final HttpServletResponse response) {
-        List<Servicio> datos = servicioDAO.consultarTodos(null, pagination);
+    public @ResponseBody Page<Servicio, Long> getServicios(@ModelAttribute final FiltroServicio filtro,
+        @Valid @ModelAttribute final PaginationDataLong pagination, final HttpServletResponse response) {
+        List<Servicio> datos = servicioDAO.consultarTodos(filtro, pagination);
         Page<Servicio, Long> r = pagFactory.getPage();
         r.setTipoItems("servicio");
-        r.setLinkPaginaActual(armaUrl("/servicios", pagination.getSinceId(), pagination.getMaxResults()));
+        r.setLinkPaginaActual(armaUrl("/servicios", filtro, pagination.getSinceId(), pagination.getMaxResults()));
         if (pagination.hasNext()) {
-            r.setLinkSiguientePagina(armaUrl("/servicios", pagination.getNextId(), pagination.getMaxResults()));
+            r.setLinkSiguientePagina(armaUrl("/servicios", filtro, pagination.getNextId(), pagination.getMaxResults()));
             r.setSiguienteItem(pagination.getNextId());
         }
         r.setItems(datos);
@@ -201,8 +203,10 @@ public class ServicioControllerImp implements ServicioController {
         return datos;
     }
     
-    private String armaUrl(final String base, final Long sinceId, final int maxResults) {
+    private String armaUrl(final String base, final FiltroServicio filtro, final Long sinceId, final int maxResults) {
         String r = base;
+        r = addUrlParameter(r,"fechaInicial", filtro.getFechaInicial());
+        r = addUrlParameter(r,"fechaFinal", filtro.getFechaFinal());
         if (sinceId != null && sinceId > 0) {
             r = addUrlParameter(r,"sinceId", sinceId + "");
         }

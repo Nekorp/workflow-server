@@ -15,12 +15,14 @@
  */
 package org.nekorp.workflow.backend.data.access.objectify;
 
+import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
+import org.nekorp.workflow.backend.data.access.util.FiltroServicio;
 import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.secuencia.DatosFoliadorServicio;
@@ -41,7 +43,17 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
     public List<Servicio> consultarTodos(FiltroBusqueda filtroRaw, PaginationData<Long> pagination) {
         List<Servicio> result;
         Objectify ofy = getObjectifyFactory().begin();
-        Query<Servicio> query =  ofy.load().type(Servicio.class);
+        Query<Servicio> query = ofy.load().type(Servicio.class);
+        if (filtroRaw instanceof FiltroServicio) {
+            FiltroServicio filtro = (FiltroServicio) filtroRaw;
+            //consulta unicamente por rango de fechas
+            //ignora datos de paginacion
+            //esto es debido a limitantes de appengine ya que no puede tener desigualdades sobre mas de un campo
+            //en este caso el registro inicial de la paginacion y las comparaciones con las fechas
+            if (!StringUtils.isEmpty(filtro.getFechaInicial())) {
+                return consultarTodosPorFecha(filtro, pagination);
+            }
+        }
         if (pagination.getSinceId() != null) {
             Key<Servicio> key = Key.create(Servicio.class, pagination.getSinceId());
             query = query.filterKey(">=", key);
@@ -66,6 +78,23 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
             result.remove(pagination.getMaxResults());
         }
         return result;
+    }
+    
+    private List<Servicio> consultarTodosPorFecha(FiltroServicio filtro, PaginationData<Long> pagination) {
+        List<Servicio> result;
+        try {
+            Objectify ofy = getObjectifyFactory().begin();
+            Query<Servicio> query = ofy.load().type(Servicio.class);
+            DateTime inicio = new DateTime(filtro.getFechaInicial());
+            query = query.filter("metadata.fechaInicio >=", inicio.toDate());
+            DateTime fin = new DateTime(filtro.getFechaFinal());
+            query = query.filter("metadata.fechaInicio <=", fin.toDate());
+            result = query.list();
+            return result;
+        } catch (IllegalArgumentException e) {
+            result = new LinkedList<Servicio>();
+            return result;
+        }
     }
 
     @Override

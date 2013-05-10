@@ -18,6 +18,8 @@ package org.nekorp.workflow.backend.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import org.nekorp.workflow.backend.data.access.util.FiltroServicio;
 import org.nekorp.workflow.backend.data.pagination.model.Page;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
@@ -46,7 +48,7 @@ import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
  */
 public interface ServicioController {
 
-    Page<Servicio, Long> getServicios(PaginationDataLong pagination, HttpServletResponse response);
+    Page<Servicio, Long> getServicios(FiltroServicio filtro, PaginationDataLong pagination, HttpServletResponse response);
     void crearServicio(Servicio servicio, HttpServletResponse response);
     Servicio getServicio(Long id, HttpServletResponse response);
     void actualizarServicio(Long id, Servicio datos, HttpServletResponse response);

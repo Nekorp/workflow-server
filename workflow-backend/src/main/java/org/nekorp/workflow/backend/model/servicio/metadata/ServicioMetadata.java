@@ -26,6 +26,7 @@ import com.googlecode.objectify.annotation.Unindex;
 @Unindex
 public class ServicioMetadata {
 
+    @Index
     private Date fechaInicio;
     @Index
     private String status;
