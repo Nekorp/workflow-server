@@ -33,8 +33,10 @@ import org.nekorp.workflow.backend.service.ServicioMetadataFactory;
 public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
 
     private static final int CADUCIDAD_DEFAULT = 15;
+    private static final int DIAS_MAX_CIERRE_DEFAULT = 15;
     private BitacoraDAO bitacoraDAO;
     private int diasCaducidad = ServicioMetadataFactoryImp.CADUCIDAD_DEFAULT;
+    private int diasMaxCierre = ServicioMetadataFactoryImp.DIAS_MAX_CIERRE_DEFAULT;
 
     @Override
     public ServicioMetadata calcularMetadata(Servicio servicio) {
@@ -49,6 +51,7 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
         }
         Evento eventoInicio = null;
         Evento eventoEntradaAuto = null;
+        Evento eventoSalidaAuto = null;
         Evento eventoCancelar = null;
         Evento eventoTermino = null;
         for (Evento x: eventos) {
@@ -58,6 +61,9 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
             }
             if (x.getEtiqueta().equals(EventoConstants.entradaAuto) && eventoEntradaAuto == null) {
                 eventoEntradaAuto = x;
+            }
+            if (x.getEtiqueta().equals(EventoConstants.salidaAuto) && eventoSalidaAuto == null) {
+                eventoSalidaAuto = x;
             }
             if (x.getEtiqueta().equals(EventoConstants.cancelacion) && eventoCancelar == null) {
                 eventoCancelar = x;
@@ -71,6 +77,13 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
         }
         if (eventoTermino != null && StringUtils.isEmpty(respuesta.getStatus())) {
             respuesta.setStatus(ServicioStatusConstants.terminado);
+        }
+        if (eventoSalidaAuto != null && StringUtils.isEmpty(respuesta.getStatus())) {
+            DateTime fechaEntrega= new DateTime(eventoSalidaAuto.getFecha());
+            DateTime fechaCaducidad = fechaEntrega.plusDays(diasMaxCierre);
+            if (fechaCaducidad.isBeforeNow()) {
+                respuesta.setStatus(ServicioStatusConstants.sinCerrar);
+            }
         }
         if (eventoEntradaAuto != null && StringUtils.isEmpty(respuesta.getStatus())) {
             respuesta.setStatus(ServicioStatusConstants.activo);
@@ -95,4 +108,7 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
         this.diasCaducidad = diasCaducidad;
     }
 
+    public void setDiasMaxCierre(int diasMaxCierre) {
+        this.diasMaxCierre = diasMaxCierre;
+    }    
 }

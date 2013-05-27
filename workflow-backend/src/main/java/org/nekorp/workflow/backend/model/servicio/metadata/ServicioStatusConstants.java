@@ -23,5 +23,6 @@ public class ServicioStatusConstants {
     public static final String activo = "Activo";
     public static final String terminado = "Terminado";
     public static final String vencido = "Vencido";
+    public static final String sinCerrar = "SinCerrar";
     public static final String cancelado = "Cancelado";
 }

@@ -13,5 +13,6 @@
 	<bean id="servicioMetadataFactory" class="org.nekorp.workflow.backend.service.imp.ServicioMetadataFactoryImp">
 		<property name="bitacoraDAO" ref="bitacoraDAO"/>
 		<property name="diasCaducidad" value="30"/>
+		<property name="diasMaxCierre" value="15"/>
 	</bean>
 </beans>
