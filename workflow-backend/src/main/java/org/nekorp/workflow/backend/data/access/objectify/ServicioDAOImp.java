@@ -89,6 +89,9 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
             query = query.filter("metadata.fechaInicio >=", inicio.toDate());
             DateTime fin = new DateTime(filtro.getFechaFinal());
             query = query.filter("metadata.fechaInicio <=", fin.toDate());
+            if (filtro.getIdCliente() != null) {
+                query = query.filter("idCliente =", filtro.getIdCliente());
+            }
             result = query.list();
             return result;
         } catch (IllegalArgumentException e) {

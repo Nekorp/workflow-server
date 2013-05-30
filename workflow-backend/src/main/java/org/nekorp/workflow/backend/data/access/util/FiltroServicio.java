@@ -26,6 +26,7 @@ public class FiltroServicio implements FiltroBusqueda {
     private String fechaInicial;
     //formato iso ISO8601
     private String fechaFinal;
+    private Long idCliente;
     public String getFechaInicial() {
         return fechaInicial;
     }
@@ -37,5 +38,11 @@ public class FiltroServicio implements FiltroBusqueda {
     }
     public void setFechaFinal(String fechaFinal) {
         this.fechaFinal = fechaFinal;
+    }
+    public Long getIdCliente() {
+        return idCliente;
+    }
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
     }
 }

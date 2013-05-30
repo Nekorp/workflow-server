@@ -64,4 +64,8 @@
 	</bean>
 	<bean id="UploadController" class="org.nekorp.workflow.backend.controller.imp.UploadControllerImp">
 	</bean>
+	<bean id="ReporteGlobalController" class="org.nekorp.workflow.backend.controller.imp.ReporteGlobalControllerImp">
+		<property name="servicioDAO" ref="servicioDAO"/>
+		<property name="renglonFactoryRG" ref="renglonFactoryRG"/>
+	</bean>
 </beans>

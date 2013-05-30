@@ -28,6 +28,7 @@ import com.googlecode.objectify.annotation.Unindex;
 public class Servicio {
     @Id
     private Long id;
+    @Index
     private Long idCliente;
     @Index
     private String idAuto;

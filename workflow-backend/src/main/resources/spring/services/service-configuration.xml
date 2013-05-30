@@ -15,4 +15,26 @@
 		<property name="diasCaducidad" value="30"/>
 		<property name="diasMaxCierre" value="15"/>
 	</bean>
+	<!-- servicio para generar reporte global -->
+	<!-- genera uno de los renglones del reporte global, uno por servicio -->
+	<bean id="renglonFactoryRG" class="org.nekorp.workflow.backend.service.reporte.global.RenglonFactoryRG">
+		<property name="factoryAuto" ref="datosAutoFactoryRG"/>
+		<property name="factoryBitacora" ref="datosBitacoraFactoryRG"/>
+		<property name="factoryCliente" ref="datosClienteFactoryRG"/>
+		<property name="factoryCosto" ref="datosCostoFactoryRG"/>
+		<property name="factoryServicio" ref="datosServicioFactoryRG"/>
+	</bean>
+	<bean id="datosAutoFactoryRG" class="org.nekorp.workflow.backend.service.reporte.global.DatosAutoFactoryRG">
+		<property name="autoDAO" ref="autoDAO"/>
+	</bean>
+	<bean id="datosBitacoraFactoryRG" class="org.nekorp.workflow.backend.service.reporte.global.DatosBitacoraFactoryRG">
+		<property name="bitacoraDAO" ref="bitacoraDAO"/>
+	</bean>
+	<bean id="datosClienteFactoryRG" class="org.nekorp.workflow.backend.service.reporte.global.DatosClienteFactoryRG">
+		<property name="clienteDAO" ref="clienteDAO"/>
+	</bean>
+	<bean id="datosCostoFactoryRG" class="org.nekorp.workflow.backend.service.reporte.global.DatosCostoFactoryRG">
+		<property name="costoDAO" ref="costoDAO"/>
+	</bean>
+	<bean id="datosServicioFactoryRG" class="org.nekorp.workflow.backend.service.reporte.global.DatosServicioFactoryRG"/>
 </beans>
