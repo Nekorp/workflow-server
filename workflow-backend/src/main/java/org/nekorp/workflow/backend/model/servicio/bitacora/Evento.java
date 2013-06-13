@@ -17,12 +17,9 @@ package org.nekorp.workflow.backend.model.servicio.bitacora;
 
 import java.util.Date;
 import java.util.List;
-
 import org.nekorp.workflow.backend.model.servicio.Servicio;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Parent;
@@ -55,7 +52,6 @@ public class Evento implements Comparable<Evento> {
     /**
      * la evidencia anexada al evento
      */
-    @Embed
     private List<Evidencia> evidencia;
     /**
      * la fecha en la que sucedio el evento.

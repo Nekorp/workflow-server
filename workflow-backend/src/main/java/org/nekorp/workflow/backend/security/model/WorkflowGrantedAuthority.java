@@ -16,12 +16,14 @@
 package org.nekorp.workflow.backend.security.model;
 
 import org.springframework.security.core.GrantedAuthority;
+
+import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Unindex;
 
 /**
  * 
  */
-@Unindex
+@Embed @Unindex
 public class WorkflowGrantedAuthority implements GrantedAuthority {
 
     /**

@@ -77,7 +77,7 @@ public class RegistroCostoDAOImp extends ObjectifyDAOTemplate implements Registr
         Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
         Key<RegistroCosto> key = Key.create(parentKey, RegistroCosto.class, id);
         Objectify ofy = getObjectifyFactory().begin();
-        RegistroCosto respuesta = ofy.load().key(key).get();
+        RegistroCosto respuesta = ofy.load().key(key).now();
         return respuesta;
     }
 

@@ -119,7 +119,7 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
             @Override
             public Long run() {
                 Key<DatosFoliadorServicio> key = Key.create(DatosFoliadorServicio.class, idFoliador);
-                DatosFoliadorServicio datFolio = ofy.load().key(key).get();
+                DatosFoliadorServicio datFolio = ofy.load().key(key).now();
                 if (datFolio == null) {
                     datFolio = new DatosFoliadorServicio(idFoliador, Long.valueOf(1));
                 }
@@ -135,7 +135,7 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
     public Servicio consultar(Long id) {
         Objectify ofy = getObjectifyFactory().begin();
         Key<Servicio> key = Key.create(Servicio.class, id);
-        Servicio respuesta = ofy.load().key(key).get();
+        Servicio respuesta = ofy.load().key(key).now();
         return respuesta;
     }
 

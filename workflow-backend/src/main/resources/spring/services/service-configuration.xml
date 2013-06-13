@@ -37,4 +37,11 @@
 		<property name="costoDAO" ref="costoDAO"/>
 	</bean>
 	<bean id="datosServicioFactoryRG" class="org.nekorp.workflow.backend.service.reporte.global.DatosServicioFactoryRG"/>
+	
+	<bean id="reporteClienteDataFactory" class="org.nekorp.workflow.backend.service.reporte.cliente.ReporteClienteDataFactoryImp">
+		<property name="clienteDao" ref="clienteDAO"/>
+		<property name="bitacoraDao" ref="bitacoraDAO"/>
+		<property name="autoDao" ref="autoDAO"/>
+		<property name="costoDao" ref="costoDAO"/>
+	</bean>
 </beans>

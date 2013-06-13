@@ -87,7 +87,7 @@ public class ClienteDAOImp extends ObjectifyDAOTemplate implements ClienteDAO {
     public Cliente consultar(final Long id) {
         Objectify ofy = getObjectifyFactory().begin();
         Key<Cliente> key = Key.create(Cliente.class, id);
-        Cliente respuesta = ofy.load().key(key).get();
+        Cliente respuesta = ofy.load().key(key).now();
         return respuesta;
     }
 

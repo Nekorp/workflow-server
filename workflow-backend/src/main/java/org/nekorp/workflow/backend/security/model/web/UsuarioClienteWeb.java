@@ -13,29 +13,51 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.model.servicio.metadata;
+package org.nekorp.workflow.backend.security.model.web;
 
-import java.util.Date;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import com.googlecode.objectify.annotation.Embed;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Unindex;
 
 /**
  * 
  */
-@Embed @Unindex
-public class ServicioMetadata {
+@Entity @Unindex
+public class UsuarioClienteWeb {
 
+    @Id
+    @Size(min=1)
+    @NotNull
+    private String alias;
     @Index
-    private Date fechaInicio;
-    @Index
+    @NotNull
+    private Long idCliente;
+    @Size(min=1)
+    @NotNull
+    private String password;
+    @NotNull
     private String status;
-    public Date getFechaInicio() {
-        return fechaInicio;
+    public String getAlias() {
+        return alias;
     }
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+    public Long getIdCliente() {
+        return idCliente;
+    }
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
     public String getStatus() {
         return status;

@@ -28,6 +28,12 @@
 		<property name="userSecurityDAO" ref="userSecurityDAO"/>
 	</bean>
 	
+	<bean id="UsuarioClienteWebController" class="org.nekorp.workflow.backend.security.controller.imp.UsuarioClienteWebControllerImp">
+		<property name="pagFactory" ref="PaginationModelFactory"/>
+		<property name="usuarioClienteWebDAO" ref="usuarioClienteWebDAO"/>
+		<property name="clienteDao" ref="clienteDAO"/>
+	</bean>
+	
 	<bean id="ClienteController" class="org.nekorp.workflow.backend.controller.imp.ClienteControllerImp">
 		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="clienteDao" ref="clienteDAO"/>
@@ -67,5 +73,9 @@
 	<bean id="ReporteGlobalController" class="org.nekorp.workflow.backend.controller.imp.ReporteGlobalControllerImp">
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="renglonFactoryRG" ref="renglonFactoryRG"/>
+	</bean>
+	<bean id="ReporteClienteController" class="org.nekorp.workflow.backend.controller.imp.ReporteClienteControllerImp">
+		<property name="servicioDao" ref="servicioDAO"/>
+		<property name="dataFactory" ref="reporteClienteDataFactory"/>
 	</bean>
 </beans>

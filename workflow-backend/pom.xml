@@ -10,7 +10,7 @@
 
     <properties>
         <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.7.4</appengine.target.version>
+        <appengine.target.version>1.8.1</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 	
@@ -21,8 +21,8 @@
                 <version>2.5.1</version>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -143,6 +143,22 @@
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
+        <!-- serializacion json -->
+        <dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.2.2</version>
+		</dependency>
         <!-- Servicio de validacion -->
         <dependency>
 		    <groupId>org.hibernate</groupId>
@@ -153,7 +169,7 @@
 		<!-- Middle End API para persistir objetos en appengien -->
 		<groupId>com.googlecode.objectify</groupId>
       		<artifactId>objectify</artifactId>
-			<version>4.0b1</version>
+			<version>4.0rc1</version>
 		</dependency>
 		<!-- Integracion de objectify con spring -->
 		<dependency>

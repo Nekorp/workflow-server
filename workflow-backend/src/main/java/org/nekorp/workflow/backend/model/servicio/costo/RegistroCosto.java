@@ -17,10 +17,8 @@ package org.nekorp.workflow.backend.model.servicio.costo;
 
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.moneda.Moneda;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Parent;
@@ -37,10 +35,8 @@ public class RegistroCosto {
     private String subtipo;
     private String concepto;
     private Integer cantidad;
-    @Embed
     private Moneda precioUnitario;
     private boolean precioUnitarioConIVA;
-    @Embed
     private Moneda precioCliente;
     private boolean subtotalConIVA;
     

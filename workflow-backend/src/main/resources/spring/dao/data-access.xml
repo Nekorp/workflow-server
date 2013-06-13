@@ -19,6 +19,7 @@
 				<value>org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetail</value>
 				<value>org.nekorp.workflow.backend.security.model.WorkflowUserDetails</value>
 				<value>org.nekorp.workflow.backend.model.secuencia.DatosFoliadorServicio</value>
+				<value>org.nekorp.workflow.backend.security.model.web.UsuarioClienteWeb</value>
 			</list>
 		</property>
 	</bean>
@@ -60,4 +61,7 @@
 		<property name="objectifyFactory" ref="objectifyFactory"/>
 	</bean>
 	
+	<bean id="usuarioClienteWebDAO" class="org.nekorp.workflow.backend.security.data.access.objectify.UsuarioClienteWebDAOImp">
+		<property name="objectifyFactory" ref="objectifyFactory"/>
+	</bean>
 </beans>

@@ -20,7 +20,6 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -58,7 +57,6 @@ public class Auto implements Serializable {
     @Size(min=1, max=10)
     @NotNull
     private String placas;
-    @Embed
     private Equipamiento equipamiento;
     
     public String getVin() {

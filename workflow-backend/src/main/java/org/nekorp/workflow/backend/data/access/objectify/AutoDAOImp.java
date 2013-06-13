@@ -84,7 +84,7 @@ public class AutoDAOImp extends ObjectifyDAOTemplate implements AutoDAO {
     public Auto consultar(String numerSerie) {
         Objectify ofy = getObjectifyFactory().begin();
         Key<Auto> key = Key.create(Auto.class, numerSerie);
-        Auto respuesta = ofy.load().key(key).get();
+        Auto respuesta = ofy.load().key(key).now();
         return respuesta;
     }    
     

@@ -16,9 +16,10 @@
 
 package org.nekorp.workflow.backend.model.servicio.bitacora;
 
+import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Unindex;
 
-@Unindex
+@Embed @Unindex
 public class Evidencia {
 
     private String thumbnail;

@@ -17,14 +17,10 @@ package org.nekorp.workflow.backend.security.model;
 
 import java.util.Collection;
 import java.util.List;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Unindex;
@@ -44,7 +40,6 @@ public class WorkflowUserDetails implements UserDetails {
     private String password;
     @JsonIgnore
     private boolean enabled;
-    @Embed
     private List<WorkflowGrantedAuthority> permisos;
     /**
      * default serial version.

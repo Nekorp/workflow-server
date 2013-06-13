@@ -78,7 +78,7 @@ public class EventoDAOImp extends ObjectifyDAOTemplate implements EventoDAO {
         Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
         Key<Evento> key = Key.create(parentKey, Evento.class, id);
         Objectify ofy = getObjectifyFactory().begin();
-        Evento respuesta = ofy.load().key(key).get();
+        Evento respuesta = ofy.load().key(key).now();
         return respuesta;
     }
 

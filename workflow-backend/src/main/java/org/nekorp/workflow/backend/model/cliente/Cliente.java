@@ -19,9 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -44,12 +42,10 @@ public class Cliente implements Serializable {
     private String nombreEstandar;
     @Size(max=13)
     private String rfc;
-    @Embed
     private DomicilioFiscal domicilio;
     private String email;
     private String contacto;
     @Size(max=3)
-    @Embed
     private List<Telefono> telefonoContacto;
 
     public Long getId() {

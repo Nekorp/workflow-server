@@ -13,35 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-package org.nekorp.workflow.backend.model.servicio.moneda;
+package org.nekorp.workflow.backend.security.data.access;
 
-import com.googlecode.objectify.annotation.Embed;
-
+import org.nekorp.workflow.backend.data.access.template.EntityDAO;
+import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
+import org.nekorp.workflow.backend.security.model.web.UsuarioClienteWeb;
 
 /**
- *
- * gracias java por tu perdida de precision.
- * no usar los getter y setter estan ahi para serializar :a
+ * 
  */
-@Embed
-public class Moneda {
-    
-    private String value;
-    
-    public Moneda() {
-        this.value = "0.00";
-    }
-    
-    public Moneda(String val) {
-        this.value = val;
-    }
-    
-    public String getValue() {
-        return value;
-    }
+public interface UsuarioClienteWebDAO extends EntityDAO<UsuarioClienteWeb, String, FiltroBusqueda>{
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-    
 }

@@ -15,6 +15,7 @@
  */
 package org.nekorp.workflow.backend.data.access.objectify;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
@@ -42,6 +43,7 @@ public class BitacoraDAOImp extends ObjectifyDAOTemplate implements BitacoraDAO 
         Query<Evento> query =  ofy.load().type(Evento.class);
         query = query.ancestor(parentKey);
         result = query.list();
+        Collections.sort(result);
         return result;
     }
 
