@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 
+ * @author Nekorp
  */
 @Controller
 @RequestMapping("/index")
@@ -92,6 +92,7 @@ public class ServicioIndexControllerImp implements ServicioIndexController {
         if (auto != null) {
             nuevo.setNumeroSerie(auto.getNumeroSerie());
             nuevo.setPlacas(auto.getPlacas());
+            nuevo.setTipo(auto.getTipo());
         }
         return nuevo;
     }

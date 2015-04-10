@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,13 +15,20 @@
  */
 package org.nekorp.workflow.backend.model.servicio;
 
+import org.nekorp.workflow.backend.model.cobranza.DatosCobranza;
 import org.nekorp.workflow.backend.model.servicio.auto.DatosAuto;
 import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadata;
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Unindex;
 
+/**
+ * 
+ * @author Nekorp
+ *
+ */
 @Entity @Unindex
 public class Servicio {
     @Id
@@ -33,6 +40,10 @@ public class Servicio {
     private String descripcion;
     private DatosAuto datosAuto;
     private ServicioMetadata metadata;
+    private DatosCobranza cobranza;
+    public Servicio() {
+        this.cobranza = new DatosCobranza();
+    }
     public Long getId() {
         return id;
     }
@@ -79,5 +90,11 @@ public class Servicio {
 
     public void setMetadata(ServicioMetadata metadata) {
         this.metadata = metadata;
+    }
+    public DatosCobranza getCobranza() {
+        return cobranza;
+    }
+    public void setCobranza(DatosCobranza cobranza) {
+        this.cobranza = cobranza;
     }
 }

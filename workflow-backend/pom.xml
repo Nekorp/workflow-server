@@ -3,14 +3,14 @@
 
     <modelVersion>4.0.0</modelVersion>
     <packaging>war</packaging>
-    <version>0.8.0</version>
+    <version>0.9.0</version>
 
     <groupId>org.nekorp.workflow</groupId>
     <artifactId>workflow-backend</artifactId>
 
     <properties>
         <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.8.1</appengine.target.version>
+        <appengine.target.version>1.9.18</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 	
@@ -75,13 +75,13 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
+            <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -99,44 +99,44 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>3.2.0.RELEASE</version>
+            <version>4.1.5.RELEASE</version>
         </dependency>
         <!-- AOP stuff -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>3.2.0.RELEASE</version>
+            <version>4.1.5.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.7.1</version>
+            <version>1.8.5</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.7.1</version>
+            <version>1.8.5</version>
         </dependency>
         <!-- MVC stuff -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.2.0.RELEASE</version>
+            <version>4.1.5.RELEASE</version>
         </dependency>
         <dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>3.1.3.RELEASE</version>
+			<version>3.2.6.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>3.1.3.RELEASE</version>
+			<version>3.2.6.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>3.1.3.RELEASE</version>
+			<version>3.2.6.RELEASE</version>
 		</dependency>
 		<dependency>
             <groupId>commons-lang</groupId>
@@ -147,36 +147,38 @@
         <dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.2.2</version>
+			<version>2.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.2.2</version>
+			<version>2.5.1</version>
 		</dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.2.2</version>
+            <version>2.5.1</version>
 		</dependency>
-        <!-- Servicio de validacion -->
+        <!-- Servicio de validacion se usa esta version en especifico por un bug con JUEL-->
+        <!-- solo se usa la validacion 1.0, la 1.1 necesita una version mas nueva de hibernate validator 5.1.x -->
         <dependency>
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-validator</artifactId>
 		    <version>4.3.1.Final</version>
 		</dependency>
-		<dependency>
+		<!--  <dependency>
+			<groupId>de.odysseus.juel</groupId>
+			<artifactId>juel</artifactId>
+			<version>2.1.3</version>
+		</dependency>-->
 		<!-- Middle End API para persistir objetos en appengien -->
+		<dependency>
 		<groupId>com.googlecode.objectify</groupId>
       		<artifactId>objectify</artifactId>
-			<version>4.0rc1</version>
+			<version>4.1.3</version>
+			<!-- <version>5.1.5</version> -->
 		</dependency>
-		<!-- Integracion de objectify con spring -->
-		<dependency>
-			<groupId>com.googlecode.objectify-appengine-spring</groupId>
-			<artifactId>objectify-appengine-spring</artifactId>
-			<version>1.1.1</version>
-		</dependency>
+		<!-- Para no utilizar el DATE de java que tiene muchas limitaciones -->
 		<dependency>
 		    <groupId>joda-time</groupId>
 		    <artifactId>joda-time</artifactId>

@@ -5,15 +5,20 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans     
-        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
  
 	<mvc:annotation-driven/>
 	<bean id="batchController" class="org.nekorp.workflow.backend.batch.controller.BatchController">
 		<property name="servicioDAO" ref="servicioDAO"/>
+		<property name="bitacoraDAO" ref="bitacoraDAO"/>
+		<property name="costoDAO" ref="costoDAO"/>
+		<property name="damageDetailDAO" ref="damageDetailDAO"/>
+		<property name="autoDAO" ref="autoDAO"/>
+		<property name="clienteDAO" ref="clienteDAO"/>
 		<property name="servicioMetadataFactory" ref="servicioMetadataFactory"/>
 	</bean>
 </beans>
