@@ -16,17 +16,12 @@
 package org.nekorp.workflow.backend.model.cobranza;
 
 import java.util.Date;
-
 import org.nekorp.workflow.backend.model.servicio.moneda.Moneda;
-
-import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.Unindex;
 
 /**
  *
  * @author Nekorp
  */
-@Embed @Unindex
 public class PagoCobranza {
     private Date fecha;
     private String responsable;

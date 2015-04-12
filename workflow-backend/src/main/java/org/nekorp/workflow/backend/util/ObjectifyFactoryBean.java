@@ -19,57 +19,39 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.googlecode.objectify.ObjectifyFactory;
-
+import com.googlecode.objectify.ObjectifyService;
 /**
  * 
  * @author Nekorp
  *
  */
-public class ObjectifyFactoryBean extends ObjectifyFactory implements FactoryBean<ObjectifyFactory>,
-        InitializingBean {
+public class ObjectifyFactoryBean implements InitializingBean {
 
-    public ObjectifyFactoryBean() {
-        super(true);
-    }
+    private final Log logger = LogFactory.getLog(getClass());
 
-    protected final Log logger = LogFactory.getLog(getClass());
-    
-    private List<Class<?>> classes;
-
-    public ObjectifyFactory getObject() throws Exception {
-        return this;
-    }
-
-    public Class<? extends ObjectifyFactory> getObjectType() {
-        return ObjectifyFactory.class;
-    }
-
-    public boolean isSingleton() {
-        return true;
-    }
+    private List<Class<?>> classes;    
 
     public void afterPropertiesSet() throws Exception {
         if (this.logger.isInfoEnabled()) {
             this.logger.info("Initialization started");
         }
         long startTime = System.currentTimeMillis();
-
+        ObjectifyFactory factory = ObjectifyService.factory();
         if (classes == null) {
             classes = new ArrayList<Class<?>>();
         }
-        
+
         for (Class<?> clazz : classes) {
-            this.register(clazz);
+            factory.register(clazz);
             if (this.logger.isInfoEnabled()) {
                 this.logger.info("Registered entity class [" + clazz.getName()
                         + "]");
             }
         }
-
+        ObjectifyService.setFactory(factory);
         if (this.logger.isInfoEnabled()) {
             long elapsedTime = System.currentTimeMillis() - startTime;
             this.logger.info("Initialization completed in " + elapsedTime

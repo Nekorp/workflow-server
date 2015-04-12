@@ -18,18 +18,17 @@ package org.nekorp.workflow.backend.data.access.objectify;
 import java.util.LinkedList;
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.DamageDetailDAO;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetail;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Result;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class DamageDetailDAOImp extends ObjectifyDAOTemplate implements DamageDetailDAO {
+public class DamageDetailDAOImp implements DamageDetailDAO {
 
     /**
      * {@inheritDoc}
@@ -38,8 +37,7 @@ public class DamageDetailDAOImp extends ObjectifyDAOTemplate implements DamageDe
     public List<DamageDetail> consultar(final Long idServicio) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         List<DamageDetail> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<DamageDetail> query =  ofy.load().type(DamageDetail.class);
+        Query<DamageDetail> query =  ofy().load().type(DamageDetail.class);
         query = query.ancestor(parentKey);
         result = query.list();
         return result;
@@ -59,10 +57,9 @@ public class DamageDetailDAOImp extends ObjectifyDAOTemplate implements DamageDe
         List<Result<Key<DamageDetail>>> nuevos = new LinkedList<Result<Key<DamageDetail>>>();
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         Result<Key<DamageDetail>> result;
-        Objectify ofy = getObjectifyFactory().begin();
         for (DamageDetail x: damage) {
             x.setParent(parentKey);
-            result = ofy.save().entity(x);
+            result = ofy().save().entity(x);
             if (x.getId() == null) {
                 nuevos.add(result);
             }
@@ -74,7 +71,6 @@ public class DamageDetailDAOImp extends ObjectifyDAOTemplate implements DamageDe
     }
     
     public void borrar(final DamageDetail dmg) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(dmg);
+        ofy().delete().entity(dmg);
     }
 }

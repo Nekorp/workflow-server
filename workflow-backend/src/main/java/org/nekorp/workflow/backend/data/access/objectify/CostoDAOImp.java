@@ -18,18 +18,17 @@ package org.nekorp.workflow.backend.data.access.objectify;
 import java.util.LinkedList;
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.CostoDAO;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Result;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class CostoDAOImp extends ObjectifyDAOTemplate implements CostoDAO {
+public class CostoDAOImp implements CostoDAO {
 
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.CostoDAO#getEventos(java.lang.Long)
@@ -38,8 +37,7 @@ public class CostoDAOImp extends ObjectifyDAOTemplate implements CostoDAO {
     public List<RegistroCosto> consultar(Long idServicio) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         List<RegistroCosto> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<RegistroCosto> query =  ofy.load().type(RegistroCosto.class);
+        Query<RegistroCosto> query =  ofy().load().type(RegistroCosto.class);
         query = query.ancestor(parentKey);
         result = query.list();
         return result;
@@ -59,10 +57,9 @@ public class CostoDAOImp extends ObjectifyDAOTemplate implements CostoDAO {
         List<Result<Key<RegistroCosto>>> nuevos = new LinkedList<Result<Key<RegistroCosto>>>();
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         Result<Key<RegistroCosto>> result;
-        Objectify ofy = getObjectifyFactory().begin();
         for (RegistroCosto x: registros) {
             x.setParent(parentKey);
-            result = ofy.save().entity(x);
+            result = ofy().save().entity(x);
             if (x.getId() == null) {
                 nuevos.add(result);
             }
@@ -74,7 +71,6 @@ public class CostoDAOImp extends ObjectifyDAOTemplate implements CostoDAO {
     }   
     
     private void borrarRegistro(final RegistroCosto registro) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(registro);
+        ofy().delete().entity(registro);
     }
 }

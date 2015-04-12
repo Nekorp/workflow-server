@@ -16,15 +16,11 @@
 package org.nekorp.workflow.backend.model.servicio.metadata;
 
 import java.util.Date;
-
-import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Unindex;
 
 /**
  * 
  */
-@Embed @Unindex
 public class ServicioMetadata {
 
     @Index

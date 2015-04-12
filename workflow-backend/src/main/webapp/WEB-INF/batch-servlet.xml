@@ -14,11 +14,6 @@
 	<mvc:annotation-driven/>
 	<bean id="batchController" class="org.nekorp.workflow.backend.batch.controller.BatchController">
 		<property name="servicioDAO" ref="servicioDAO"/>
-		<property name="bitacoraDAO" ref="bitacoraDAO"/>
-		<property name="costoDAO" ref="costoDAO"/>
-		<property name="damageDetailDAO" ref="damageDetailDAO"/>
-		<property name="autoDAO" ref="autoDAO"/>
-		<property name="clienteDAO" ref="clienteDAO"/>
 		<property name="servicioMetadataFactory" ref="servicioMetadataFactory"/>
 	</bean>
 </beans>

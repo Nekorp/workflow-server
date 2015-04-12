@@ -15,14 +15,8 @@
  */
 package org.nekorp.workflow.backend.model.cliente;
 
-import java.io.Serializable;
 
-import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.Unindex;
-
-@Embed @Unindex
-public class Telefono implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Telefono {
     private String label;
     private String valor;
 

@@ -17,19 +17,18 @@ package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.RegistroCostoDAO;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class RegistroCostoDAOImp extends ObjectifyDAOTemplate implements RegistroCostoDAO {
+public class RegistroCostoDAOImp implements RegistroCostoDAO {
 
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#consultarTodos(java.lang.Object, java.lang.Object, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
@@ -38,8 +37,7 @@ public class RegistroCostoDAOImp extends ObjectifyDAOTemplate implements Registr
     public List<RegistroCosto> consultarTodos(Long idParent, FiltroBusqueda filtro, PaginationData<Long> pagination) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
         List<RegistroCosto> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<RegistroCosto> query = ofy.load().type(RegistroCosto.class);
+        Query<RegistroCosto> query = ofy().load().type(RegistroCosto.class);
         query = query.ancestor(parentKey);
         if (pagination.getSinceId() != null) {
             Key<RegistroCosto> key = Key.create(parentKey, RegistroCosto.class, pagination.getSinceId());
@@ -65,8 +63,7 @@ public class RegistroCostoDAOImp extends ObjectifyDAOTemplate implements Registr
     public void guardar(Long idParent, RegistroCosto nuevo) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
         nuevo.setParent(parentKey);
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.save().entity(nuevo).now();
+        ofy().save().entity(nuevo).now();
     }
 
     /* (non-Javadoc)
@@ -76,8 +73,7 @@ public class RegistroCostoDAOImp extends ObjectifyDAOTemplate implements Registr
     public RegistroCosto consultar(Long idParent, Long id) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
         Key<RegistroCosto> key = Key.create(parentKey, RegistroCosto.class, id);
-        Objectify ofy = getObjectifyFactory().begin();
-        RegistroCosto respuesta = ofy.load().key(key).now();
+        RegistroCosto respuesta = ofy().load().key(key).now();
         return respuesta;
     }
 
@@ -86,8 +82,7 @@ public class RegistroCostoDAOImp extends ObjectifyDAOTemplate implements Registr
      */
     @Override
     public boolean borrar(Long idParent, RegistroCosto dato) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(dato);
+        ofy().delete().entity(dato);
         return true;
     }
 

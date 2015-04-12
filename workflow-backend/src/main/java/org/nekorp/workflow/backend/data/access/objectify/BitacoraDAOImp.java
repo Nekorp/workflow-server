@@ -19,18 +19,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Result;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class BitacoraDAOImp extends ObjectifyDAOTemplate implements BitacoraDAO {
+public class BitacoraDAOImp implements BitacoraDAO {
 
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.EventoDAO#getEventos(java.lang.Long, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
@@ -39,8 +38,7 @@ public class BitacoraDAOImp extends ObjectifyDAOTemplate implements BitacoraDAO 
     public List<Evento> consultar(final Long idServicio) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         List<Evento> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<Evento> query =  ofy.load().type(Evento.class);
+        Query<Evento> query =  ofy().load().type(Evento.class);
         query = query.ancestor(parentKey);
         result = query.list();
         Collections.sort(result);
@@ -61,10 +59,9 @@ public class BitacoraDAOImp extends ObjectifyDAOTemplate implements BitacoraDAO 
         List<Result<Key<Evento>>> nuevos = new LinkedList<Result<Key<Evento>>>();
         Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
         Result<Key<Evento>> result;
-        Objectify ofy = getObjectifyFactory().begin();
         for (Evento x: eventos) {
             x.setParent(parentKey);
-            result = ofy.save().entity(x);
+            result = ofy().save().entity(x);
             if (x.getId() == null) {
                 nuevos.add(result);
             }
@@ -76,7 +73,6 @@ public class BitacoraDAOImp extends ObjectifyDAOTemplate implements BitacoraDAO 
     }
     
     public void borrarEvento(final Evento evento) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(evento);
+        ofy().delete().entity(evento);
     }
 }

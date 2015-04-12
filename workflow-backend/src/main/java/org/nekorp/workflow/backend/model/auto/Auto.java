@@ -16,19 +16,19 @@
 package org.nekorp.workflow.backend.model.auto;
 
 import java.io.Serializable;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Unindex;
 /**
  * Se usara para identificar como unico a aun auto, para el historia.
  * para el tema de datos del auto en un servicio en especifico se usara el termino datos auto.
  */
-@Entity @Unindex
+@Entity
+@Cache
 public class Auto implements Serializable {
     private static final long serialVersionUID = 1L;
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.

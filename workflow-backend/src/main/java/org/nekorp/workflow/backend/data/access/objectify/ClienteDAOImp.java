@@ -18,18 +18,17 @@ package org.nekorp.workflow.backend.data.access.objectify;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.cliente.Cliente;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class ClienteDAOImp extends ObjectifyDAOTemplate implements ClienteDAO {
+public class ClienteDAOImp implements ClienteDAO {
     
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
@@ -37,8 +36,7 @@ public class ClienteDAOImp extends ObjectifyDAOTemplate implements ClienteDAO {
     @Override
     public List<Cliente> consultarTodos(final FiltroCliente filtro, final PaginationData<Long> pagination) {
         List<Cliente> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<Cliente> query =  ofy.load().type(Cliente.class);
+        Query<Cliente> query =  ofy().load().type(Cliente.class);
         //Por limitaciones de appengine no se pueden hacer queries con desigualdades en dos propiedades
         if (!StringUtils.isEmpty(filtro.getFiltroNombre())) {
             String nombreBuscado = filtro.getFiltroNombre();
@@ -73,8 +71,7 @@ public class ClienteDAOImp extends ObjectifyDAOTemplate implements ClienteDAO {
     @Override
     public void guardar(final Cliente nuevo) {
         try {
-            Objectify ofy = getObjectifyFactory().begin();
-            ofy.save().entity(nuevo).now();
+            ofy().save().entity(nuevo).now();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,9 +82,8 @@ public class ClienteDAOImp extends ObjectifyDAOTemplate implements ClienteDAO {
      */
     @Override
     public Cliente consultar(final Long id) {
-        Objectify ofy = getObjectifyFactory().begin();
         Key<Cliente> key = Key.create(Cliente.class, id);
-        Cliente respuesta = ofy.load().key(key).now();
+        Cliente respuesta = ofy().load().key(key).now();
         return respuesta;
     }
 
@@ -96,8 +92,7 @@ public class ClienteDAOImp extends ObjectifyDAOTemplate implements ClienteDAO {
      */
     @Override
     public boolean borrar(Cliente dato) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(dato);
+        ofy().delete().entity(dato);
         return true;
     }
 }

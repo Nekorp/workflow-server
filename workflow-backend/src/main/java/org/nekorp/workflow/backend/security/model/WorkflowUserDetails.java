@@ -21,14 +21,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Unindex;
 
 /**
  * 
  */
-@Entity @Unindex
+@Entity
+@Cache
 public class WorkflowUserDetails implements UserDetails {
 
     @Id

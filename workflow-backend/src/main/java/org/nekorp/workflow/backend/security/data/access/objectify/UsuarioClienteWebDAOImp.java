@@ -16,26 +16,24 @@
 package org.nekorp.workflow.backend.security.data.access.objectify;
 
 import java.util.List;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.security.data.access.UsuarioClienteWebDAO;
 import org.nekorp.workflow.backend.security.model.web.UsuarioClienteWeb;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class UsuarioClienteWebDAOImp extends ObjectifyDAOTemplate implements UsuarioClienteWebDAO {
+public class UsuarioClienteWebDAOImp implements UsuarioClienteWebDAO {
 
     /**{@inheritDoc}*/
     @Override
     public List<UsuarioClienteWeb> consultarTodos(FiltroBusqueda filtro, PaginationData<String> pagination) {
         List<UsuarioClienteWeb> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<UsuarioClienteWeb> query = ofy.load().type(UsuarioClienteWeb.class);
+        Query<UsuarioClienteWeb> query = ofy().load().type(UsuarioClienteWeb.class);
         if (pagination.getSinceId() != null) {
             Key<UsuarioClienteWeb> key = Key.create(UsuarioClienteWeb.class, pagination.getSinceId());
             query = query.filterKey(">=", key);
@@ -57,8 +55,7 @@ public class UsuarioClienteWebDAOImp extends ObjectifyDAOTemplate implements Usu
     @Override
     public void guardar(UsuarioClienteWeb nuevo) {
         try {
-            Objectify ofy = getObjectifyFactory().begin();
-            ofy.save().entity(nuevo).now();
+            ofy().save().entity(nuevo).now();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -67,17 +64,15 @@ public class UsuarioClienteWebDAOImp extends ObjectifyDAOTemplate implements Usu
     /**{@inheritDoc}*/
     @Override
     public UsuarioClienteWeb consultar(String id) {
-        Objectify ofy = getObjectifyFactory().begin();
         Key<UsuarioClienteWeb> key = Key.create(UsuarioClienteWeb.class, id);
-        UsuarioClienteWeb respuesta = ofy.load().key(key).now();
+        UsuarioClienteWeb respuesta = ofy().load().key(key).now();
         return respuesta;
     }
 
     /**{@inheritDoc}*/
     @Override
     public boolean borrar(UsuarioClienteWeb dato) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(dato);
+        ofy().delete().entity(dato);
         return true;
     }
 }

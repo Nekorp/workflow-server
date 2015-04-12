@@ -19,17 +19,18 @@ import org.nekorp.workflow.backend.model.cobranza.DatosCobranza;
 import org.nekorp.workflow.backend.model.servicio.auto.DatosAuto;
 import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadata;
 
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Unindex;
 
 /**
  * 
  * @author Nekorp
  *
  */
-@Entity @Unindex
+@Entity
+@Cache
 public class Servicio {
     @Id
     private Long id;

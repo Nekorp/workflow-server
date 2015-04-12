@@ -17,12 +17,11 @@ package org.nekorp.workflow.backend.model.secuencia;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Unindex;
 
 /**
  * 
  */
-@Entity @Unindex
+@Entity
 public class DatosFoliadorServicio {
 
     @Id

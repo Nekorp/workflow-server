@@ -15,16 +15,10 @@
  */
 package org.nekorp.workflow.backend.model.cliente;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotNull;
 
-import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.Unindex;
-
-@Embed @Unindex
-public class DomicilioFiscal implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class DomicilioFiscal {
+    
     @NotNull
     private String calle;
     @NotNull

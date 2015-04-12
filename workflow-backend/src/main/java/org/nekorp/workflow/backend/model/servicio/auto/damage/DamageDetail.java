@@ -16,17 +16,19 @@
 package org.nekorp.workflow.backend.model.servicio.auto.damage;
 
 import org.nekorp.workflow.backend.model.servicio.Servicio;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Parent;
-import com.googlecode.objectify.annotation.Unindex;
 
 /**
  * 
  */
-@Entity @Unindex
+@Entity
+@Cache
 public class DamageDetail {
 
     @Parent

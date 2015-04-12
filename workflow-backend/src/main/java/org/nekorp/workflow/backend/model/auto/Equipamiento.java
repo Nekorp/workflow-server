@@ -15,15 +15,9 @@
  */
 package org.nekorp.workflow.backend.model.auto;
 
-import java.io.Serializable;
 import java.util.List;
 
-import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.Unindex;
-
-@Embed @Unindex
-public class Equipamiento implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Equipamiento {
     private String transmision;
     private String elevadores;
     private String bolsasDeAire;

@@ -18,13 +18,9 @@ package org.nekorp.workflow.backend.model.servicio.auto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.Unindex;
-
 /**
  * 
  */
-@Embed @Unindex
 public class DatosAuto {
 
     @Size(min=1)

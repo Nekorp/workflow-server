@@ -17,14 +17,16 @@ package org.nekorp.workflow.backend.model.servicio.costo;
 
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.moneda.Moneda;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Parent;
-import com.googlecode.objectify.annotation.Unindex;
 
-@Entity @Unindex
+@Entity
+@Cache
 public class RegistroCosto {
     @Parent
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.

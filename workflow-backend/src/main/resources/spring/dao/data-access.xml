@@ -24,44 +24,16 @@
 		</property>
 	</bean>
 	
-	<bean id="userSecurityDAO" class="org.nekorp.workflow.backend.security.data.access.objectify.UserSecurityDAOImp">
-    	<property name="objectifyFactory" ref="objectifyFactory"/>
-    </bean>
-    
-    <bean id="clienteDAO" class="org.nekorp.workflow.backend.data.access.objectify.ClienteDAOImp">
-    	<property name="objectifyFactory" ref="objectifyFactory"/>
-    </bean>
-    
-	<bean id="autoDAO" class="org.nekorp.workflow.backend.data.access.objectify.AutoDAOImp">
-		<property name="objectifyFactory" ref="objectifyFactory"/>
-	</bean>
-	
+	<bean id="userSecurityDAO" class="org.nekorp.workflow.backend.security.data.access.objectify.UserSecurityDAOImp"/>
+    <bean id="clienteDAO" class="org.nekorp.workflow.backend.data.access.objectify.ClienteDAOImp"/>
+	<bean id="autoDAO" class="org.nekorp.workflow.backend.data.access.objectify.AutoDAOImp"/>
 	<bean id="servicioDAO" class="org.nekorp.workflow.backend.data.access.objectify.ServicioDAOImp">
-		<property name="objectifyFactory" ref="objectifyFactory"/>
 		<property name="idFoliador" value="foliadorServicio"/>
 	</bean>
-	
-	<bean id="bitacoraDAO" class="org.nekorp.workflow.backend.data.access.objectify.BitacoraDAOImp">
-		<property name="objectifyFactory" ref="objectifyFactory"/>
-	</bean>
-	
-	<bean id="costoDAO" class="org.nekorp.workflow.backend.data.access.objectify.CostoDAOImp">
-		<property name="objectifyFactory" ref="objectifyFactory"/>
-	</bean>
-	
-	<bean id="damageDetailDAO" class="org.nekorp.workflow.backend.data.access.objectify.DamageDetailDAOImp">
-		<property name="objectifyFactory" ref="objectifyFactory"/>
-	</bean>
-	
-	<bean id="eventoDAO" class="org.nekorp.workflow.backend.data.access.objectify.EventoDAOImp">
-		<property name="objectifyFactory" ref="objectifyFactory"/>
-	</bean>
-	
-	<bean id="registroCostoDAO" class="org.nekorp.workflow.backend.data.access.objectify.RegistroCostoDAOImp">
-		<property name="objectifyFactory" ref="objectifyFactory"/>
-	</bean>
-	
-	<bean id="usuarioClienteWebDAO" class="org.nekorp.workflow.backend.security.data.access.objectify.UsuarioClienteWebDAOImp">
-		<property name="objectifyFactory" ref="objectifyFactory"/>
-	</bean>
+	<bean id="bitacoraDAO" class="org.nekorp.workflow.backend.data.access.objectify.BitacoraDAOImp"/>
+	<bean id="costoDAO" class="org.nekorp.workflow.backend.data.access.objectify.CostoDAOImp"/>
+	<bean id="damageDetailDAO" class="org.nekorp.workflow.backend.data.access.objectify.DamageDetailDAOImp"/>
+	<bean id="eventoDAO" class="org.nekorp.workflow.backend.data.access.objectify.EventoDAOImp"/>
+	<bean id="registroCostoDAO" class="org.nekorp.workflow.backend.data.access.objectify.RegistroCostoDAOImp"/>
+	<bean id="usuarioClienteWebDAO" class="org.nekorp.workflow.backend.security.data.access.objectify.UsuarioClienteWebDAOImp"/>
 </beans>

@@ -15,15 +15,11 @@
  */
 package org.nekorp.workflow.backend.model.servicio.moneda;
 
-import com.googlecode.objectify.annotation.Embed;
-
-
 /**
  *
  * gracias java por tu perdida de precision.
  * no usar los getter y setter estan ahi para serializar :a
  */
-@Embed
 public class Moneda {
     
     private String value;

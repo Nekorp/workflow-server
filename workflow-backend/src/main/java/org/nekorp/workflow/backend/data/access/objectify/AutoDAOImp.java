@@ -18,18 +18,16 @@ package org.nekorp.workflow.backend.data.access.objectify;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.auto.Auto;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.Query;
-
+import static com.googlecode.objectify.ObjectifyService.ofy;
 /**
  * 
  */
-public class AutoDAOImp extends ObjectifyDAOTemplate implements AutoDAO {
+public class AutoDAOImp implements AutoDAO {
     
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#getAutos(org.nekorp.workflow.backend.data.access.util.FiltroAuto, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
@@ -37,8 +35,7 @@ public class AutoDAOImp extends ObjectifyDAOTemplate implements AutoDAO {
     @Override
     public List<Auto> consultarTodos(FiltroAuto filtro, PaginationData<String> pagination) {
         List<Auto> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<Auto> query =  ofy.load().type(Auto.class);
+        Query<Auto> query =  ofy().load().type(Auto.class);
         if (!StringUtils.isEmpty(filtro.getFiltroNumeroSerie())) {
             String serieBuscado = filtro.getFiltroNumeroSerie();
             if (StringUtils.isEmpty(pagination.getSinceId())) {
@@ -70,8 +67,7 @@ public class AutoDAOImp extends ObjectifyDAOTemplate implements AutoDAO {
     @Override
     public void guardar(Auto nuevo) {
         try {
-            Objectify ofy = getObjectifyFactory().begin();
-            ofy.save().entity(nuevo).now();
+            ofy().save().entity(nuevo).now();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,9 +78,8 @@ public class AutoDAOImp extends ObjectifyDAOTemplate implements AutoDAO {
      */
     @Override
     public Auto consultar(String numerSerie) {
-        Objectify ofy = getObjectifyFactory().begin();
         Key<Auto> key = Key.create(Auto.class, numerSerie);
-        Auto respuesta = ofy.load().key(key).now();
+        Auto respuesta = ofy().load().key(key).now();
         return respuesta;
     }    
     
@@ -93,8 +88,7 @@ public class AutoDAOImp extends ObjectifyDAOTemplate implements AutoDAO {
      */
     @Override
     public boolean borrar(Auto dato) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(dato);
+        ofy().delete().entity(dato);
         return true;
     }
 }

@@ -17,19 +17,18 @@ package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
 import org.nekorp.workflow.backend.data.access.EventoDAO;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class EventoDAOImp extends ObjectifyDAOTemplate implements EventoDAO {
+public class EventoDAOImp implements EventoDAO {
 
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#consultarTodos(java.lang.Object, java.lang.Object, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
@@ -39,8 +38,7 @@ public class EventoDAOImp extends ObjectifyDAOTemplate implements EventoDAO {
             PaginationData<Long> pagination) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
         List<Evento> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<Evento> query = ofy.load().type(Evento.class);
+        Query<Evento> query = ofy().load().type(Evento.class);
         query = query.ancestor(parentKey);
         if (pagination.getSinceId() != null) {
             Key<Evento> key = Key.create(parentKey, Evento.class, pagination.getSinceId());
@@ -66,8 +64,7 @@ public class EventoDAOImp extends ObjectifyDAOTemplate implements EventoDAO {
     public void guardar(Long idParent, Evento nuevo) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
         nuevo.setParent(parentKey);
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.save().entity(nuevo).now();
+        ofy().save().entity(nuevo).now();
     }
 
     /* (non-Javadoc)
@@ -77,8 +74,7 @@ public class EventoDAOImp extends ObjectifyDAOTemplate implements EventoDAO {
     public Evento consultar(Long idParent, Long id) {
         Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
         Key<Evento> key = Key.create(parentKey, Evento.class, id);
-        Objectify ofy = getObjectifyFactory().begin();
-        Evento respuesta = ofy.load().key(key).now();
+        Evento respuesta = ofy().load().key(key).now();
         return respuesta;
     }
 
@@ -87,8 +83,7 @@ public class EventoDAOImp extends ObjectifyDAOTemplate implements EventoDAO {
      */
     @Override
     public boolean borrar(Long idParent, Evento dato) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(dato);
+        ofy().delete().entity(dato);
         return true;
     }
 }

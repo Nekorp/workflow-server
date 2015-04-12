@@ -15,8 +15,6 @@
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="servicioMetadataFactory" ref="servicioMetadataFactory"/>
 	</bean>
-	<bean id="autoDAOCache" class="org.nekorp.workflow.backend.memcache.AutoDAOCache"/>
-	<bean id="clienteDAOCache" class="org.nekorp.workflow.backend.memcache.ClienteDAOCache"/>
 	<aop:config>
 		<aop:aspect id="refreshServicioMetadata" ref="servicioMetadataAutoRefresh">
 			<aop:pointcut id="guardarServicio" 
@@ -31,31 +29,6 @@
 			<aop:after-returning pointcut-ref="guardarBitacora" method="actualizarUsandoIdEventos"/>
 			<aop:after-returning pointcut-ref="guardarEvento" method="actualizarUsandoId"/>
 			<aop:after-returning pointcut-ref="borrarEvento" method="actualizarUsandoId"/>
-  		</aop:aspect>
-  		<aop:aspect id="autoCacheAspect" ref="autoDAOCache">
-			<aop:pointcut id="guardarAuto" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.AutoDAO.guardar(..)) and args(auto)"/>
-			<aop:pointcut id="borrarAuto" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.AutoDAO.borrar(..)) and args(auto)"/>
-			<aop:pointcut id="consultarAuto" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.AutoDAO.consultar(..)) and args(id)"/>
-			<aop:before pointcut-ref="guardarAuto" method="notifyUpdate"/>
-			<aop:before pointcut-ref="borrarAuto" method="notifyUpdate"/>
-			<aop:around pointcut-ref="consultarAuto" method="notifyQuery"/>
-  		</aop:aspect>
-  		<aop:aspect id="clienteCacheAspect" ref="clienteDAOCache">
-			<aop:pointcut id="guardarCliente" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.ClienteDAO.guardar(..)) and args(cliente)"/>
-			<aop:pointcut id="borrarCliente" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.ClienteDAO.borrar(..)) and args(cliente)"/>
-			<aop:pointcut id="consultarCliente" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.ClienteDAO.consultar(..)) and args(id)"/>
-			<aop:pointcut id="consultarTodosCliente" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.ClienteDAO.consultarTodos(..)) and args(filtro, pagination)"/>
-			<aop:before pointcut-ref="guardarCliente" method="notifyUpdate"/>
-			<aop:before pointcut-ref="borrarCliente" method="notifyUpdate"/>
-			<aop:around pointcut-ref="consultarCliente" method="notifyQuery"/>
-			<aop:around pointcut-ref="consultarTodosCliente" method="notifyQueryTodos"/>
   		</aop:aspect>
 	</aop:config>
 </beans>

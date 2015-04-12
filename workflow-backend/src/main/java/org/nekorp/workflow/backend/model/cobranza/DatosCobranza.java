@@ -19,14 +19,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.Unindex;
-
 /**
  *
  * @author Nekorp
  */
-@Embed @Unindex
 public class DatosCobranza {
     private boolean facturado;
     private String numeroFactura;

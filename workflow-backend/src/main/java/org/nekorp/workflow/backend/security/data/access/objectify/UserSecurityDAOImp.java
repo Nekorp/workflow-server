@@ -17,28 +17,25 @@ package org.nekorp.workflow.backend.security.data.access.objectify;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import org.jboss.logging.Logger;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.security.data.access.UserSecurityDAO;
 import org.nekorp.workflow.backend.security.model.WorkflowGrantedAuthority;
 import org.nekorp.workflow.backend.security.model.WorkflowUserDetails;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class UserSecurityDAOImp extends ObjectifyDAOTemplate implements UserSecurityDAO {
+public class UserSecurityDAOImp implements UserSecurityDAO {
 
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.security.data.access.UserSecurityDAO#saveUserDetails(org.nekorp.workflow.backend.security.model.WorkflowUserDetails)
      */
     @Override
     public void saveUserDetails(WorkflowUserDetails userDetails) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.save().entity(userDetails).now();
+        ofy().save().entity(userDetails).now();
     }
 
     /* (non-Javadoc)
@@ -47,8 +44,7 @@ public class UserSecurityDAOImp extends ObjectifyDAOTemplate implements UserSecu
     @Override
     public WorkflowUserDetails loadUserByName(String userName) {
         List<WorkflowUserDetails> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<WorkflowUserDetails> query =  ofy.load().type(WorkflowUserDetails.class);
+        Query<WorkflowUserDetails> query =  ofy().load().type(WorkflowUserDetails.class);
         result = query.list();
         if (result.size() == 0 && userName.equals("user")) { //no existe ningun usuario hay que crear el de default
             Logger.getLogger(UserSecurityDAOImp.class).info("Creando Usuario default");
@@ -81,9 +77,8 @@ public class UserSecurityDAOImp extends ObjectifyDAOTemplate implements UserSecu
      */
     @Override
     public void deleteUserDetails(String userName) {
-        Objectify ofy = getObjectifyFactory().begin();
         Key<WorkflowUserDetails> key = Key.create(WorkflowUserDetails.class, userName);
-        ofy.delete().entity(key).now();
+        ofy().delete().entity(key).now();
     }
 
 }

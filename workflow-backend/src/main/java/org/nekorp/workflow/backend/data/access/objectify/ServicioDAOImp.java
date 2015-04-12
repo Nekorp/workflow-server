@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
-import org.nekorp.workflow.backend.data.access.objectify.template.ObjectifyDAOTemplate;
 import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.data.access.util.FiltroServicio;
 import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
@@ -28,22 +27,21 @@ import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.secuencia.DatosFoliadorServicio;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * 
  */
-public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO {
+public class ServicioDAOImp implements ServicioDAO {
 
     private String idFoliador;
     
     @Override
     public List<Servicio> consultarTodos(FiltroBusqueda filtroRaw, PaginationData<Long> pagination) {
         List<Servicio> result;
-        Objectify ofy = getObjectifyFactory().begin();
-        Query<Servicio> query = ofy.load().type(Servicio.class);
+        Query<Servicio> query = ofy().load().type(Servicio.class);
         if (filtroRaw instanceof FiltroServicio) {
             FiltroServicio filtro = (FiltroServicio) filtroRaw;
             //consulta unicamente por rango de fechas
@@ -83,8 +81,7 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
     private List<Servicio> consultarTodosPorFecha(FiltroServicio filtro, PaginationData<Long> pagination) {
         List<Servicio> result;
         try {
-            Objectify ofy = getObjectifyFactory().begin();
-            Query<Servicio> query = ofy.load().type(Servicio.class);
+            Query<Servicio> query = ofy().load().type(Servicio.class);
             DateTime inicio = new DateTime(filtro.getFechaInicial());
             query = query.filter("metadata.fechaInicio >=", inicio.toDate());
             DateTime fin = new DateTime(filtro.getFechaFinal());
@@ -106,25 +103,23 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
             if (nuevo.getId() == null) {
                 nuevo.setId(obtenerNuevoFolio());
             }
-            Objectify ofy = getObjectifyFactory().begin();
-            ofy.save().entity(nuevo).now();
+            ofy().save().entity(nuevo).now();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
     
     private Long obtenerNuevoFolio() {
-        final Objectify ofy = getObjectifyFactory().begin();
-        Long folio = ofy.transact(new Work<Long>() {
+        Long folio = ofy().transact(new Work<Long>() {
             @Override
             public Long run() {
                 Key<DatosFoliadorServicio> key = Key.create(DatosFoliadorServicio.class, idFoliador);
-                DatosFoliadorServicio datFolio = ofy.load().key(key).now();
+                DatosFoliadorServicio datFolio = ofy().load().key(key).now();
                 if (datFolio == null) {
                     datFolio = new DatosFoliadorServicio(idFoliador, Long.valueOf(1));
                 }
                 Long r = datFolio.usarSiguienteFolio();
-                ofy.save().entity(datFolio);
+                ofy().save().entity(datFolio);
                 return r;
             }
         });
@@ -133,16 +128,14 @@ public class ServicioDAOImp extends ObjectifyDAOTemplate implements ServicioDAO 
 
     @Override
     public Servicio consultar(Long id) {
-        Objectify ofy = getObjectifyFactory().begin();
         Key<Servicio> key = Key.create(Servicio.class, id);
-        Servicio respuesta = ofy.load().key(key).now();
+        Servicio respuesta = ofy().load().key(key).now();
         return respuesta;
     }
 
     @Override
     public boolean borrar(Servicio dato) {
-        Objectify ofy = getObjectifyFactory().begin();
-        ofy.delete().entity(dato);
+        ofy().delete().entity(dato);
         return true;
     }
 
