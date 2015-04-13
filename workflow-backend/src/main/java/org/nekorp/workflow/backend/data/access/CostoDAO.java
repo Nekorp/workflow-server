@@ -16,6 +16,8 @@
 package org.nekorp.workflow.backend.data.access;
 
 import java.util.List;
+
+import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 
 /**
@@ -25,7 +27,7 @@ public interface CostoDAO {
 
     List<RegistroCosto> consultar(Long idServicio);
 
-    List<RegistroCosto> guardar(Long idServicio, List<RegistroCosto> registros);
+    List<RegistroCosto> guardar(Servicio servicio, List<RegistroCosto> registros);
     
     
 }

@@ -16,6 +16,9 @@
 package org.nekorp.workflow.backend.model.servicio.metadata;
 
 import java.util.Date;
+
+import org.nekorp.workflow.backend.model.servicio.moneda.Moneda;
+
 import com.googlecode.objectify.annotation.Index;
 
 /**
@@ -27,6 +30,7 @@ public class ServicioMetadata {
     private Date fechaInicio;
     @Index
     private String status;
+    private Moneda costoTotal;
     public Date getFechaInicio() {
         return fechaInicio;
     }
@@ -39,5 +43,10 @@ public class ServicioMetadata {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+    public Moneda getCostoTotal() {
+        return costoTotal;
+    }
+    public void setCostoTotal(Moneda costoTotal) {
+        this.costoTotal = costoTotal;
+    }
 }

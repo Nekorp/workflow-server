@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 
 /**
  * En algunas ocaciones se tiene que recalcular el metadata del servicio.
@@ -36,4 +37,6 @@ public interface ServicioMetadataAutoRefresh {
     void actualizarServicioMetadataInterceptor(Servicio servicio);
     
     void actualizarUsandoServicioEventos(Servicio servicio, List<Evento> eventos);
+    
+    void actualizarCostoTotal(final Servicio servicio, final List<RegistroCosto> registros);
 }

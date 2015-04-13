@@ -169,7 +169,7 @@ public class ServicioControllerImp implements ServicioController {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
-        List<RegistroCosto> datos = costoDAO.guardar(idServicio, registros);
+        List<RegistroCosto> datos = costoDAO.guardar(servicio, registros);
         response.setHeader("Content-Type","application/json;charset=UTF-8");
         return datos;
     }

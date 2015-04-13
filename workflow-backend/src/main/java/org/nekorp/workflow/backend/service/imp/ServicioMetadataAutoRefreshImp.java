@@ -20,6 +20,7 @@ import java.util.List;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 import org.nekorp.workflow.backend.service.ServicioMetadataAutoRefresh;
 import org.nekorp.workflow.backend.service.ServicioMetadataFactory;
 
@@ -61,6 +62,12 @@ public class ServicioMetadataAutoRefreshImp implements ServicioMetadataAutoRefre
     @Override
     public void actualizarUsandoServicioEventos(final Servicio servicio, final List<Evento> eventos) {
         servicio.setMetadata(servicioMetadataFactory.calcularMetadata(servicio, eventos));
+        servicioDAO.actualizarMetadata(servicio);
+    }
+    
+    @Override
+    public void actualizarCostoTotal(final Servicio servicio, final List<RegistroCosto> registros) {
+        servicioMetadataFactory.calcularCostoMetaData(servicio, registros);
         servicioDAO.actualizarMetadata(servicio);
     }
 

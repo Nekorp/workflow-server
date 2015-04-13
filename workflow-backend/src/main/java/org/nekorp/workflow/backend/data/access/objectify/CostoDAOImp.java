@@ -47,15 +47,15 @@ public class CostoDAOImp implements CostoDAO {
      * @see org.nekorp.workflow.backend.data.access.CostoDAO#saveEventos(java.lang.Long, java.util.List)
      */
     @Override
-    public List<RegistroCosto> guardar(final Long idServicio, final List<RegistroCosto> registros) {
-        List<RegistroCosto> oldRegistros = this.consultar(idServicio);
+    public List<RegistroCosto> guardar(final Servicio servicio, final List<RegistroCosto> registros) {
+        List<RegistroCosto> oldRegistros = this.consultar(servicio.getId());
         for (RegistroCosto x: oldRegistros) {
             if (!registros.contains(x)) {
                 borrarRegistro(x);
             }
         }
         List<Result<Key<RegistroCosto>>> nuevos = new LinkedList<Result<Key<RegistroCosto>>>();
-        Key<Servicio> parentKey = Key.create(Servicio.class, idServicio);
+        Key<Servicio> parentKey = Key.create(Servicio.class, servicio.getId());
         Result<Key<RegistroCosto>> result;
         for (RegistroCosto x: registros) {
             x.setParent(parentKey);

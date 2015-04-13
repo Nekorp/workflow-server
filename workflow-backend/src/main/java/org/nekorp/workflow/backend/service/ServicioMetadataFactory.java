@@ -16,8 +16,10 @@
 package org.nekorp.workflow.backend.service;
 
 import java.util.List;
+
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadata;
 
 /**
@@ -39,4 +41,11 @@ public interface ServicioMetadataFactory {
      * @return los datos calculados.
      */
     ServicioMetadata calcularMetadata(Servicio servicio,  List<Evento> eventos);
+    
+    /**
+     * Actualiza el costo total del metadata de un servicio
+     * @param servicio
+     * @param registros
+     */
+    void calcularCostoMetaData(Servicio servicio, List<RegistroCosto> registros);
 }

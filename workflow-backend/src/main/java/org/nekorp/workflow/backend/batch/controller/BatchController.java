@@ -17,11 +17,16 @@ package org.nekorp.workflow.backend.batch.controller;
 
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.validation.Valid;
+
+import org.nekorp.workflow.backend.data.access.CostoDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.service.ServicioMetadataFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +40,7 @@ public class BatchController {
     private static final Logger log = Logger.getLogger(BatchController.class.getName());
     
     private ServicioDAO servicioDAO;
+    private CostoDAO costoDAO;
     private ServicioMetadataFactory servicioMetadataFactory;
     
     @RequestMapping(value="/actualizarServicioMetadata", method = RequestMethod.GET)
@@ -55,9 +61,32 @@ public class BatchController {
         }
         BatchController.log.info("se procesaron exitosamente " + countOk + " servicios");
     }
+    
+    @RequestMapping(value="/actualizarCostoTotal", method = RequestMethod.GET)
+    public @ResponseBody PaginationDataLong actualizarCostoTotal(@Valid @ModelAttribute final PaginationDataLong pagination) {
+        BatchController.log.warning("Iniciando Proceso batch de actualizacion de los costos Totales");
+        int countOk = 0;
+        List<Servicio> servicios = servicioDAO.consultarTodos(null, pagination);
+        for (Servicio x : servicios) {
+            try {
+                servicioMetadataFactory.calcularCostoMetaData(x, costoDAO.consultar(x.getId()));
+                servicioDAO.actualizarMetadata(x);
+                countOk = countOk + 1;
+            } catch (Exception e) {
+                BatchController.log.severe("error al actualizar el servicio: " + x.getId() + " " + e.getMessage());
+                break;
+            }
+        }
+        BatchController.log.warning("se procesaron exitosamente " + countOk + " servicios");
+        return pagination;
+    }
 
     public void setServicioDAO(ServicioDAO servicioDAO) {
         this.servicioDAO = servicioDAO;
+    }
+
+    public void setCostoDAO(CostoDAO costoDAO) {
+        this.costoDAO = costoDAO;
     }
 
     public void setServicioMetadataFactory(

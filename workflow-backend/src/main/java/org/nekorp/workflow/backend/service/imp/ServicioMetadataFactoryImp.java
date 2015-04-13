@@ -17,15 +17,19 @@ package org.nekorp.workflow.backend.service.imp;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
 import org.nekorp.workflow.backend.model.servicio.Servicio;
 import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
 import org.nekorp.workflow.backend.model.servicio.bitacora.EventoConstants;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
 import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadata;
 import org.nekorp.workflow.backend.model.servicio.metadata.ServicioStatusConstants;
+import org.nekorp.workflow.backend.model.servicio.moneda.Moneda;
 import org.nekorp.workflow.backend.service.ServicioMetadataFactory;
+import org.nekorp.workflow.backend.util.MonedaHalfUpRound;
 
 /**
  * 
@@ -100,6 +104,25 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
         return respuesta;
     }
 
+    @Override
+    public void calcularCostoMetaData(Servicio servicio, List<RegistroCosto> registros) {
+        MonedaHalfUpRound total = new MonedaHalfUpRound();
+        for (RegistroCosto x: registros) {
+            MonedaHalfUpRound subtotal = null;
+            if (StringUtils.equals("Insumo", x.getSubtipo())) {
+                MonedaHalfUpRound precioUnitario = MonedaHalfUpRound.valueOf(x.getPrecioUnitario().getValue());
+                subtotal = precioUnitario.multiplica(x.getCantidad());
+            } else {
+                MonedaHalfUpRound precioCliente = MonedaHalfUpRound.valueOf(x.getPrecioCliente().getValue());
+                subtotal = precioCliente.multiplica(x.getCantidad());
+            }
+            total = total.suma(subtotal);
+        }
+        Moneda resultado = new Moneda();
+        resultado.setValue(total.toString());
+        servicio.getMetadata().setCostoTotal(resultado);
+    }
+    
     public void setBitacoraDAO(BitacoraDAO bitacoraDAO) {
         this.bitacoraDAO = bitacoraDAO;
     }

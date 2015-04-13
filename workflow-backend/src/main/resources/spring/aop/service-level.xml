@@ -25,10 +25,13 @@
 				expression="execution(* org.nekorp.workflow.backend.data.access.EventoDAO.guardar(..)) and args(idServicio,..)"/>
 			<aop:pointcut id="borrarEvento" 
 				expression="execution(* org.nekorp.workflow.backend.data.access.EventoDAO.borrar(..)) and args(idServicio,..)"/>
+			<aop:pointcut id="actualizarCostos" 
+				expression="execution(* org.nekorp.workflow.backend.data.access.CostoDAO.guardar(..)) and args(servicio,registros)"/>
 			<aop:before pointcut-ref="guardarServicio" method="actualizarServicioMetadataInterceptor"/>
 			<aop:after-returning pointcut-ref="guardarBitacora" method="actualizarUsandoIdEventos"/>
 			<aop:after-returning pointcut-ref="guardarEvento" method="actualizarUsandoId"/>
 			<aop:after-returning pointcut-ref="borrarEvento" method="actualizarUsandoId"/>
+			<aop:after-returning pointcut-ref="actualizarCostos" method="actualizarCostoTotal"/>
   		</aop:aspect>
 	</aop:config>
 </beans>

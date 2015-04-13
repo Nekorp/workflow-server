@@ -17,8 +17,10 @@ package org.nekorp.workflow.backend.controller.imp;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.controller.ServicioIndexController;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
@@ -84,6 +86,7 @@ public class ServicioIndexControllerImp implements ServicioIndexController {
         nuevo.setId(servicio.getId());
         nuevo.setStatus(servicio.getMetadata().getStatus());
         nuevo.setCobranza(servicio.getCobranza());
+        nuevo.setCostoTotal(servicio.getMetadata().getCostoTotal());
         return nuevo;
     }
     
@@ -153,5 +156,4 @@ public class ServicioIndexControllerImp implements ServicioIndexController {
     public void setPagFactory(PaginationModelFactory pagFactory) {
         this.pagFactory = pagFactory;
     }
-    
 }
