@@ -17,6 +17,8 @@ package org.nekorp.workflow.backend.model.index.servicio;
 
 import java.util.Date;
 
+import org.nekorp.workflow.backend.model.cobranza.DatosCobranza;
+
 /**
  * 
  */
@@ -28,6 +30,7 @@ public class ServicioIndex {
     private Date fechaInicio;
     private ServicioIndexClienteData clienteData;
     private ServicioIndexAutoData autoData;
+    private DatosCobranza cobranza;
     public ServicioIndex() {
         clienteData = new ServicioIndexClienteData();
         autoData = new ServicioIndexAutoData();
@@ -67,6 +70,12 @@ public class ServicioIndex {
     }
     public void setAutoData(ServicioIndexAutoData autoData) {
         this.autoData = autoData;
+    }
+    public DatosCobranza getCobranza() {
+        return cobranza;
+    }
+    public void setCobranza(DatosCobranza cobranza) {
+        this.cobranza = cobranza;
     }
     
 }

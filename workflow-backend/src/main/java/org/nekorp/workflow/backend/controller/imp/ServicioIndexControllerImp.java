@@ -83,6 +83,7 @@ public class ServicioIndexControllerImp implements ServicioIndexController {
         nuevo.setFechaInicio(servicio.getMetadata().getFechaInicio());
         nuevo.setId(servicio.getId());
         nuevo.setStatus(servicio.getMetadata().getStatus());
+        nuevo.setCobranza(servicio.getCobranza());
         return nuevo;
     }
     
