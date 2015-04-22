@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,23 +15,30 @@
  */
 package org.nekorp.workflow.backend.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
+import org.springframework.validation.BindingResult;
+
+import technology.tikal.gae.pagination.model.Page;
+import technology.tikal.gae.pagination.model.PaginationDataLong;
 
 /**
- * 
+ * @author Nekorp
  */
+@Deprecated
 public interface EventoController {
 
-    Page<Evento, Long> getEventos(Long idServicio, PaginationDataLong pagination, HttpServletResponse response);
+    Page<List<EventoOfy>> getEventos(Long idServicio, PaginationDataLong pagination, BindingResult resultPagination, HttpServletRequest request);
     
-    void crearEvento(Long idServicio, Evento dato, HttpServletResponse response);
+    void crearEvento(Long idServicio, EventoOfy dato, BindingResult result, HttpServletRequest request, HttpServletResponse response);
     
-    Evento getEvento(Long idServicio, Long idEvento, HttpServletResponse response);
+    EventoOfy getEvento(Long idServicio, Long idEvento);
     
-    void actualizarEvento(Long idServicio, Long idEvento, Evento dato, HttpServletResponse response);
+    void actualizarEvento(Long idServicio, Long idEvento, EventoOfy dato, BindingResult result);
     
-    void borrarEvento(Long idServicio, Long idEvento, HttpServletResponse response);
+    void borrarEvento(Long idServicio, Long idEvento);
 }

@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@ package org.nekorp.workflow.backend.model.servicio.metadata;
 
 import java.util.Date;
 
-import org.nekorp.workflow.backend.model.servicio.moneda.Moneda;
+import technology.tikal.taller.automotriz.model.servicio.moneda.Moneda;
 
 import com.googlecode.objectify.annotation.Index;
 
 /**
- * 
+ * @author Nekorp
  */
-public class ServicioMetadata {
+public class ServicioMetadataOfy {
 
     @Index
     private Date fechaInicio;

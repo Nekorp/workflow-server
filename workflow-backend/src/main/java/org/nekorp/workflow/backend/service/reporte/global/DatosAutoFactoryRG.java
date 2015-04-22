@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,23 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-
 package org.nekorp.workflow.backend.service.reporte.global;
 
 import org.nekorp.workflow.backend.data.access.AutoDAO;
-import org.nekorp.workflow.backend.model.auto.Auto;
+import org.nekorp.workflow.backend.model.auto.AutoOfy;
 import org.nekorp.workflow.backend.model.reporte.global.DatosAutoRG;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 /**
- *
+ * @author Nekorp
  */
 public class DatosAutoFactoryRG implements DataFactoryRG<DatosAutoRG> {
 
     private AutoDAO autoDAO;
     @Override
-    public DatosAutoRG build(Servicio data) {
+    public DatosAutoRG build(ServicioOfy data) {
         DatosAutoRG r = new DatosAutoRG();
-        Auto auto = autoDAO.consultar(data.getIdAuto());
+        AutoOfy auto = autoDAO.consultar(data.getIdAuto());
         r.setColor(auto.getColor());
         r.setMarca(auto.getMarca());
         r.setModelo(auto.getModelo());

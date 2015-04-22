@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,21 @@
 package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
+
 import org.nekorp.workflow.backend.data.access.RegistroCostoDAO;
-import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
+
+import technology.tikal.gae.dao.template.FiltroBusqueda;
+import technology.tikal.gae.pagination.model.PaginationData;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
- * 
+ * @author Nekorp
  */
 public class RegistroCostoDAOImp implements RegistroCostoDAO {
 
@@ -34,13 +38,13 @@ public class RegistroCostoDAOImp implements RegistroCostoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#consultarTodos(java.lang.Object, java.lang.Object, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<RegistroCosto> consultarTodos(Long idParent, FiltroBusqueda filtro, PaginationData<Long> pagination) {
-        Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
-        List<RegistroCosto> result;
-        Query<RegistroCosto> query = ofy().load().type(RegistroCosto.class);
+    public List<RegistroCostoOfy> consultarTodos(ServicioOfy parent, FiltroBusqueda filtro, PaginationData<Long> pagination) {
+        Key<ServicioOfy> parentKey = Key.create(parent);
+        List<RegistroCostoOfy> result;
+        Query<RegistroCostoOfy> query = ofy().load().type(RegistroCostoOfy.class);
         query = query.ancestor(parentKey);
         if (pagination.getSinceId() != null) {
-            Key<RegistroCosto> key = Key.create(parentKey, RegistroCosto.class, pagination.getSinceId());
+            Key<RegistroCostoOfy> key = Key.create(parentKey, RegistroCostoOfy.class, pagination.getSinceId());
             query = query.filterKey(">=", key);
         }
         if (pagination.getMaxResults() != 0) {
@@ -49,7 +53,7 @@ public class RegistroCostoDAOImp implements RegistroCostoDAO {
         }
         result = query.list();
         if (pagination.getMaxResults() != 0 && result.size() > pagination.getMaxResults()) {
-            RegistroCosto ultimo = result.get(pagination.getMaxResults());
+            RegistroCostoOfy ultimo = result.get(pagination.getMaxResults());
             pagination.setNextId(ultimo.getId());
             result.remove(pagination.getMaxResults());
         }
@@ -60,8 +64,8 @@ public class RegistroCostoDAOImp implements RegistroCostoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#guardar(java.lang.Object, java.lang.Object)
      */
     @Override
-    public void guardar(Long idParent, RegistroCosto nuevo) {
-        Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
+    public void guardar(ServicioOfy parent, RegistroCostoOfy nuevo) {
+        Key<ServicioOfy> parentKey = Key.create(parent);
         nuevo.setParent(parentKey);
         ofy().save().entity(nuevo).now();
     }
@@ -70,10 +74,10 @@ public class RegistroCostoDAOImp implements RegistroCostoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#consultar(java.lang.Object, java.lang.Object)
      */
     @Override
-    public RegistroCosto consultar(Long idParent, Long id) {
-        Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
-        Key<RegistroCosto> key = Key.create(parentKey, RegistroCosto.class, id);
-        RegistroCosto respuesta = ofy().load().key(key).now();
+    public RegistroCostoOfy consultar(ServicioOfy parent, Long id, Class<?>... group) {
+        Key<ServicioOfy> parentKey = Key.create(parent);
+        Key<RegistroCostoOfy> key = Key.create(parentKey, RegistroCostoOfy.class, id);
+        RegistroCostoOfy respuesta = ofy().load().key(key).safe();
         return respuesta;
     }
 
@@ -81,9 +85,8 @@ public class RegistroCostoDAOImp implements RegistroCostoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#borrar(java.lang.Object, java.lang.Object)
      */
     @Override
-    public boolean borrar(Long idParent, RegistroCosto dato) {
-        ofy().delete().entity(dato);
-        return true;
+    public void borrar(ServicioOfy parent, RegistroCostoOfy dato) {
+        ofy().delete().entity(dato).now();
     }
 
 }

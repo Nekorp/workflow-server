@@ -22,20 +22,23 @@ import javax.validation.Valid;
 
 import org.nekorp.workflow.backend.data.access.CostoDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 import org.nekorp.workflow.backend.service.ServicioMetadataFactory;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import technology.tikal.gae.pagination.model.PaginationDataLong;
+import technology.tikal.gae.service.template.RestControllerTemplate;
 
 /**
  * @author Nekorp
  */
-@Controller
-public class BatchController {
+@RestController
+public class BatchController extends RestControllerTemplate {
 
     private static final Logger log = Logger.getLogger(BatchController.class.getName());
     
@@ -47,10 +50,10 @@ public class BatchController {
     public @ResponseBody void actualizarServicioMetadata() {
         BatchController.log.info("Iniciando Proceso batch de actualizacion del metadata de los servicios");
         PaginationDataLong p = new PaginationDataLong();
-        List<Servicio> servicios = servicioDAO.consultarTodos(null, p);
+        List<ServicioOfy> servicios = servicioDAO.consultarTodos(null, p);
         BatchController.log.info("Se procesaran " + servicios.size() + " servicos");
         int countOk = 0;
-        for (Servicio x: servicios) {
+        for (ServicioOfy x: servicios) {
             try {
                 x.setMetadata(servicioMetadataFactory.calcularMetadata(x));
                 servicioDAO.actualizarMetadata(x);
@@ -62,14 +65,14 @@ public class BatchController {
         BatchController.log.info("se procesaron exitosamente " + countOk + " servicios");
     }
     
-    @RequestMapping(value="/actualizarCostoTotal", method = RequestMethod.GET)
-    public @ResponseBody PaginationDataLong actualizarCostoTotal(@Valid @ModelAttribute final PaginationDataLong pagination) {
+    @RequestMapping(produces = "application/json;charset=UTF-8", value="/actualizarCostoTotal", method = RequestMethod.GET)
+    public PaginationDataLong actualizarCostoTotal(@Valid @ModelAttribute final PaginationDataLong pagination) {
         BatchController.log.warning("Iniciando Proceso batch de actualizacion de los costos Totales");
         int countOk = 0;
-        List<Servicio> servicios = servicioDAO.consultarTodos(null, pagination);
-        for (Servicio x : servicios) {
+        List<ServicioOfy> servicios = servicioDAO.consultarTodos(null, pagination);
+        for (ServicioOfy x : servicios) {
             try {
-                servicioMetadataFactory.calcularCostoMetaData(x, costoDAO.consultar(x.getId()));
+                servicioMetadataFactory.calcularCostoMetaData(x, costoDAO.consultar(x));
                 servicioDAO.actualizarMetadata(x);
                 countOk = countOk + 1;
             } catch (Exception e) {

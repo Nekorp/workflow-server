@@ -1,5 +1,5 @@
 /**
- *   Copyright 2012-2013 Nekorp
+ *   Copyright 2012-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,22 +15,28 @@
  */
 package org.nekorp.workflow.backend.model.servicio.costo;
 
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.moneda.Moneda;
+import java.util.Date;
+
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+
+import technology.tikal.taller.automotriz.model.servicio.moneda.Moneda;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Parent;
 
+/**
+ * 
+ * @author Nekorp
+ *
+ */
 @Entity
-@Cache
-public class RegistroCosto {
+public class RegistroCostoOfy {
     @Parent
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.
-    private Key<Servicio> parent;
+    private Key<ServicioOfy> parent;
     @Id
     private Long id;
     private String tipo;
@@ -41,12 +47,17 @@ public class RegistroCosto {
     private boolean precioUnitarioConIVA;
     private Moneda precioCliente;
     private boolean subtotalConIVA;
+    private Date fechaCreacion;
     
-    public Key<Servicio> getParent() {
+    public RegistroCostoOfy() {
+        fechaCreacion = new Date();
+    }
+    
+    public Key<ServicioOfy> getParent() {
         return parent;
     }
 
-    public void setParent(Key<Servicio> parent) {
+    public void setParent(Key<ServicioOfy> parent) {
         this.parent = parent;
     }
 
@@ -122,6 +133,14 @@ public class RegistroCosto {
         this.subtotalConIVA = subtotalConIVA;
     }
 
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -138,7 +157,7 @@ public class RegistroCosto {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        RegistroCosto other = (RegistroCosto) obj;
+        RegistroCostoOfy other = (RegistroCostoOfy) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

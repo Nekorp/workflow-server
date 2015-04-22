@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,14 +15,12 @@
  */
 package org.nekorp.workflow.backend.controller;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.nekorp.workflow.backend.model.reporte.global.RenglonRG;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface ReporteGlobalController {
 
-    RenglonRG getRenglon(Long idServicio, HttpServletResponse response);
+    RenglonRG getRenglon(Long idServicio);
 }

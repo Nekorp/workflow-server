@@ -8,24 +8,22 @@
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context.xsd">
     
-	<bean id = "objectifyFactory" class="org.nekorp.workflow.backend.util.ObjectifyFactoryBean">
+	<bean id = "objectifyFactory" class="technology.tikal.gae.spring.objectify.ObjectifyFactoryInitializer">
 		<property name="classes">
     		<list>
-				<value>org.nekorp.workflow.backend.model.cliente.Cliente</value>
-				<value>org.nekorp.workflow.backend.model.auto.Auto</value>
-				<value>org.nekorp.workflow.backend.model.servicio.Servicio</value>
-				<value>org.nekorp.workflow.backend.model.servicio.bitacora.Evento</value>
-				<value>org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto</value>
-				<value>org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetail</value>
-				<value>org.nekorp.workflow.backend.security.model.WorkflowUserDetails</value>
+				<value>org.nekorp.workflow.backend.model.cliente.ClienteOfy</value>
+				<value>org.nekorp.workflow.backend.model.auto.AutoOfy</value>
+				<value>org.nekorp.workflow.backend.model.servicio.ServicioOfy</value>
+				<value>org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy</value>
+				<value>org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy</value>
+				<value>org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetailOfy</value>
 				<value>org.nekorp.workflow.backend.model.secuencia.DatosFoliadorServicio</value>
 				<value>org.nekorp.workflow.backend.security.model.web.UsuarioClienteWeb</value>
 			</list>
 		</property>
 	</bean>
 	
-	<bean id="userSecurityDAO" class="org.nekorp.workflow.backend.security.data.access.objectify.UserSecurityDAOImp"/>
-    <bean id="clienteDAO" class="org.nekorp.workflow.backend.data.access.objectify.ClienteDAOImp"/>
+	<bean id="clienteDAO" class="org.nekorp.workflow.backend.data.access.objectify.ClienteDAOImp"/>
 	<bean id="autoDAO" class="org.nekorp.workflow.backend.data.access.objectify.AutoDAOImp"/>
 	<bean id="servicioDAO" class="org.nekorp.workflow.backend.data.access.objectify.ServicioDAOImp">
 		<property name="idFoliador" value="foliadorServicio"/>

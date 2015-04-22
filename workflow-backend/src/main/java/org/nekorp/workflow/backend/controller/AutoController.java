@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,25 +15,30 @@
  */
 package org.nekorp.workflow.backend.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
-import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationDataString;
-import org.nekorp.workflow.backend.model.auto.Auto;
+import org.nekorp.workflow.backend.model.auto.AutoOfy;
+import org.springframework.validation.BindingResult;
+
+import technology.tikal.gae.pagination.model.Page;
+import technology.tikal.gae.pagination.model.PaginationDataString;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface AutoController {
 
-    Page<Auto, String> getAutos(FiltroAuto filtro, PaginationDataString pagination, HttpServletResponse response);
+    Page<List<AutoOfy>> getAutos(FiltroAuto filtro, PaginationDataString pagination, BindingResult resultPagination, HttpServletRequest request);
 
-    void crearAuto(Auto auto, HttpServletResponse response);
+    void crearAuto(AutoOfy auto, BindingResult result, HttpServletRequest request, HttpServletResponse response);
 
-    Auto getAuto(String numeroSerie, HttpServletResponse response);
+    AutoOfy getAuto(String numeroSerie);
 
-    void actualizarAuto(String numeroSerie, Auto datos, HttpServletResponse response);
+    void actualizarAuto(String numeroSerie, AutoOfy datos, BindingResult result);
     
-    void borrarAuto(String numeroSerie, HttpServletResponse response);
+    void borrarAuto(String numeroSerie);
 }

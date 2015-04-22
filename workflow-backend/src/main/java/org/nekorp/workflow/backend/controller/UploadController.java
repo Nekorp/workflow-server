@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ package org.nekorp.workflow.backend.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.nekorp.workflow.backend.model.upload.ImagenMetadata;
+import technology.tikal.taller.automotriz.model.upload.ImagenMetadata;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface UploadController {
 

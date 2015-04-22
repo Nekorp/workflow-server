@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,13 +15,15 @@
  */
 package org.nekorp.workflow.backend.data.access;
 
-import org.nekorp.workflow.backend.data.access.template.EntityDAO;
-import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+
+import technology.tikal.gae.dao.template.EntityDAO;
+import technology.tikal.gae.dao.template.FiltroBusqueda;
+import technology.tikal.gae.pagination.model.PaginationData;
 
 /**
- * 
+ * @author Nekorp
  */
-public interface ServicioDAO extends EntityDAO<Servicio, Long, FiltroBusqueda> {
-    void actualizarMetadata(Servicio servicio);
+public interface ServicioDAO extends EntityDAO<ServicioOfy, Long, FiltroBusqueda, PaginationData<Long>> {
+    void actualizarMetadata(ServicioOfy servicio);
 }

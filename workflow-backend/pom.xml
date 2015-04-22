@@ -10,7 +10,7 @@
 
     <properties>
         <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.9.18</appengine.target.version>
+        <appengine.target.version>1.9.19</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 	
@@ -53,6 +53,22 @@
     </build>
 
     <dependencies>
+    	<!-- Dependencias Tikal -->
+    	<dependency>
+            <groupId>technology.tikal</groupId>
+            <artifactId>tikal-gae-commons</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>technology.tikal</groupId>
+            <artifactId>tikal-commons-shared</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>technology.tikal</groupId>
+    		<artifactId>taller-automotriz-shared</artifactId>
+    		<version>0.1.0</version>
+        </dependency>
         <!-- Compile/runtime dependencies -->
         <dependency>
             <groupId>com.google.appengine</groupId>

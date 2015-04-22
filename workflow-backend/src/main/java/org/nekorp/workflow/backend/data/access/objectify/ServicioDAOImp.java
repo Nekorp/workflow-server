@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,31 +17,35 @@ package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
-import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
 import org.nekorp.workflow.backend.data.access.util.FiltroServicio;
 import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
 import org.nekorp.workflow.backend.model.secuencia.DatosFoliadorServicio;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+
+import technology.tikal.gae.dao.template.FiltroBusqueda;
+import technology.tikal.gae.pagination.model.PaginationData;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
- * 
+ * @author Nekorp
  */
 public class ServicioDAOImp implements ServicioDAO {
 
     private String idFoliador;
     
     @Override
-    public List<Servicio> consultarTodos(FiltroBusqueda filtroRaw, PaginationData<Long> pagination) {
-        List<Servicio> result;
-        Query<Servicio> query = ofy().load().type(Servicio.class);
+    public List<ServicioOfy> consultarTodos(FiltroBusqueda filtroRaw, PaginationData<Long> pagination) {
+        List<ServicioOfy> result;
+        Query<ServicioOfy> query = ofy().load().type(ServicioOfy.class);
         if (filtroRaw instanceof FiltroServicio) {
             FiltroServicio filtro = (FiltroServicio) filtroRaw;
             //consulta unicamente por rango de fechas
@@ -53,7 +57,7 @@ public class ServicioDAOImp implements ServicioDAO {
             }
         }
         if (pagination.getSinceId() != null) {
-            Key<Servicio> key = Key.create(Servicio.class, pagination.getSinceId());
+            Key<ServicioOfy> key = Key.create(ServicioOfy.class, pagination.getSinceId());
             query = query.filterKey(">=", key);
         }
         if (pagination.getMaxResults() != 0) {
@@ -71,17 +75,17 @@ public class ServicioDAOImp implements ServicioDAO {
         }
         result = query.list();
         if (pagination.getMaxResults() != 0 && result.size() > pagination.getMaxResults()) {
-            Servicio ultimo = result.get(pagination.getMaxResults());
+            ServicioOfy ultimo = result.get(pagination.getMaxResults());
             pagination.setNextId(ultimo.getId());
             result.remove(pagination.getMaxResults());
         }
         return result;
     }
     
-    private List<Servicio> consultarTodosPorFecha(FiltroServicio filtro, PaginationData<Long> pagination) {
-        List<Servicio> result;
+    private List<ServicioOfy> consultarTodosPorFecha(FiltroServicio filtro, PaginationData<Long> pagination) {
+        List<ServicioOfy> result;
         try {
-            Query<Servicio> query = ofy().load().type(Servicio.class);
+            Query<ServicioOfy> query = ofy().load().type(ServicioOfy.class);
             DateTime inicio = new DateTime(filtro.getFechaInicial());
             query = query.filter("metadata.fechaInicio >=", inicio.toDate());
             DateTime fin = new DateTime(filtro.getFechaFinal());
@@ -92,13 +96,13 @@ public class ServicioDAOImp implements ServicioDAO {
             result = query.list();
             return result;
         } catch (IllegalArgumentException e) {
-            result = new LinkedList<Servicio>();
+            result = new LinkedList<ServicioOfy>();
             return result;
         }
     }
 
     @Override
-    public void guardar(Servicio nuevo) {
+    public void guardar(ServicioOfy nuevo) {
         try {
             if (nuevo.getId() == null) {
                 nuevo.setId(obtenerNuevoFolio());
@@ -127,21 +131,20 @@ public class ServicioDAOImp implements ServicioDAO {
     }
 
     @Override
-    public Servicio consultar(Long id) {
-        Key<Servicio> key = Key.create(Servicio.class, id);
-        Servicio respuesta = ofy().load().key(key).now();
+    public ServicioOfy consultar(Long id, Class<?>... group) {
+        Key<ServicioOfy> key = Key.create(ServicioOfy.class, id);
+        ServicioOfy respuesta = ofy().load().key(key).safe();
         return respuesta;
     }
 
     @Override
-    public boolean borrar(Servicio dato) {
-        ofy().delete().entity(dato);
-        return true;
+    public void borrar(ServicioOfy dato) {
+        ofy().delete().entity(dato).now();
     }
 
     /**{@inheritDoc}*/
     @Override
-    public void actualizarMetadata(Servicio servicio) {
+    public void actualizarMetadata(ServicioOfy servicio) {
         this.guardar(servicio);
     }
 

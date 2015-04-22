@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,16 +16,20 @@
 package org.nekorp.workflow.backend.security.data.access.objectify;
 
 import java.util.List;
-import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
+
 import org.nekorp.workflow.backend.security.data.access.UsuarioClienteWebDAO;
 import org.nekorp.workflow.backend.security.model.web.UsuarioClienteWeb;
+
+import technology.tikal.gae.dao.template.FiltroBusqueda;
+import technology.tikal.gae.pagination.model.PaginationData;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
- * 
+ * @author Nekorp
  */
 public class UsuarioClienteWebDAOImp implements UsuarioClienteWebDAO {
 
@@ -63,16 +67,15 @@ public class UsuarioClienteWebDAOImp implements UsuarioClienteWebDAO {
 
     /**{@inheritDoc}*/
     @Override
-    public UsuarioClienteWeb consultar(String id) {
+    public UsuarioClienteWeb consultar(String id, Class<?>... group) {
         Key<UsuarioClienteWeb> key = Key.create(UsuarioClienteWeb.class, id);
-        UsuarioClienteWeb respuesta = ofy().load().key(key).now();
+        UsuarioClienteWeb respuesta = ofy().load().key(key).safe();
         return respuesta;
     }
 
     /**{@inheritDoc}*/
     @Override
-    public boolean borrar(UsuarioClienteWeb dato) {
-        ofy().delete().entity(dato);
-        return true;
+    public void borrar(UsuarioClienteWeb dato) {
+        ofy().delete().entity(dato).now();
     }
 }

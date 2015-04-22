@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,42 +15,37 @@
  */
 package org.nekorp.workflow.backend.controller.imp;
 
-import javax.servlet.http.HttpServletResponse;
 import org.nekorp.workflow.backend.controller.ReporteClienteController;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.model.reporte.cliente.ReporteCliente;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 import org.nekorp.workflow.backend.service.reporte.cliente.ReporteClienteDataFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.googlecode.objectify.NotFoundException;
+
+import technology.tikal.gae.service.template.RestControllerTemplate;
 
 /**
- * 
+ * @author Nekorp
  */
-@Controller
+@RestController
 @RequestMapping("/reportes/cliente/{idCliente}")
-public class ReporteClienteControllerImp implements ReporteClienteController {
+public class ReporteClienteControllerImp extends RestControllerTemplate implements ReporteClienteController {
 
     private ServicioDAO servicioDao;
     private ReporteClienteDataFactory dataFactory;
     /**{@inheritDoc}*/
     @Override
-    @RequestMapping(value="/{idServicio}", method = RequestMethod.GET)
-    @ResponseBody public ReporteCliente getDatosReporte(@PathVariable Long idCliente, @PathVariable Long idServicio, HttpServletResponse response) {
-        Servicio servicio = servicioDao.consultar(idServicio);
-        if (servicio == null) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
-        }
+    @RequestMapping(produces = "application/json;charset=UTF-8", value="/{idServicio}", method = RequestMethod.GET)
+    public ReporteCliente getDatosReporte(@PathVariable Long idCliente, @PathVariable Long idServicio) {
+        ServicioOfy servicio = servicioDao.consultar(idServicio);
         if (servicio.getIdCliente().longValue() != idCliente.longValue()) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
+            throw new NotFoundException();
         }
-        response.setHeader("Content-Type","application/json;charset=UTF-8");
         return dataFactory.getData(servicio);
     }
 

@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,20 +18,21 @@ package org.nekorp.workflow.backend.service.reporte.cliente;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
 import org.nekorp.workflow.backend.data.access.CostoDAO;
-import org.nekorp.workflow.backend.model.auto.Auto;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+import org.nekorp.workflow.backend.model.auto.AutoOfy;
+import org.nekorp.workflow.backend.model.cliente.ClienteOfy;
 import org.nekorp.workflow.backend.model.reporte.cliente.AutoRC;
 import org.nekorp.workflow.backend.model.reporte.cliente.EventoRC;
 import org.nekorp.workflow.backend.model.reporte.cliente.RegistroCostoRC;
 import org.nekorp.workflow.backend.model.reporte.cliente.ReporteCliente;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
 import org.nekorp.workflow.backend.util.MonedaHalfUpRound;
 
 /**
@@ -39,6 +40,7 @@ import org.nekorp.workflow.backend.util.MonedaHalfUpRound;
  * Lo que esta aqui se usa para generar el reporte pdf del cliente web
  * lo que esta repetido en el cliente es para generar el reporte xml con la informacion que se tiene en memoria en el cliente de escritorio.
  * se podrian unificar en uno solo.
+ * @author Nekorp
  */
 public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
 
@@ -49,17 +51,17 @@ public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
     /**{@inheritDoc}*/
     @Override
     //otra cosa horriblemente repetida, en el cliente lo realiza similar pero con la informacion que tiene cargada en memoria.
-    public ReporteCliente getData(Servicio servicio) {
-        Cliente cliente = clienteDao.consultar(servicio.getIdCliente());
+    public ReporteCliente getData(ServicioOfy servicio) {
+        ClienteOfy cliente = clienteDao.consultar(servicio.getIdCliente());
         ReporteCliente dato = new ReporteCliente();
         dato.setNumeroDeServicio(servicio.getId() + "");
         dato.setNombreDelCliente(cliente.getNombre());
         dato.setDescripcionServicio(servicio.getDescripcion());
         
-        List<Evento> bitacora = bitacoraDao.consultar(servicio.getId());
+        List<EventoOfy> bitacora = bitacoraDao.consultar(servicio);
         dato.setTiempoReparacion(calculaTiempoServicio(bitacora));
         
-        Auto autoRaw = autoDao.consultar(servicio.getIdAuto());
+        AutoOfy autoRaw = autoDao.consultar(servicio.getIdAuto());
         AutoRC auto = new AutoRC();
         auto.setMarca(autoRaw.getMarca());
         auto.setTipo(autoRaw.getTipo());
@@ -73,10 +75,10 @@ public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
         
         List<RegistroCostoRC> mecanica = new LinkedList<RegistroCostoRC>();
         List<RegistroCostoRC> hojalateria = new LinkedList<RegistroCostoRC>();
-        List<RegistroCosto> costos = costoDao.consultar(servicio.getId());
+        List<RegistroCostoOfy> costos = costoDao.consultar(servicio);
         MonedaHalfUpRound totalMecanica = new MonedaHalfUpRound();
         MonedaHalfUpRound totalHojalateria = new MonedaHalfUpRound();
-        for (RegistroCosto x: costos) {
+        for (RegistroCostoOfy x: costos) {
             if (StringUtils.equals("Mecanica", x.getTipo()) && !StringUtils.equals("Insumo", x.getSubtipo())) {
                 RegistroCostoRC registro = new RegistroCostoRC();
                 registro.setTipo(x.getSubtipo());
@@ -106,7 +108,7 @@ public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
         
         List<EventoRC> eventos = new LinkedList<EventoRC>();
         EventoRC evento;
-        for (Evento x: bitacora) {
+        for (EventoOfy x: bitacora) {
             evento = new EventoRC();
             if (x.getTipo().equals("EventoEntrega")) {
                 evento.setNombreEvento(x.getEtiqueta());
@@ -163,7 +165,7 @@ public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
     //horrible smell a cosas repetidas
     //pero en el cliente lo calcula constantemente para refrescar cada segundo lo que pinta en pantalla
     //BitacoraAnalyzerImp en el cliente desktop tambien tiene esta logica
-    private String calculaTiempoServicio(List<Evento> bitacora) {
+    private String calculaTiempoServicio(List<EventoOfy> bitacora) {
         Date fechaEntrada = getFechaInicioServicio(bitacora);
         Date fechaSalida = getFechaFinServicio(bitacora);
         if (fechaSalida == null) {
@@ -186,8 +188,8 @@ public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
         }
     }
    
-    private Date getFechaInicioServicio(List<Evento> bitacora) {
-        for (Evento x: bitacora) {
+    private Date getFechaInicioServicio(List<EventoOfy> bitacora) {
+        for (EventoOfy x: bitacora) {
             if (StringUtils.equals("EventoSistema", x.getTipo()) && StringUtils.equals("Inicio del Servicio", x.getEtiqueta())) {
                 return x.getFechaCreacion();
             }
@@ -195,8 +197,8 @@ public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
         return null;
     }
     
-    private Date getFechaFinServicio(List<Evento> bitacora) {
-        for (Evento x: bitacora) {
+    private Date getFechaFinServicio(List<EventoOfy> bitacora) {
+        for (EventoOfy x: bitacora) {
             if (StringUtils.equals("EventoFinServicio", x.getTipo())) {
                 return x.getFechaCreacion();
             }

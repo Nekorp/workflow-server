@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,27 +16,32 @@
 package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
 import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+import org.nekorp.workflow.backend.model.cliente.ClienteOfy;
+
+import technology.tikal.gae.pagination.model.PaginationData;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
- * 
+ * @author Nekorp
  */
+@Deprecated
 public class ClienteDAOImp implements ClienteDAO {
     
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Cliente> consultarTodos(final FiltroCliente filtro, final PaginationData<Long> pagination) {
-        List<Cliente> result;
-        Query<Cliente> query =  ofy().load().type(Cliente.class);
+    public List<ClienteOfy> consultarTodos(final FiltroCliente filtro, final PaginationData<Long> pagination) {
+        List<ClienteOfy> result;
+        Query<ClienteOfy> query =  ofy().load().type(ClienteOfy.class);
         //Por limitaciones de appengine no se pueden hacer queries con desigualdades en dos propiedades
         if (!StringUtils.isEmpty(filtro.getFiltroNombre())) {
             String nombreBuscado = filtro.getFiltroNombre();
@@ -48,7 +53,7 @@ public class ClienteDAOImp implements ClienteDAO {
             return result;
         } else {
             if (pagination.getSinceId() != null) {
-                Key<Cliente> key = Key.create(Cliente.class, pagination.getSinceId());
+                Key<ClienteOfy> key = Key.create(ClienteOfy.class, pagination.getSinceId());
                 query = query.filterKey(">=", key);
             }
             if (pagination.getMaxResults() != 0) {
@@ -57,7 +62,7 @@ public class ClienteDAOImp implements ClienteDAO {
             }
             result = query.list();
             if (pagination.getMaxResults() != 0 && result.size() > pagination.getMaxResults()) {
-                Cliente ultimo = result.get(pagination.getMaxResults());
+                ClienteOfy ultimo = result.get(pagination.getMaxResults());
                 pagination.setNextId(ultimo.getId());
                 result.remove(pagination.getMaxResults());
             }
@@ -69,7 +74,7 @@ public class ClienteDAOImp implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#nuevoCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
      */
     @Override
-    public void guardar(final Cliente nuevo) {
+    public void guardar(final ClienteOfy nuevo) {
         try {
             ofy().save().entity(nuevo).now();
         } catch (Exception e) {
@@ -81,9 +86,9 @@ public class ClienteDAOImp implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getCliente(java.lang.String)
      */
     @Override
-    public Cliente consultar(final Long id) {
-        Key<Cliente> key = Key.create(Cliente.class, id);
-        Cliente respuesta = ofy().load().key(key).now();
+    public ClienteOfy consultar(final Long id, Class<?>... group) {
+        Key<ClienteOfy> key = Key.create(ClienteOfy.class, id);
+        ClienteOfy respuesta = ofy().load().key(key).safe();
         return respuesta;
     }
 
@@ -91,8 +96,7 @@ public class ClienteDAOImp implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
      */
     @Override
-    public boolean borrar(Cliente dato) {
-        ofy().delete().entity(dato);
-        return true;
+    public void borrar(ClienteOfy dato) {
+        ofy().delete().entity(dato).now();
     }
 }

@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package org.nekorp.workflow.backend.data.access.util;
 
-import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
+import technology.tikal.gae.dao.template.FiltroBusqueda;
+
 
 /**
- * 
+ * @author Nekorp
  */
 public class FiltroAuto implements FiltroBusqueda {
 

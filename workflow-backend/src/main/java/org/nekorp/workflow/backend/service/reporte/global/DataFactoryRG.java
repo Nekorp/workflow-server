@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,17 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License
  */
-
 package org.nekorp.workflow.backend.service.reporte.global;
 
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 
 
 
 /**
- *
+ * @author Nekorp
  */
 public interface DataFactoryRG<T> {
 
-    T build(Servicio data);
+    T build(ServicioOfy data);
 }

@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@ package org.nekorp.workflow.backend.data.access;
 
 import java.util.List;
 
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface CostoDAO {
 
-    List<RegistroCosto> consultar(Long idServicio);
+    List<RegistroCostoOfy> consultar(ServicioOfy servicio);
 
-    List<RegistroCosto> guardar(Servicio servicio, List<RegistroCosto> registros);
+    List<RegistroCostoOfy> guardar(ServicioOfy servicio, List<RegistroCostoOfy> registros);
     
     
 }

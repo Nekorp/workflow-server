@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,20 +15,25 @@
  */
 package org.nekorp.workflow.backend.security.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationDataString;
 import org.nekorp.workflow.backend.security.model.web.UsuarioClienteWeb;
+import org.springframework.validation.BindingResult;
+
+import technology.tikal.gae.pagination.model.Page;
+import technology.tikal.gae.pagination.model.PaginationDataString;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface UsuarioClienteWebController {
 
-    Page<UsuarioClienteWeb, String> listar(PaginationDataString pagination, HttpServletResponse response);
-    void crear(UsuarioClienteWeb datos, HttpServletResponse response);
-    UsuarioClienteWeb consultar(String alias, HttpServletResponse response);
-    void actualizar(String alias, UsuarioClienteWeb datos, HttpServletResponse response);
-    void borrar(String alias, HttpServletResponse response);
+    Page<List<UsuarioClienteWeb>> listar(PaginationDataString pagination, BindingResult resultPagination, HttpServletRequest request);
+    void crear(UsuarioClienteWeb datos, BindingResult result, HttpServletRequest request, HttpServletResponse response);
+    UsuarioClienteWeb consultar(String alias);
+    void actualizar(String alias, UsuarioClienteWeb datos, BindingResult result);
+    void borrar(String alias);
 }

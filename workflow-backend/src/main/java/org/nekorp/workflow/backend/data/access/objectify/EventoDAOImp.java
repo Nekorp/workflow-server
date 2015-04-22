@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,21 @@
 package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
+
 import org.nekorp.workflow.backend.data.access.EventoDAO;
-import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
+
+import technology.tikal.gae.dao.template.FiltroBusqueda;
+import technology.tikal.gae.pagination.model.PaginationData;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
- * 
+ * @author Nekorp
  */
 public class EventoDAOImp implements EventoDAO {
 
@@ -34,14 +38,13 @@ public class EventoDAOImp implements EventoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#consultarTodos(java.lang.Object, java.lang.Object, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Evento> consultarTodos(Long idParent, FiltroBusqueda filtro,
-            PaginationData<Long> pagination) {
-        Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
-        List<Evento> result;
-        Query<Evento> query = ofy().load().type(Evento.class);
+    public List<EventoOfy> consultarTodos(ServicioOfy parent, FiltroBusqueda filtro, PaginationData<Long> pagination) {
+        Key<ServicioOfy> parentKey = Key.create(parent);
+        List<EventoOfy> result;
+        Query<EventoOfy> query = ofy().load().type(EventoOfy.class);
         query = query.ancestor(parentKey);
         if (pagination.getSinceId() != null) {
-            Key<Evento> key = Key.create(parentKey, Evento.class, pagination.getSinceId());
+            Key<EventoOfy> key = Key.create(parentKey, EventoOfy.class, pagination.getSinceId());
             query = query.filterKey(">=", key);
         }
         if (pagination.getMaxResults() != 0) {
@@ -50,7 +53,7 @@ public class EventoDAOImp implements EventoDAO {
         }
         result = query.list();
         if (pagination.getMaxResults() != 0 && result.size() > pagination.getMaxResults()) {
-            Evento ultimo = result.get(pagination.getMaxResults());
+            EventoOfy ultimo = result.get(pagination.getMaxResults());
             pagination.setNextId(ultimo.getId());
             result.remove(pagination.getMaxResults());
         }
@@ -61,8 +64,8 @@ public class EventoDAOImp implements EventoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#guardar(java.lang.Object, java.lang.Object)
      */
     @Override
-    public void guardar(Long idParent, Evento nuevo) {
-        Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
+    public void guardar(ServicioOfy parent, EventoOfy nuevo) {
+        Key<ServicioOfy> parentKey = Key.create(parent);
         nuevo.setParent(parentKey);
         ofy().save().entity(nuevo).now();
     }
@@ -71,10 +74,10 @@ public class EventoDAOImp implements EventoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#consultar(java.lang.Object, java.lang.Object)
      */
     @Override
-    public Evento consultar(Long idParent, Long id) {
-        Key<Servicio> parentKey = Key.create(Servicio.class, idParent);
-        Key<Evento> key = Key.create(parentKey, Evento.class, id);
-        Evento respuesta = ofy().load().key(key).now();
+    public EventoOfy consultar(ServicioOfy parent, Long id, Class<?>... group) {
+        Key<ServicioOfy> parentKey = Key.create(parent);
+        Key<EventoOfy> key = Key.create(parentKey, EventoOfy.class, id);
+        EventoOfy respuesta = ofy().load().key(key).safe();
         return respuesta;
     }
 
@@ -82,8 +85,7 @@ public class EventoDAOImp implements EventoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.ChildEntityDAO#borrar(java.lang.Object, java.lang.Object)
      */
     @Override
-    public boolean borrar(Long idParent, Evento dato) {
-        ofy().delete().entity(dato);
-        return true;
+    public void borrar(ServicioOfy parent, EventoOfy dato) {
+        ofy().delete().entity(dato).now();
     }
 }

@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,21 +17,22 @@
 package org.nekorp.workflow.backend.service.reporte.global;
 
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+import org.nekorp.workflow.backend.model.cliente.ClienteOfy;
 import org.nekorp.workflow.backend.model.reporte.global.DatosClienteRG;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 
 
 /**
- *
+ * @author Nekorp
  */
+@Deprecated
 public class DatosClienteFactoryRG implements DataFactoryRG<DatosClienteRG>{
 
     private ClienteDAO clienteDAO;
     @Override
-    public DatosClienteRG build(Servicio data) {
+    public DatosClienteRG build(ServicioOfy data) {
         DatosClienteRG r = new DatosClienteRG();
-        Cliente cliente = clienteDAO.consultar(data.getIdCliente());
+        ClienteOfy cliente = clienteDAO.consultar(data.getIdCliente());
         r.setCiudad(cliente.getDomicilio().getCiudad());
         r.setColonia(cliente.getDomicilio().getColonia());
         r.setContacto(cliente.getContacto());

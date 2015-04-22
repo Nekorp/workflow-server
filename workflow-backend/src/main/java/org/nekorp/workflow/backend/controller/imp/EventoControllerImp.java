@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,54 +16,56 @@
 package org.nekorp.workflow.backend.controller.imp;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import org.apache.commons.lang.StringUtils;
+
 import org.nekorp.workflow.backend.controller.EventoController;
 import org.nekorp.workflow.backend.data.access.EventoDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
-import org.nekorp.workflow.backend.data.pagination.PaginationModelFactory;
-import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import technology.tikal.gae.error.exceptions.NotValidException;
+import technology.tikal.gae.pagination.PaginationModelFactory;
+import technology.tikal.gae.pagination.model.Page;
+import technology.tikal.gae.pagination.model.PaginationDataLong;
+import technology.tikal.gae.service.template.RestControllerTemplate;
 
 /**
- * 
+ * @author Nekorp
  */
+@RestController
 @RequestMapping("/servicios/{idServicio}/bitacora/eventos")
-public class EventoControllerImp implements EventoController {
+@Deprecated
+public class EventoControllerImp extends RestControllerTemplate implements EventoController {
 
     private ServicioDAO servicioDAO;
     private EventoDAO eventoDAO;
-    private PaginationModelFactory pagFactory;
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.controller.ServicioEventoController#getEventos(java.lang.Long, org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody Page<Evento, Long> getEventos(@PathVariable final Long idServicio,
-        @Valid @ModelAttribute final PaginationDataLong pagination, final HttpServletResponse response) {
-        if (!idServicioValido(idServicio)) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
+    @RequestMapping(produces = "application/json;charset=UTF-8", method = RequestMethod.GET)
+    public Page<List<EventoOfy>> getEventos(@PathVariable final Long idServicio,
+            @Valid @ModelAttribute final PaginationDataLong pagination, final BindingResult resultPagination,
+            final HttpServletRequest request) {
+        if (resultPagination.hasErrors()) {
+            throw new NotValidException(resultPagination);
         }
-        List<Evento> datos = eventoDAO.consultarTodos(idServicio, null, pagination);
-        Page<Evento, Long> r = pagFactory.getPage();
-        r.setTipoItems("evento");
-        r.setLinkPaginaActual(armaUrl(idServicio, pagination.getSinceId(), pagination.getMaxResults()));
-        if (pagination.hasNext()) {
-            r.setLinkSiguientePagina(armaUrl(idServicio, pagination.getNextId(), pagination.getMaxResults()));
-            r.setSiguienteItem(pagination.getNextId());
-        }
-        r.setItems(datos);
-        response.setHeader("Content-Type","application/json;charset=UTF-8");
+        ServicioOfy servicio = servicioDAO.consultar(idServicio);
+        List<EventoOfy> datos = eventoDAO.consultarTodos(servicio, null, pagination);
+        Page<List<EventoOfy>> r = PaginationModelFactory.getPage(datos, "evento", request.getRequestURI() , null, pagination);
         return r;
     }
 
@@ -72,16 +74,16 @@ public class EventoControllerImp implements EventoController {
      */
     @Override
     @RequestMapping(method = RequestMethod.POST)
-    public void crearEvento(@PathVariable final Long idServicio, @Valid @RequestBody final Evento dato,
-        final HttpServletResponse response) {
-        dato.setId(null);
-        if (!idServicioValido(idServicio)) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return;
+    @ResponseStatus(HttpStatus.CREATED)
+    public void crearEvento(@PathVariable final Long idServicio, @Valid @RequestBody final EventoOfy dato, final BindingResult result,
+            final HttpServletRequest request, final HttpServletResponse response) {
+        if (result.hasErrors()) {
+            throw new NotValidException(result);
         }
-        this.eventoDAO.guardar(idServicio, dato);
-        response.setStatus(HttpStatus.CREATED.value());
-        response.setHeader("Location", "/servicios/" + idServicio + "/bitacora/eventos/" + dato.getId());
+        dato.setId(null);
+        ServicioOfy servicio = servicioDAO.consultar(idServicio);
+        this.eventoDAO.guardar(servicio, dato);
+        response.setHeader("Location", request.getRequestURI() + "/" + dato.getId());
         
     }
 
@@ -89,18 +91,10 @@ public class EventoControllerImp implements EventoController {
      * @see org.nekorp.workflow.backend.controller.ServicioEventoController#getEvento(java.lang.Long, java.lang.Long, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    @RequestMapping(value="/{idEvento}", method = RequestMethod.GET)
-    public @ResponseBody Evento getEvento(@PathVariable final Long idServicio, @PathVariable final Long idEvento,
-        final HttpServletResponse response) {
-        if (!idServicioValido(idServicio)) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
-        }
-        Evento respuesta = this.eventoDAO.consultar(idServicio, idEvento);
-        if (respuesta == null) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-        }
-        response.setHeader("Content-Type","application/json;charset=UTF-8");
+    @RequestMapping(produces = "application/json;charset=UTF-8", value="/{idEvento}", method = RequestMethod.GET)
+    public EventoOfy getEvento(@PathVariable final Long idServicio, @PathVariable final Long idEvento) {
+        ServicioOfy servicio = servicioDAO.consultar(idServicio);
+        EventoOfy respuesta = this.eventoDAO.consultar(servicio, idEvento);
         return respuesta;
     }
 
@@ -110,17 +104,14 @@ public class EventoControllerImp implements EventoController {
     @Override
     @RequestMapping(value="/{idEvento}", method = RequestMethod.POST)
     public void actualizarEvento(@PathVariable final Long idServicio, @PathVariable final Long idEvento, 
-        @Valid @RequestBody final Evento dato, final HttpServletResponse response) {
-        if (!idServicioValido(idServicio)) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return;
+        @Valid @RequestBody final EventoOfy dato, final BindingResult result) {
+        if (result.hasErrors()) {
+            throw new NotValidException(result);
         }
+        ServicioOfy servicio = servicioDAO.consultar(idServicio);
         dato.setId(idEvento);
-        if (eventoDAO.consultar(idServicio, idEvento) == null) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-        } else {
-            eventoDAO.guardar(idServicio, dato);
-        }
+        eventoDAO.consultar(servicio, idEvento);
+        eventoDAO.guardar(servicio, dato);
     }
 
     /* (non-Javadoc)
@@ -128,49 +119,11 @@ public class EventoControllerImp implements EventoController {
      */
     @Override
     @RequestMapping(value="/{idEvento}", method = RequestMethod.DELETE)
-    public void borrarEvento(@PathVariable final Long idServicio, @PathVariable final Long idEvento,
-        final HttpServletResponse response) {
-        if (!idServicioValido(idServicio)) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return;
-        }
-        Evento dato = eventoDAO.consultar(idServicio, idEvento);
-        if (dato == null) {
-            //no hay nada que responder
-            response.setStatus(HttpStatus.NO_CONTENT.value());
-            return;
-        }
-        eventoDAO.borrar(idServicio, dato);
-        //se acepto la peticion de borrado, no quiere decir que sucede de inmediato.
-        response.setStatus(HttpStatus.ACCEPTED.value());
-    }
-    
-    private boolean idServicioValido(Long idServicio) {
-        return servicioDAO.consultar(idServicio) != null;
-    }
-    
-    private String armaUrl(final Long idParent, final Long sinceId, final int maxResults) {
-        String r = "/servicios/" + idParent + "/bitacora/eventos";
-        if (sinceId != null && sinceId > 0) {
-            r = addUrlParameter(r,"sinceId", sinceId + "");
-        }
-        if (maxResults > 0) {
-            r = addUrlParameter(r,"maxResults", maxResults + "");
-        }
-        return r;
-    }
-    
-    private String addUrlParameter(final String url, final String name, final String value) {
-        String response = url;
-        if (!StringUtils.isEmpty(value)) {
-            if (!StringUtils.contains(response, '?')) {
-                response = response + "?";
-            } else {
-                response = response + "&";
-            }
-            response = response + name + "=" + value;
-        }
-        return response;
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void borrarEvento(@PathVariable final Long idServicio, @PathVariable final Long idEvento) {
+        ServicioOfy servicio = servicioDAO.consultar(idServicio);
+        EventoOfy dato = eventoDAO.consultar(servicio, idEvento);
+        eventoDAO.borrar(servicio, dato);
     }
 
     public void setServicioDAO(ServicioDAO servicioDAO) {
@@ -179,9 +132,5 @@ public class EventoControllerImp implements EventoController {
 
     public void setEventoDAO(EventoDAO eventoDAO) {
         this.eventoDAO = eventoDAO;
-    }
-
-    public void setPagFactory(PaginationModelFactory pagFactory) {
-        this.pagFactory = pagFactory;
-    }
+    }    
 }

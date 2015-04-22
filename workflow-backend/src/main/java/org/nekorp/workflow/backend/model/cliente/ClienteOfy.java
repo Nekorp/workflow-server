@@ -15,11 +15,13 @@
  */
 package org.nekorp.workflow.backend.model.cliente;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import technology.tikal.taller.automotriz.model.cliente.DomicilioFiscal;
+import technology.tikal.taller.automotriz.model.cliente.Telefono;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.annotation.Cache;
@@ -27,10 +29,15 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+/**
+ * 
+ * @author Nekorp
+ *
+ */
 @Entity
 @Cache
-public class Cliente implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Deprecated
+public class ClienteOfy {
     @Id
     private Long id;
     @NotNull

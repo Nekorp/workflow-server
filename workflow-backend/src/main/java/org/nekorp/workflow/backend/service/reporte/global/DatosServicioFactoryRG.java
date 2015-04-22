@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@
 package org.nekorp.workflow.backend.service.reporte.global;
 
 import org.nekorp.workflow.backend.model.reporte.global.DatosServicioRG;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 
 /**
- *
+ * @author Nekorp
  */
 public class DatosServicioFactoryRG implements DataFactoryRG<DatosServicioRG>{
 
     @Override
-    public DatosServicioRG build(Servicio data) {
+    public DatosServicioRG build(ServicioOfy data) {
         DatosServicioRG r = new DatosServicioRG();
         r.setFalla(data.getDescripcion());
         r.setFolio(data.getId() + "");

@@ -20,62 +20,65 @@
 	</mvc:annotation-driven>
 	<!-- customizacion de jackson -->
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
-	<bean id="JacksonConfiguration" class="org.nekorp.workflow.backend.util.JacksonConfiguration" init-method="init">
+	<bean id="JacksonConfiguration" class="technology.tikal.gae.jackson.JacksonBasicConfiguration" init-method="init">
 		<property name="objectMapper" ref="jacksonObjectMapper"/>
 	</bean>
-	
-	<bean id="SecurityController" class="org.nekorp.workflow.backend.security.controller.SecurityController">
-		<property name="userSecurityDAO" ref="userSecurityDAO"/>
-	</bean>
-	
+	<!-- i18n -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    	<property name="basename" value="/WEB-INF/resources/i18n/ValidationMessages" />
+  	</bean>
+  	
 	<bean id="UsuarioClienteWebController" class="org.nekorp.workflow.backend.security.controller.imp.UsuarioClienteWebControllerImp">
-		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="usuarioClienteWebDAO" ref="usuarioClienteWebDAO"/>
-		<property name="clienteDao" ref="clienteDAO"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	
 	<bean id="ClienteController" class="org.nekorp.workflow.backend.controller.imp.ClienteControllerImp">
-		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="clienteDao" ref="clienteDAO"/>
 		<property name="stringStandarizer" ref="stringStandarizer"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	<bean id="AutoController" class="org.nekorp.workflow.backend.controller.imp.AutoControllerImp">
-		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="autoDAO" ref="autoDAO"/>
 		<property name="stringStandarizer" ref="stringStandarizer"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	<bean id="ServicioController" class="org.nekorp.workflow.backend.controller.imp.ServicioControllerImp">
-		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="bitacoraDAO" ref="bitacoraDAO"/>
 		<property name="costoDAO" ref="costoDAO"/>
 		<property name="damageDetailDAO" ref="damageDetailDAO"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
+	<!-- no se usan por el momento se consultan todos y se actualizan todos
 	<bean id="EventoController" class="org.nekorp.workflow.backend.controller.imp.EventoControllerImp">
-		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="eventoDAO" ref="eventoDAO"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	<bean id="RegistroCostoController" class="org.nekorp.workflow.backend.controller.imp.RegistroCostoControllerImp">
-		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="registroCostoDAO" ref="registroCostoDAO"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
+	 -->
 	<bean id="ServicioIndexController" class="org.nekorp.workflow.backend.controller.imp.ServicioIndexControllerImp">
-		<property name="pagFactory" ref="PaginationModelFactory"/>
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="autoDAO" ref="autoDAO"/>
-		<property name="clienteDao" ref="clienteDAO"/>
 		<property name="stringStandarizer" ref="stringStandarizer"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	<bean id="UploadController" class="org.nekorp.workflow.backend.controller.imp.UploadControllerImp">
+	    <property name="messageSource" ref="messageSource"/>
 	</bean>
 	<bean id="ReporteGlobalController" class="org.nekorp.workflow.backend.controller.imp.ReporteGlobalControllerImp">
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="renglonFactoryRG" ref="renglonFactoryRG"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	<bean id="ReporteClienteController" class="org.nekorp.workflow.backend.controller.imp.ReporteClienteControllerImp">
 		<property name="servicioDao" ref="servicioDAO"/>
 		<property name="dataFactory" ref="reporteClienteDataFactory"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
 </beans>

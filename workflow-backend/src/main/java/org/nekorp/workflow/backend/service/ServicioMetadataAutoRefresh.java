@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,26 +17,27 @@ package org.nekorp.workflow.backend.service;
 
 import java.util.List;
 
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
 
 /**
  * En algunas ocaciones se tiene que recalcular el metadata del servicio.
+ * @author Nekorp
  */
 public interface ServicioMetadataAutoRefresh {
     
-    void actualizarUsandoId(Long idServicio);
+    void actualizarUsandoId(ServicioOfy servicio);
     
-    void actualizarUsandoIdEventos(Long idServicio, List<Evento> eventos);
+    void actualizarUsandoIdEventos(ServicioOfy servicio, List<EventoOfy> eventos);
     
     /**
      * cambia el contenido del metadata, con un valor calculado en ese momento.
      * @param servicio
      */
-    void actualizarServicioMetadataInterceptor(Servicio servicio);
+    void actualizarServicioMetadataInterceptor(ServicioOfy servicio);
     
-    void actualizarUsandoServicioEventos(Servicio servicio, List<Evento> eventos);
+    void actualizarUsandoServicioEventos(ServicioOfy servicio, List<EventoOfy> eventos);
     
-    void actualizarCostoTotal(final Servicio servicio, final List<RegistroCosto> registros);
+    void actualizarCostoTotal(final ServicioOfy servicio, final List<RegistroCostoOfy> registros);
 }

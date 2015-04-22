@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,24 +17,25 @@
 package org.nekorp.workflow.backend.service.reporte.global;
 
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.CostoDAO;
 import org.nekorp.workflow.backend.model.reporte.global.DatosCostoRG;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
 import org.nekorp.workflow.backend.util.MonedaHalfUpRound;
 
 /**
- *
+ * @author Nekorp
  */
 public class DatosCostoFactoryRG implements DataFactoryRG<DatosCostoRG> {
 
     private CostoDAO costoDAO;
     private MonedaHalfUpRound iva = MonedaHalfUpRound.valueOf("0.16");
     @Override
-    public DatosCostoRG build(Servicio data) {
+    public DatosCostoRG build(ServicioOfy data) {
         DatosCostoRG r = new DatosCostoRG();
-        List<RegistroCosto> costo = costoDAO.consultar(data.getId());
+        List<RegistroCostoOfy> costo = costoDAO.consultar(data);
         r.setManoDeObra(concatenerManoDeObra(costo));
         r.setCostoManoDeObra(sumarCostoManoDeObra(costo));
         r.setCostoRefacciones(sumarCostoRefacciones(costo));
@@ -45,9 +46,9 @@ public class DatosCostoFactoryRG implements DataFactoryRG<DatosCostoRG> {
         return r;
     }
 
-    private String concatenerManoDeObra(List<RegistroCosto> costo) {
+    private String concatenerManoDeObra(List<RegistroCostoOfy> costo) {
         String r = "";
-        for (RegistroCosto x: costo) {
+        for (RegistroCostoOfy x: costo) {
             if (StringUtils.equals(x.getSubtipo(), "Mano de Obra")) {
                 if (!StringUtils.isEmpty(r)) {
                     r = r + ", ";
@@ -58,10 +59,10 @@ public class DatosCostoFactoryRG implements DataFactoryRG<DatosCostoRG> {
         return r;
     }
     
-    private double sumarCostoManoDeObra(List<RegistroCosto> costo) {
+    private double sumarCostoManoDeObra(List<RegistroCostoOfy> costo) {
         MonedaHalfUpRound total = new MonedaHalfUpRound();
         MonedaHalfUpRound precioUnitario;
-        for (RegistroCosto x: costo) {
+        for (RegistroCostoOfy x: costo) {
             if (StringUtils.equals(x.getSubtipo(), "Mano de Obra")) {
                 precioUnitario = MonedaHalfUpRound.valueOf(x.getPrecioUnitario().getValue());
                 total = total.suma(precioUnitario.multiplica(x.getCantidad()));
@@ -70,10 +71,10 @@ public class DatosCostoFactoryRG implements DataFactoryRG<DatosCostoRG> {
         return total.doubleValue();
     }
     
-    private double sumarCostoRefacciones(List<RegistroCosto> costo) {
+    private double sumarCostoRefacciones(List<RegistroCostoOfy> costo) {
         MonedaHalfUpRound total = new MonedaHalfUpRound();
         MonedaHalfUpRound precioUnitario;
-        for (RegistroCosto x: costo) {
+        for (RegistroCostoOfy x: costo) {
             if (StringUtils.equals(x.getSubtipo(), "Refacciones")) {
                 precioUnitario = MonedaHalfUpRound.valueOf(x.getPrecioUnitario().getValue());
                 total = total.suma(precioUnitario.multiplica(x.getCantidad()));
@@ -82,10 +83,10 @@ public class DatosCostoFactoryRG implements DataFactoryRG<DatosCostoRG> {
         return total.doubleValue();
     }
     
-    private double sumarIvaCosto(List<RegistroCosto> costo) {
+    private double sumarIvaCosto(List<RegistroCostoOfy> costo) {
         MonedaHalfUpRound total = new MonedaHalfUpRound();
         MonedaHalfUpRound precioUnitario;
-        for (RegistroCosto x: costo) {
+        for (RegistroCostoOfy x: costo) {
             if (StringUtils.equals(x.getSubtipo(), "Refacciones") || StringUtils.equals(x.getSubtipo(), "Mano de Obra")) {
                 if (x.isPrecioUnitarioConIVA()) {
                     precioUnitario = MonedaHalfUpRound.valueOf(x.getPrecioUnitario().getValue());
@@ -96,10 +97,10 @@ public class DatosCostoFactoryRG implements DataFactoryRG<DatosCostoRG> {
         return total.doubleValue();
     }
     
-    private double sumarManoDeObraFacturado(List<RegistroCosto> costo) {
+    private double sumarManoDeObraFacturado(List<RegistroCostoOfy> costo) {
         MonedaHalfUpRound total = new MonedaHalfUpRound();
         MonedaHalfUpRound precioCliente;
-        for (RegistroCosto x: costo) {
+        for (RegistroCostoOfy x: costo) {
             if (StringUtils.equals(x.getSubtipo(), "Mano de Obra")) {
                 precioCliente = MonedaHalfUpRound.valueOf(x.getPrecioCliente().getValue());
                 total = total.suma(precioCliente.multiplica(x.getCantidad()));
@@ -108,10 +109,10 @@ public class DatosCostoFactoryRG implements DataFactoryRG<DatosCostoRG> {
         return total.doubleValue();
     }
     
-    private double sumarRefaccionesFacturado(List<RegistroCosto> costo) {
+    private double sumarRefaccionesFacturado(List<RegistroCostoOfy> costo) {
         MonedaHalfUpRound total = new MonedaHalfUpRound();
         MonedaHalfUpRound precioCliente;
-        for (RegistroCosto x: costo) {
+        for (RegistroCostoOfy x: costo) {
             if (StringUtils.equals(x.getSubtipo(), "Refacciones")) {
                 precioCliente = MonedaHalfUpRound.valueOf(x.getPrecioCliente().getValue());
                 total = total.suma(precioCliente.multiplica(x.getCantidad()));
@@ -120,10 +121,10 @@ public class DatosCostoFactoryRG implements DataFactoryRG<DatosCostoRG> {
         return total.doubleValue();
     }
     
-    private double sumarIvaFacturado(List<RegistroCosto> costo) {
+    private double sumarIvaFacturado(List<RegistroCostoOfy> costo) {
         MonedaHalfUpRound total = new MonedaHalfUpRound();
         MonedaHalfUpRound precioCliente;
-        for (RegistroCosto x: costo) {
+        for (RegistroCostoOfy x: costo) {
             if (StringUtils.equals(x.getSubtipo(), "Refacciones") || StringUtils.equals(x.getSubtipo(), "Mano de Obra")) {
                 if (x.isSubtotalConIVA()) {
                     precioCliente = MonedaHalfUpRound.valueOf(x.getPrecioCliente().getValue());

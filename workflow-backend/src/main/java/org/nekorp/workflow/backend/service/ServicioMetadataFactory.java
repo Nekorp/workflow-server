@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@ package org.nekorp.workflow.backend.service;
 
 import java.util.List;
 
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
-import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadata;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
+import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadataOfy;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface ServicioMetadataFactory {
 
@@ -32,7 +32,7 @@ public interface ServicioMetadataFactory {
      * @param servicio el servicio al que se van a calcular su metadata.
      * @return los datos calculados.
      */
-    ServicioMetadata calcularMetadata(Servicio servicio);
+    ServicioMetadataOfy calcularMetadata(ServicioOfy servicio);
     
     /**
      * Calcula el metadata de un servicio.
@@ -40,12 +40,12 @@ public interface ServicioMetadataFactory {
      * @param eventos los eventos de la bitacora. (si ya se tienen cargados para no hacer doble busqueda).
      * @return los datos calculados.
      */
-    ServicioMetadata calcularMetadata(Servicio servicio,  List<Evento> eventos);
+    ServicioMetadataOfy calcularMetadata(ServicioOfy servicio,  List<EventoOfy> eventos);
     
     /**
      * Actualiza el costo total del metadata de un servicio
      * @param servicio
      * @param registros
      */
-    void calcularCostoMetaData(Servicio servicio, List<RegistroCosto> registros);
+    void calcularCostoMetaData(ServicioOfy servicio, List<RegistroCostoOfy> registros);
 }

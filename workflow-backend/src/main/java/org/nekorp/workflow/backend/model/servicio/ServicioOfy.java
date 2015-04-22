@@ -15,9 +15,10 @@
  */
 package org.nekorp.workflow.backend.model.servicio;
 
-import org.nekorp.workflow.backend.model.cobranza.DatosCobranza;
-import org.nekorp.workflow.backend.model.servicio.auto.DatosAuto;
-import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadata;
+import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadataOfy;
+
+import technology.tikal.taller.automotriz.model.cobranza.DatosCobranza;
+import technology.tikal.taller.automotriz.model.servicio.auto.DatosAuto;
 
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -31,7 +32,7 @@ import com.googlecode.objectify.annotation.Index;
  */
 @Entity
 @Cache
-public class Servicio {
+public class ServicioOfy {
     @Id
     private Long id;
     @Index
@@ -40,9 +41,9 @@ public class Servicio {
     private String idAuto;
     private String descripcion;
     private DatosAuto datosAuto;
-    private ServicioMetadata metadata;
+    private ServicioMetadataOfy metadata;
     private DatosCobranza cobranza;
-    public Servicio() {
+    public ServicioOfy() {
         this.cobranza = new DatosCobranza();
     }
     public Long getId() {
@@ -85,11 +86,11 @@ public class Servicio {
         this.datosAuto = datosAuto;
     }
 
-    public ServicioMetadata getMetadata() {
+    public ServicioMetadataOfy getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(ServicioMetadata metadata) {
+    public void setMetadata(ServicioMetadataOfy metadata) {
         this.metadata = metadata;
     }
     public DatosCobranza getCobranza() {

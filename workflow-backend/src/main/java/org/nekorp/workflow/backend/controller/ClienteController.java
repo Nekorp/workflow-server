@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,25 +15,31 @@
  */
 package org.nekorp.workflow.backend.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
-import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+import org.nekorp.workflow.backend.model.cliente.ClienteOfy;
+import org.springframework.validation.BindingResult;
+
+import technology.tikal.gae.pagination.model.Page;
+import technology.tikal.gae.pagination.model.PaginationDataLong;
 
 /**
- * 
+ * @author Nekorp
  */
+@Deprecated
 public interface ClienteController {
 
-    Page<Cliente, Long> getClientes(FiltroCliente filtro, PaginationDataLong pagination, HttpServletResponse response);
+    Page<List<ClienteOfy>> getClientes(FiltroCliente filtro, PaginationDataLong pagination, BindingResult resultPagination, HttpServletRequest request);
 
-    void crearCliente(Cliente cliente, HttpServletResponse response);
+    void crearCliente(ClienteOfy cliente, BindingResult result, HttpServletRequest request, HttpServletResponse response);
 
-    Cliente getCliente(Long id, HttpServletResponse response);
+    ClienteOfy getCliente(Long id);
 
-    void actualizarCliente(Long id, Cliente datos, HttpServletResponse response);
+    void actualizarCliente(Long id, ClienteOfy datos, BindingResult result);
     
-    void borrarCliente(Long id, HttpServletResponse response);
+    void borrarCliente(Long id);
 }

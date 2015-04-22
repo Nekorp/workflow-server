@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@
  */
 package org.nekorp.workflow.backend.model.auto;
 
-import java.io.Serializable;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import technology.tikal.taller.automotriz.model.auto.Equipamiento;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -26,11 +29,13 @@ import com.googlecode.objectify.annotation.Index;
 /**
  * Se usara para identificar como unico a aun auto, para el historia.
  * para el tema de datos del auto en un servicio en especifico se usara el termino datos auto.
+ * 
+ * MMMM esta duplicado el codigo de auto y las demas entidades que tienen anotaciones de objectify
+ * @author Nekorp
  */
 @Entity
 @Cache
-public class Auto implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class AutoOfy {
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.
     @Id
     private String vin;
@@ -57,6 +62,7 @@ public class Auto implements Serializable {
     @Size(min=1, max=10)
     @NotNull
     private String placas;
+    @Valid
     private Equipamiento equipamiento;
     
     public String getVin() {

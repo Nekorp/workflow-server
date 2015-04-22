@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,25 +15,23 @@
  */
 package org.nekorp.workflow.backend.model.servicio.auto.damage;
 
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Parent;
 
 /**
- * 
+ * @author Nekorp
  */
 @Entity
-@Cache
-public class DamageDetail {
+public class DamageDetailOfy {
 
     @Parent
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.
-    private Key<Servicio> parent;
+    private Key<ServicioOfy> parent;
     @Id
     private Long id;
     private String esquema;
@@ -42,10 +40,10 @@ public class DamageDetail {
     private int x;
     private int y;
     
-    public Key<Servicio> getParent() {
+    public Key<ServicioOfy> getParent() {
         return parent;
     }
-    public void setParent(Key<Servicio> parent) {
+    public void setParent(Key<ServicioOfy> parent) {
         this.parent = parent;
     }
     public Long getId() {
@@ -99,7 +97,7 @@ public class DamageDetail {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        DamageDetail other = (DamageDetail) obj;
+        DamageDetailOfy other = (DamageDetailOfy) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

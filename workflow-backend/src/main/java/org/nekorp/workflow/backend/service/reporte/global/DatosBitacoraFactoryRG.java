@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,22 +18,23 @@ package org.nekorp.workflow.backend.service.reporte.global;
 
 import java.util.Date;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
 import org.nekorp.workflow.backend.model.reporte.global.DatosBitacoraRG;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
 /**
- *
+ * @author Nekorp
  */
 public class DatosBitacoraFactoryRG implements DataFactoryRG<DatosBitacoraRG> {
 
     private BitacoraDAO bitacoraDAO;
     
     @Override
-    public DatosBitacoraRG build(Servicio data) {
+    public DatosBitacoraRG build(ServicioOfy data) {
         DatosBitacoraRG r = new DatosBitacoraRG();
-        List<Evento> eventos = bitacoraDAO.consultar(data.getId());
+        List<EventoOfy> eventos = bitacoraDAO.consultar(data);
         r.setDiagnostico(calcularDiagnostico(eventos));
         r.setFechaIngresoAuto(calcularFechaIngresoAuto(eventos));
         r.setFechaEntregaAuto(calcularFechaEntregaAuto(eventos));
@@ -41,9 +42,9 @@ public class DatosBitacoraFactoryRG implements DataFactoryRG<DatosBitacoraRG> {
         return r;
     }
 
-    private String calcularDiagnostico(List<Evento> eventos) {
+    private String calcularDiagnostico(List<EventoOfy> eventos) {
         String r = "";
-        for (Evento x: eventos) {
+        for (EventoOfy x: eventos) {
             if (x.getTipo().equals("EventoDiagnostico") && !StringUtils.isEmpty(x.getDescripcion())) {
                 if (!StringUtils.isEmpty(r)) {
                     r = r + "\n";
@@ -54,8 +55,8 @@ public class DatosBitacoraFactoryRG implements DataFactoryRG<DatosBitacoraRG> {
         return r;
     }
     
-    private Date calcularFechaIngresoAuto(List<Evento> eventos) {
-        for (Evento x: eventos) {
+    private Date calcularFechaIngresoAuto(List<EventoOfy> eventos) {
+        for (EventoOfy x: eventos) {
             if (StringUtils.equals(x.getTipo(), "EventoEntrega") && StringUtils.equals(x.getEtiqueta(), "Entrada de Auto")) {
                 return x.getFecha();
             }
@@ -63,8 +64,8 @@ public class DatosBitacoraFactoryRG implements DataFactoryRG<DatosBitacoraRG> {
         return null;
     }
     
-    private Date calcularFechaEntregaAuto(List<Evento> eventos) {
-        for (Evento x: eventos) {
+    private Date calcularFechaEntregaAuto(List<EventoOfy> eventos) {
+        for (EventoOfy x: eventos) {
             if (StringUtils.equals(x.getTipo(), "EventoEntrega") && StringUtils.equals(x.getEtiqueta(), "Salida de Auto")) {
                 return x.getFecha();
             }
@@ -72,9 +73,9 @@ public class DatosBitacoraFactoryRG implements DataFactoryRG<DatosBitacoraRG> {
         return null;
     }
     
-    private String calcularRecomendaciones(List<Evento> eventos) {
+    private String calcularRecomendaciones(List<EventoOfy> eventos) {
         String r = "";
-        for (Evento x: eventos) {
+        for (EventoOfy x: eventos) {
             boolean esEventoGeneral = x.getTipo().equals("EventoGeneral");
             boolean esUnaRecomendacion = StringUtils.equalsIgnoreCase(StringUtils.trim(x.getEtiqueta()), "recomendaciones");
             boolean noEstaVaciaLaDescripcion = !StringUtils.isEmpty(x.getDescripcion());

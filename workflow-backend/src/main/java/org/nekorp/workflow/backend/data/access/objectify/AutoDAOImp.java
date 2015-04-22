@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,16 +16,20 @@
 package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
 import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
-import org.nekorp.workflow.backend.model.auto.Auto;
+import org.nekorp.workflow.backend.model.auto.AutoOfy;
+
+import technology.tikal.gae.pagination.model.PaginationData;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 /**
- * 
+ * @author Nekorp
  */
 public class AutoDAOImp implements AutoDAO {
     
@@ -33,9 +37,9 @@ public class AutoDAOImp implements AutoDAO {
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#getAutos(org.nekorp.workflow.backend.data.access.util.FiltroAuto, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
      */
     @Override
-    public List<Auto> consultarTodos(FiltroAuto filtro, PaginationData<String> pagination) {
-        List<Auto> result;
-        Query<Auto> query =  ofy().load().type(Auto.class);
+    public List<AutoOfy> consultarTodos(FiltroAuto filtro, PaginationData<String> pagination) {
+        List<AutoOfy> result;
+        Query<AutoOfy> query =  ofy().load().type(AutoOfy.class);
         if (!StringUtils.isEmpty(filtro.getFiltroNumeroSerie())) {
             String serieBuscado = filtro.getFiltroNumeroSerie();
             if (StringUtils.isEmpty(pagination.getSinceId())) {
@@ -54,7 +58,7 @@ public class AutoDAOImp implements AutoDAO {
         }
         result = query.list();
         if (pagination.getMaxResults() != 0 && result.size() > pagination.getMaxResults()) {
-            Auto ultimo = result.get(pagination.getMaxResults());
+            AutoOfy ultimo = result.get(pagination.getMaxResults());
             pagination.setNextId(ultimo.getVin());
             result.remove(pagination.getMaxResults());
         }
@@ -65,7 +69,7 @@ public class AutoDAOImp implements AutoDAO {
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#nuevoAuto(org.nekorp.workflow.backend.model.auto.Auto)
      */
     @Override
-    public void guardar(Auto nuevo) {
+    public void guardar(AutoOfy nuevo) {
         try {
             ofy().save().entity(nuevo).now();
         } catch (Exception e) {
@@ -77,9 +81,9 @@ public class AutoDAOImp implements AutoDAO {
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#getAuto(java.lang.String)
      */
     @Override
-    public Auto consultar(String numerSerie) {
-        Key<Auto> key = Key.create(Auto.class, numerSerie);
-        Auto respuesta = ofy().load().key(key).now();
+    public AutoOfy consultar(String numerSerie, Class<?>... group) {
+        Key<AutoOfy> key = Key.create(AutoOfy.class, numerSerie);
+        AutoOfy respuesta = ofy().load().key(key).safe();
         return respuesta;
     }    
     
@@ -87,8 +91,7 @@ public class AutoDAOImp implements AutoDAO {
      * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
      */
     @Override
-    public boolean borrar(Auto dato) {
-        ofy().delete().entity(dato);
-        return true;
+    public void borrar(AutoOfy dato) {
+        ofy().delete().entity(dato).now();
     }
 }

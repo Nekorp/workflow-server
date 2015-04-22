@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,33 +17,37 @@ package org.nekorp.workflow.backend.controller.imp;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.nekorp.workflow.backend.controller.UploadController;
-import org.nekorp.workflow.backend.model.upload.ImagenMetadata;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import technology.tikal.gae.service.template.RestControllerTemplate;
+import technology.tikal.taller.automotriz.model.upload.ImagenMetadata;
+
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 /**
- * 
+ * @author Nekorp
  */
-@Controller
+@RestController
 @RequestMapping("/upload")
-public class UploadControllerImp implements UploadController {
+public class UploadControllerImp extends RestControllerTemplate implements UploadController {
 
     private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     
     /**{@inheritDoc}*/
     @Override
-    @RequestMapping(value="/url", method = RequestMethod.GET)
-    public @ResponseBody ImagenMetadata getUploadUrl() {
+    @RequestMapping(produces = "application/json;charset=UTF-8", value="/url", method = RequestMethod.GET)
+    public ImagenMetadata getUploadUrl() {
         ImagenMetadata r = new ImagenMetadata();
         r.setUploadUrl(blobstoreService.createUploadUrl("/api/v1/upload/imagenes/"));
         return r;
@@ -51,8 +55,8 @@ public class UploadControllerImp implements UploadController {
 
     /**{@inheritDoc}*/
     @Override
-    @RequestMapping(value="/imagenes", method = RequestMethod.POST)
-    public @ResponseBody ImagenMetadata uploadImage(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(produces = "application/json;charset=UTF-8", value="/imagenes", method = RequestMethod.POST)
+    public ImagenMetadata uploadImage(HttpServletRequest request, HttpServletResponse response) {
         Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
         ImagenMetadata r = new ImagenMetadata();
         for (BlobKey x: blobs.get("myFile")) {
@@ -64,7 +68,7 @@ public class UploadControllerImp implements UploadController {
     /**{@inheritDoc}*/
     @Override
     @RequestMapping(value="/imagenes/{rawBlobKey}", method = RequestMethod.GET)
-    public @ResponseBody void getImage(@PathVariable String rawBlobKey, HttpServletResponse response) {
+    public void getImage(@PathVariable String rawBlobKey, HttpServletResponse response) {
         try {
             BlobKey blobKey = new BlobKey(rawBlobKey);
             blobstoreService.serve(blobKey, response);

@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,29 +17,32 @@ package org.nekorp.workflow.backend.data.access.mock;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import org.nekorp.workflow.backend.data.access.ClienteDAO;
 import org.nekorp.workflow.backend.data.access.util.FiltroCliente;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationData;
-import org.nekorp.workflow.backend.model.cliente.Cliente;
+import org.nekorp.workflow.backend.model.cliente.ClienteOfy;
+
+import technology.tikal.gae.pagination.model.PaginationData;
 
 /**
- * 
+ * @author Nekorp
  */
+@Deprecated
 public class ClienteDAOMock implements ClienteDAO {
 
     
-    private List<Cliente> clientes;
+    private List<ClienteOfy> clientes;
     
     public ClienteDAOMock() {
-        clientes = new LinkedList<Cliente>();
+        clientes = new LinkedList<ClienteOfy>();
     }
     
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getClientes(java.util.Map, org.nekorp.workflow.backend.data.access.util.PaginationData)
      */
     @Override
-    public List<Cliente> consultarTodos(final FiltroCliente filtro, final PaginationData<Long> pagination) {
-        LinkedList<Cliente> datos = new LinkedList<Cliente>();
+    public List<ClienteOfy> consultarTodos(final FiltroCliente filtro, final PaginationData<Long> pagination) {
+        LinkedList<ClienteOfy> datos = new LinkedList<ClienteOfy>();
         if (pagination.getMaxResults() == 0) { //todos 
             return clientes;
         } else {//limitado
@@ -65,7 +68,7 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#nuevoCliente(org.nekorp.workflow.backend.model.cliente.Cliente)
      */
     @Override
-    public void guardar(Cliente nuevo) {
+    public void guardar(ClienteOfy nuevo) {
         Long id = this.clientes.size() + 1l;
         nuevo.setId(id);
         this.clientes.add(nuevo);
@@ -75,8 +78,8 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.ClienteDAO#getCliente(java.lang.String)
      */
     @Override
-    public Cliente consultar(Long id) {
-        for (Cliente x: clientes) {
+    public ClienteOfy consultar(Long id, Class<?>... group) {
+        for (ClienteOfy x: clientes) {
             if(id == x.getId()) {
                 return x;
             }
@@ -88,8 +91,8 @@ public class ClienteDAOMock implements ClienteDAO {
      * @see org.nekorp.workflow.backend.data.access.template.EntityDAO#borrar(java.lang.Object)
      */
     @Override
-    public boolean borrar(Cliente dato) {
+    public void borrar(ClienteOfy dato) {
         // TODO Auto-generated method stub
-        return false;
+        return;
     }
 }

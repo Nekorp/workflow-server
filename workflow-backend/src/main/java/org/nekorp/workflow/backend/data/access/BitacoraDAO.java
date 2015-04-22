@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,16 @@
 package org.nekorp.workflow.backend.data.access;
 
 import java.util.List;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
+
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface BitacoraDAO {
 
-    List<Evento> consultar(Long idServicio);
+    List<EventoOfy> consultar(ServicioOfy servicio);
 
-    List<Evento> guardar(Long idServicio, List<Evento> eventos);
+    List<EventoOfy> guardar(ServicioOfy servicio, List<EventoOfy> eventos);
 }

@@ -12,4 +12,5 @@
 	<import resource="classpath:/spring/dao/data-access.xml"/>
 	<import resource="classpath:/spring/services/service-configuration.xml"/>
 	<import resource="classpath:/spring/aop/service-level.xml"/>
+	<import resource="classpath*:/system/spring/applicationContext.xml"/>
 </beans>

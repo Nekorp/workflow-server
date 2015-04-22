@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,17 +15,21 @@
  */
 package org.nekorp.workflow.backend.controller;
 
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
-import org.nekorp.workflow.backend.data.pagination.model.Page;
-import org.nekorp.workflow.backend.data.pagination.model.PaginationDataLong;
-import org.nekorp.workflow.backend.model.index.servicio.ServicioIndex;
+import org.springframework.validation.BindingResult;
+
+import technology.tikal.gae.pagination.model.Page;
+import technology.tikal.gae.pagination.model.PaginationDataLong;
+import technology.tikal.taller.automotriz.model.index.servicio.ServicioIndex;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface ServicioIndexController {
 
-    Page<ServicioIndex, Long> getServicioIndex(FiltroServicioIndex filtro, PaginationDataLong pagination, HttpServletResponse response);
+    Page<List<ServicioIndex>> getServicioIndex(FiltroServicioIndex filtro, PaginationDataLong pagination, BindingResult resultPagination, HttpServletRequest request);
 }

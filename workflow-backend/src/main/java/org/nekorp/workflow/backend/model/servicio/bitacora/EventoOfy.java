@@ -1,5 +1,5 @@
 /**
- *   Copyright 2012-2013 Nekorp
+ *   Copyright 2012-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,22 +18,27 @@ package org.nekorp.workflow.backend.model.servicio.bitacora;
 import java.util.Date;
 import java.util.List;
 
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+
+import technology.tikal.taller.automotriz.model.servicio.bitacora.Evidencia;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Parent;
 
+/**
+ * 
+ * @author Nekorp
+ *
+ */
 @Entity
-@Cache
-public class Evento implements Comparable<Evento> {
+public class EventoOfy implements Comparable<EventoOfy> {
 
     @Parent
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.
-    private Key<Servicio> parent;
+    private Key<ServicioOfy> parent;
     @Id
     private Long id;
     /**
@@ -65,11 +70,11 @@ public class Evento implements Comparable<Evento> {
      */
     private String descripcion;
     
-    public Key<Servicio> getParent() {
+    public Key<ServicioOfy> getParent() {
         return parent;
     }
 
-    public void setParent(Key<Servicio> parent) {
+    public void setParent(Key<ServicioOfy> parent) {
         this.parent = parent;
     }
 
@@ -138,7 +143,7 @@ public class Evento implements Comparable<Evento> {
     }
 
     @Override
-    public int compareTo(Evento o) {
+    public int compareTo(EventoOfy o) {
         return this.fechaCreacion.compareTo(o.getFechaCreacion());
     }
 
@@ -158,7 +163,7 @@ public class Evento implements Comparable<Evento> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Evento other = (Evento) obj;
+        EventoOfy other = (EventoOfy) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

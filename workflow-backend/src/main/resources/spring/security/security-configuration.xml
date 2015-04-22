@@ -6,16 +6,11 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security.xsd">
  
-	<http create-session="stateless">
-		<intercept-url pattern="/api/**" access="ROLE_USER" />
+	<http pattern="/api/**" create-session="stateless" use-expressions="true">
+		<intercept-url pattern="/api/**" access="hasAnyRole('ROLE_SYSTEM, ROLE_USER')" />
 		<http-basic/>
 	</http>
-	
 	<authentication-manager>
-		<authentication-provider user-service-ref="workflowUserDetailsService"/>
+		<authentication-provider user-service-ref="systemUserDao"/>
 	</authentication-manager>
-	
-	<beans:bean id="workflowUserDetailsService" class="org.nekorp.workflow.backend.security.service.WorkflowUserDetailsService">
-		<beans:property name="userSecurityDAO" ref="userSecurityDAO"/>
-	</beans:bean>
 </beans:beans>

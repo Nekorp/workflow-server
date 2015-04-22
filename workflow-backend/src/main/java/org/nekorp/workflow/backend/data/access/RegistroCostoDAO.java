@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,12 +15,15 @@
  */
 package org.nekorp.workflow.backend.data.access;
 
-import org.nekorp.workflow.backend.data.access.template.ChildEntityDAO;
-import org.nekorp.workflow.backend.data.access.template.FiltroBusqueda;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
+
+import technology.tikal.gae.dao.template.ChildEntityDAO;
+import technology.tikal.gae.dao.template.FiltroBusqueda;
+import technology.tikal.gae.pagination.model.PaginationData;
 
 /**
- * 
+ * @author Nekorp
  */
-public interface RegistroCostoDAO extends ChildEntityDAO<RegistroCosto, Long, Long, FiltroBusqueda> {
+public interface RegistroCostoDAO extends ChildEntityDAO<RegistroCostoOfy, Long, ServicioOfy, FiltroBusqueda, PaginationData<Long>> {
 }

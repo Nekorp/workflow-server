@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,16 @@
 package org.nekorp.workflow.backend.data.access;
 
 import java.util.List;
-import org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetail;
+
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetailOfy;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface DamageDetailDAO {
 
-    List<DamageDetail> consultar(Long idServicio);
+    List<DamageDetailOfy> consultar(ServicioOfy servicio);
 
-    List<DamageDetail> guardar(Long idServicio, List<DamageDetail> damage);
+    List<DamageDetailOfy> guardar(ServicioOfy servicio, List<DamageDetailOfy> damage);
 }

@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 package org.nekorp.workflow.backend.service.reporte.cliente;
 
 import org.nekorp.workflow.backend.model.reporte.cliente.ReporteCliente;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 
 /**
- * 
+ * @author Nekorp
  */
 public interface ReporteClienteDataFactory {
 
-    ReporteCliente getData(Servicio servicio);
+    ReporteCliente getData(ServicioOfy servicio);
 }

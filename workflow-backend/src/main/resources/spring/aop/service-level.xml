@@ -20,11 +20,11 @@
 			<aop:pointcut id="guardarServicio" 
 				expression="execution(* org.nekorp.workflow.backend.data.access.ServicioDAO.guardar(..)) and args(servicio)"/>
 			<aop:pointcut id="guardarBitacora" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.BitacoraDAO.guardar(..)) and args(idServicio,eventos)"/>
+				expression="execution(* org.nekorp.workflow.backend.data.access.BitacoraDAO.guardar(..)) and args(servicio,eventos)"/>
 			<aop:pointcut id="guardarEvento" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.EventoDAO.guardar(..)) and args(idServicio,..)"/>
+				expression="execution(* org.nekorp.workflow.backend.data.access.EventoDAO.guardar(..)) and args(servicio,..)"/>
 			<aop:pointcut id="borrarEvento" 
-				expression="execution(* org.nekorp.workflow.backend.data.access.EventoDAO.borrar(..)) and args(idServicio,..)"/>
+				expression="execution(* org.nekorp.workflow.backend.data.access.EventoDAO.borrar(..)) and args(servicio,..)"/>
 			<aop:pointcut id="actualizarCostos" 
 				expression="execution(* org.nekorp.workflow.backend.data.access.CostoDAO.guardar(..)) and args(servicio,registros)"/>
 			<aop:before pointcut-ref="guardarServicio" method="actualizarServicioMetadataInterceptor"/>

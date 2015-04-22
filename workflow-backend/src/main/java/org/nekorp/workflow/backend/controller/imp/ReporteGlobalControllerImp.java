@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,40 +15,34 @@
  */
 package org.nekorp.workflow.backend.controller.imp;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.nekorp.workflow.backend.controller.ReporteGlobalController;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
 import org.nekorp.workflow.backend.model.reporte.global.RenglonRG;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 import org.nekorp.workflow.backend.service.reporte.global.RenglonFactoryRG;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import technology.tikal.gae.service.template.RestControllerTemplate;
+
 
 /**
- * 
+ * @author Nekorp
  */
-@Controller
+@RestController
 @RequestMapping("/reportes/global/renglones/servicio")
-public class ReporteGlobalControllerImp implements ReporteGlobalController {
+public class ReporteGlobalControllerImp extends RestControllerTemplate implements ReporteGlobalController {
 
     private ServicioDAO servicioDAO;
     private RenglonFactoryRG renglonFactoryRG;
     /**{@inheritDoc}*/
     @Override
-    @RequestMapping(value="/{idServicio}", method = RequestMethod.GET)
-    @ResponseBody public RenglonRG getRenglon(@PathVariable final Long idServicio, final HttpServletResponse response) {
-        Servicio servicio = servicioDAO.consultar(idServicio);
-        if (servicio == null) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
-        }
+    @RequestMapping(produces = "application/json;charset=UTF-8", value="/{idServicio}", method = RequestMethod.GET)
+    public RenglonRG getRenglon(@PathVariable final Long idServicio) {
+        ServicioOfy servicio = servicioDAO.consultar(idServicio);
         RenglonRG r = renglonFactoryRG.build(servicio);
-        response.setHeader("Content-Type","application/json;charset=UTF-8");
         return r;
     }
     public void setServicioDAO(ServicioDAO servicioDAO) {

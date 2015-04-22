@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,18 +21,19 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
-import org.nekorp.workflow.backend.model.servicio.bitacora.EventoConstants;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
-import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadata;
-import org.nekorp.workflow.backend.model.servicio.metadata.ServicioStatusConstants;
-import org.nekorp.workflow.backend.model.servicio.moneda.Moneda;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
+import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadataOfy;
 import org.nekorp.workflow.backend.service.ServicioMetadataFactory;
 import org.nekorp.workflow.backend.util.MonedaHalfUpRound;
 
+import technology.tikal.taller.automotriz.model.servicio.bitacora.EventoConstants;
+import technology.tikal.taller.automotriz.model.servicio.metadata.ServicioStatusConstants;
+import technology.tikal.taller.automotriz.model.servicio.moneda.Moneda;
+
 /**
- * 
+ * @author Nekorp
  */
 public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
 
@@ -43,23 +44,23 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
     private int diasMaxCierre = ServicioMetadataFactoryImp.DIAS_MAX_CIERRE_DEFAULT;
 
     @Override
-    public ServicioMetadata calcularMetadata(Servicio servicio) {
-        return this.calcularMetadata(servicio, bitacoraDAO.consultar(servicio.getId()));
+    public ServicioMetadataOfy calcularMetadata(ServicioOfy servicio) {
+        return this.calcularMetadata(servicio, bitacoraDAO.consultar(servicio));
     }
 
     @Override
-    public ServicioMetadata calcularMetadata(Servicio servicio, List<Evento> eventos) {
-        ServicioMetadata respuesta = new ServicioMetadata();
+    public ServicioMetadataOfy calcularMetadata(ServicioOfy servicio, List<EventoOfy> eventos) {
+        ServicioMetadataOfy respuesta = new ServicioMetadataOfy();
         respuesta.setCostoTotal(servicio.getMetadata().getCostoTotal());
         if (eventos == null) {
-            eventos = new LinkedList<Evento>();
+            eventos = new LinkedList<EventoOfy>();
         }
-        Evento eventoInicio = null;
-        Evento eventoEntradaAuto = null;
-        Evento eventoSalidaAuto = null;
-        Evento eventoCancelar = null;
-        Evento eventoTermino = null;
-        for (Evento x: eventos) {
+        EventoOfy eventoInicio = null;
+        EventoOfy eventoEntradaAuto = null;
+        EventoOfy eventoSalidaAuto = null;
+        EventoOfy eventoCancelar = null;
+        EventoOfy eventoTermino = null;
+        for (EventoOfy x: eventos) {
             if (x.getEtiqueta().equals(EventoConstants.inicioServicio) && eventoInicio == null) {
                 eventoInicio = x;
                 respuesta.setFechaInicio(x.getFechaCreacion());
@@ -106,9 +107,13 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
     }
 
     @Override
-    public void calcularCostoMetaData(Servicio servicio, List<RegistroCosto> registros) {
+    public void calcularCostoMetaData(ServicioOfy servicio, List<RegistroCostoOfy> registros) {
+        if (registros == null) {
+            servicio.getMetadata().setCostoTotal(new Moneda());
+            return;
+        }
         MonedaHalfUpRound total = new MonedaHalfUpRound();
-        for (RegistroCosto x: registros) {
+        for (RegistroCostoOfy x: registros) {
             MonedaHalfUpRound subtotal = null;
             if (StringUtils.equals("Insumo", x.getSubtipo())) {
                 MonedaHalfUpRound precioUnitario = MonedaHalfUpRound.valueOf(x.getPrecioUnitario().getValue());

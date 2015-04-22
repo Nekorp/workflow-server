@@ -1,5 +1,5 @@
 /**
- *   Copyright 2013 Nekorp
+ *   Copyright 2013-2015 Tikal-Technology
  *
  *Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@ package org.nekorp.workflow.backend.service.imp;
 import java.util.List;
 
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
-import org.nekorp.workflow.backend.model.servicio.Servicio;
-import org.nekorp.workflow.backend.model.servicio.bitacora.Evento;
-import org.nekorp.workflow.backend.model.servicio.costo.RegistroCosto;
+import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
+import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
+import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
 import org.nekorp.workflow.backend.service.ServicioMetadataAutoRefresh;
 import org.nekorp.workflow.backend.service.ServicioMetadataFactory;
 
 /**
- * 
+ * @author Nekorp
  */
 public class ServicioMetadataAutoRefreshImp implements ServicioMetadataAutoRefresh {
 
@@ -34,39 +34,38 @@ public class ServicioMetadataAutoRefreshImp implements ServicioMetadataAutoRefre
     
     /**{@inheritDoc}*/
     @Override
-    public void actualizarUsandoId(final Long idServicio) {
-        Servicio servicio = servicioDAO.consultar(idServicio);
+    public void actualizarUsandoId(final ServicioOfy servicio) {
         servicio.setMetadata(servicioMetadataFactory.calcularMetadata(servicio));
         servicioDAO.actualizarMetadata(servicio);
     }
     
     /**{@inheritDoc}*/
     @Override
-    public void actualizarUsandoIdEventos(Long idServicio, List<Evento> eventos) {
-        Servicio servicio = servicioDAO.consultar(idServicio);
+    public void actualizarUsandoIdEventos(ServicioOfy servicio, List<EventoOfy> eventos) {
         servicio.setMetadata(servicioMetadataFactory.calcularMetadata(servicio, eventos));
         servicioDAO.actualizarMetadata(servicio);
     }
 
     /**{@inheritDoc}*/
     @Override
-    public void actualizarServicioMetadataInterceptor(final Servicio servicio) {
+    public void actualizarServicioMetadataInterceptor(final ServicioOfy servicio) {
         if (servicio.getId() != null) {
             servicio.setMetadata(servicioMetadataFactory.calcularMetadata(servicio));
         } else {
             servicio.setMetadata(servicioMetadataFactory.calcularMetadata(servicio, null));
+            servicioMetadataFactory.calcularCostoMetaData(servicio, null);
         }
     }
 
     /**{@inheritDoc}*/
     @Override
-    public void actualizarUsandoServicioEventos(final Servicio servicio, final List<Evento> eventos) {
+    public void actualizarUsandoServicioEventos(final ServicioOfy servicio, final List<EventoOfy> eventos) {
         servicio.setMetadata(servicioMetadataFactory.calcularMetadata(servicio, eventos));
         servicioDAO.actualizarMetadata(servicio);
     }
     
     @Override
-    public void actualizarCostoTotal(final Servicio servicio, final List<RegistroCosto> registros) {
+    public void actualizarCostoTotal(final ServicioOfy servicio, final List<RegistroCostoOfy> registros) {
         servicioMetadataFactory.calcularCostoMetaData(servicio, registros);
         servicioDAO.actualizarMetadata(servicio);
     }
@@ -77,5 +76,5 @@ public class ServicioMetadataAutoRefreshImp implements ServicioMetadataAutoRefre
 
     public void setServicioMetadataFactory(ServicioMetadataFactory servicioMetadataFactory) {
         this.servicioMetadataFactory = servicioMetadataFactory;
-    }
+    }    
 }
