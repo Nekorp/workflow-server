@@ -22,10 +22,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
 import org.nekorp.workflow.backend.data.access.BitacoraDAO;
-import org.nekorp.workflow.backend.data.access.ClienteDAO;
 import org.nekorp.workflow.backend.data.access.CostoDAO;
 import org.nekorp.workflow.backend.model.auto.AutoOfy;
-import org.nekorp.workflow.backend.model.cliente.ClienteOfy;
 import org.nekorp.workflow.backend.model.reporte.cliente.AutoRC;
 import org.nekorp.workflow.backend.model.reporte.cliente.EventoRC;
 import org.nekorp.workflow.backend.model.reporte.cliente.RegistroCostoRC;
@@ -44,7 +42,6 @@ import org.nekorp.workflow.backend.util.MonedaHalfUpRound;
  */
 public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
 
-    private ClienteDAO clienteDao;
     private BitacoraDAO bitacoraDao;
     private AutoDAO autoDao;
     private CostoDAO costoDao;
@@ -52,10 +49,10 @@ public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
     @Override
     //otra cosa horriblemente repetida, en el cliente lo realiza similar pero con la informacion que tiene cargada en memoria.
     public ReporteCliente getData(ServicioOfy servicio) {
-        ClienteOfy cliente = clienteDao.consultar(servicio.getIdCliente());
         ReporteCliente dato = new ReporteCliente();
         dato.setNumeroDeServicio(servicio.getId() + "");
-        dato.setNombreDelCliente(cliente.getNombre());
+        //TODO fix esta cosa, tiene que sacar el nombre del cliente de algun lado.
+        dato.setNombreDelCliente(servicio.getIdCliente() + "");
         dato.setDescripcionServicio(servicio.getDescripcion());
         
         List<EventoOfy> bitacora = bitacoraDao.consultar(servicio);
@@ -204,11 +201,7 @@ public class ReporteClienteDataFactoryImp implements ReporteClienteDataFactory {
             }
         }
         return null;
-    }
-
-    public void setClienteDao(ClienteDAO clienteDao) {
-        this.clienteDao = clienteDao;
-    }
+    }    
 
     public void setBitacoraDao(BitacoraDAO bitacoraDao) {
         this.bitacoraDao = bitacoraDao;
