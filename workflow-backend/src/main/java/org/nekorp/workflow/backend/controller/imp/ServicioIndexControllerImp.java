@@ -15,8 +15,11 @@
  */
 package org.nekorp.workflow.backend.controller.imp;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -65,17 +68,22 @@ public class ServicioIndexControllerImp extends RestControllerTemplate implement
         }
         filtro.setNumeroSerieAuto(stringStandarizer.standarize(filtro.getNumeroSerieAuto()));
         List<ServicioOfy> servicios = servicioDAO.consultarTodos(filtro, pagination);
+        Set<String> setIds = new HashSet<>();
+        for (ServicioOfy x: servicios) {
+            setIds.add(x.getIdAuto());
+        }
+        Map<String, AutoOfy> autos = autoDAO.consultaBatch(setIds.toArray(new String[setIds.size()]));
         List<ServicioIndex> datosRespuesta = new LinkedList<ServicioIndex>();
         for (ServicioOfy x: servicios) {
-            datosRespuesta.add(crearServicioIndex(x));
+            datosRespuesta.add(crearServicioIndex(x, autos.get(x.getIdAuto())));
         }
         Page<List<ServicioIndex>> r = PaginationModelFactory.getPage(datosRespuesta, "ServicioIndex", request.getRequestURI() , filtro, pagination);
         return r;
     }
     
-    private ServicioIndex crearServicioIndex(ServicioOfy servicio) {
+    private ServicioIndex crearServicioIndex(ServicioOfy servicio, AutoOfy auto) {
         ServicioIndex nuevo = new ServicioIndex();
-        nuevo.setAutoData(crearServicioIndexAutoData(servicio.getIdAuto()));
+        nuevo.setAutoData(crearServicioIndexAutoData(auto));
         nuevo.setClienteData(crearServicioIndexClienteData(servicio.getIdCliente()));
         nuevo.setDescripcion(servicio.getDescripcion());
         nuevo.setFechaInicio(servicio.getMetadata().getFechaInicio());
@@ -86,9 +94,8 @@ public class ServicioIndexControllerImp extends RestControllerTemplate implement
         return nuevo;
     }
     
-    private ServicioIndexAutoData crearServicioIndexAutoData(String idAuto) {
+    private ServicioIndexAutoData crearServicioIndexAutoData(AutoOfy auto) {
         ServicioIndexAutoData nuevo = new ServicioIndexAutoData();
-        AutoOfy auto = autoDAO.consultar(idAuto);
         if (auto != null) {
             nuevo.setNumeroSerie(auto.getNumeroSerie());
             nuevo.setPlacas(auto.getPlacas());

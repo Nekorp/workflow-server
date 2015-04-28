@@ -16,6 +16,7 @@
 package org.nekorp.workflow.backend.data.access.objectify;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
@@ -93,5 +94,11 @@ public class AutoDAOImp implements AutoDAO {
     @Override
     public void borrar(AutoOfy dato) {
         ofy().delete().entity(dato).now();
+    }
+
+    @Override
+    public Map<String, AutoOfy> consultaBatch(String[] ids, Class<?>... group) {
+        Map<String, AutoOfy> ths = ofy().load().type(AutoOfy.class).ids(ids);
+        return ths;
     }
 }

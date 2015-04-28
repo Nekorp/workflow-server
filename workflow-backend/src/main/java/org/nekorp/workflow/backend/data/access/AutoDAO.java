@@ -15,6 +15,8 @@
  */
 package org.nekorp.workflow.backend.data.access;
 
+import java.util.Map;
+
 import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
 import org.nekorp.workflow.backend.model.auto.AutoOfy;
 
@@ -25,4 +27,5 @@ import technology.tikal.gae.pagination.model.PaginationData;
  * @author Nekorp
  */
 public interface AutoDAO extends EntityDAO<AutoOfy, String, FiltroAuto, PaginationData<String>> {
+    Map<String, AutoOfy> consultaBatch(String[] ids, Class<?>... group);
 }

@@ -15,6 +15,8 @@
  */
 package org.nekorp.workflow.backend.model.auto;
 
+import java.util.Objects;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -137,4 +139,22 @@ public class AutoOfy {
         this.equipamiento = equipamiento;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(vin);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj instanceof AutoOfy) {
+            AutoOfy other = (AutoOfy) obj;
+            return Objects.equals(vin, other.vin);
+        } 
+        return false;
+    }
+
+    
 }
