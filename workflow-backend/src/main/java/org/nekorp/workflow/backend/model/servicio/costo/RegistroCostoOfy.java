@@ -32,7 +32,7 @@ import com.googlecode.objectify.annotation.Parent;
  * @author Nekorp
  *
  */
-@Entity
+@Entity(name="RegistroCosto")
 public class RegistroCostoOfy {
     @Parent
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.

@@ -15,18 +15,17 @@
  */
 package org.nekorp.workflow.backend.controller.imp;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.nekorp.workflow.backend.controller.AutoIndexController;
 import org.nekorp.workflow.backend.controller.ServicioIndexController;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
 import org.nekorp.workflow.backend.data.access.ServicioDAO;
+import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
 import org.nekorp.workflow.backend.data.access.util.FiltroServicioIndex;
 import org.nekorp.workflow.backend.data.access.util.StringStandarizer;
 import org.nekorp.workflow.backend.model.auto.AutoOfy;
@@ -41,20 +40,20 @@ import technology.tikal.gae.error.exceptions.NotValidException;
 import technology.tikal.gae.pagination.PaginationModelFactory;
 import technology.tikal.gae.pagination.model.Page;
 import technology.tikal.gae.pagination.model.PaginationDataLong;
+import technology.tikal.gae.pagination.model.PaginationDataString;
 import technology.tikal.gae.service.template.RestControllerTemplate;
 import technology.tikal.taller.automotriz.model.index.servicio.ServicioIndex;
 import technology.tikal.taller.automotriz.model.index.servicio.ServicioIndexAutoData;
-import technology.tikal.taller.automotriz.model.index.servicio.ServicioIndexClienteData;
 
 /**
  * @author Nekorp
  */
 @RestController
 @RequestMapping("/index")
-public class ServicioIndexControllerImp extends RestControllerTemplate implements ServicioIndexController {
+public class IndexControllerImp extends RestControllerTemplate implements ServicioIndexController, AutoIndexController {
 
-    private AutoDAO autoDAO;
     private ServicioDAO servicioDAO;
+    private AutoDAO autoDAO;
     private StringStandarizer stringStandarizer;
     
     /**{@inheritDoc}*/
@@ -68,23 +67,18 @@ public class ServicioIndexControllerImp extends RestControllerTemplate implement
         }
         filtro.setNumeroSerieAuto(stringStandarizer.standarize(filtro.getNumeroSerieAuto()));
         List<ServicioOfy> servicios = servicioDAO.consultarTodos(filtro, pagination);
-        Set<String> setIds = new HashSet<>();
-        for (ServicioOfy x: servicios) {
-            setIds.add(x.getIdAuto());
-        }
-        Map<String, AutoOfy> autos = autoDAO.consultaBatch(setIds.toArray(new String[setIds.size()]));
         List<ServicioIndex> datosRespuesta = new LinkedList<ServicioIndex>();
         for (ServicioOfy x: servicios) {
-            datosRespuesta.add(crearServicioIndex(x, autos.get(x.getIdAuto())));
+            datosRespuesta.add(crearServicioIndex(x));
         }
         Page<List<ServicioIndex>> r = PaginationModelFactory.getPage(datosRespuesta, "ServicioIndex", request.getRequestURI() , filtro, pagination);
         return r;
     }
     
-    private ServicioIndex crearServicioIndex(ServicioOfy servicio, AutoOfy auto) {
+    private ServicioIndex crearServicioIndex(ServicioOfy servicio) {
         ServicioIndex nuevo = new ServicioIndex();
-        nuevo.setAutoData(crearServicioIndexAutoData(auto));
-        nuevo.setClienteData(crearServicioIndexClienteData(servicio.getIdCliente()));
+        nuevo.setIdAuto(servicio.getIdAuto());
+        nuevo.setIdCliente(servicio.getIdCliente());
         nuevo.setDescripcion(servicio.getDescripcion());
         nuevo.setFechaInicio(servicio.getMetadata().getFechaInicio());
         nuevo.setId(servicio.getId());
@@ -94,26 +88,36 @@ public class ServicioIndexControllerImp extends RestControllerTemplate implement
         return nuevo;
     }
     
-    private ServicioIndexAutoData crearServicioIndexAutoData(AutoOfy auto) {
-        ServicioIndexAutoData nuevo = new ServicioIndexAutoData();
-        if (auto != null) {
-            nuevo.setNumeroSerie(auto.getNumeroSerie());
-            nuevo.setPlacas(auto.getPlacas());
-            nuevo.setTipo(auto.getTipo());
+    @Override
+    @RequestMapping(produces = "application/json;charset=UTF-8", value = "/auto", method = RequestMethod.GET)
+    public Page<List<ServicioIndexAutoData>> getAutoIndex(final FiltroAuto filtro, final PaginationDataString pagination, 
+            final BindingResult resultPagination, final HttpServletRequest request) {
+        if (resultPagination.hasErrors()) {
+            throw new NotValidException(resultPagination);
         }
-        return nuevo;
+        filtro.setFiltroNumeroSerie(this.stringStandarizer.standarize(filtro.getFiltroNumeroSerie()));
+        pagination.setSinceId(this.stringStandarizer.standarize(pagination.getSinceId()));
+        List<AutoOfy> datos = autoDAO.consultarTodos(filtro, pagination);
+        List<ServicioIndexAutoData> datosRespuesta = new LinkedList<>();
+        for (AutoOfy x: datos) {
+            datosRespuesta.add(buildAutoIndex(x));
+        }
+        Page<List<ServicioIndexAutoData>> r = PaginationModelFactory.getPage(datosRespuesta, "ServicioIndexAutoData", request.getRequestURI() , filtro, pagination);
+        return r;
     }
-    
-    private ServicioIndexClienteData crearServicioIndexClienteData(Long idCliente) {
-        ServicioIndexClienteData nuevo = new ServicioIndexClienteData();
-        nuevo.setId(idCliente);
-        return nuevo;
+
+    private ServicioIndexAutoData buildAutoIndex(AutoOfy source) {
+        ServicioIndexAutoData r = new ServicioIndexAutoData();
+        r.setNumeroSerie(source.getNumeroSerie());
+        r.setPlacas(source.getPlacas());
+        r.setTipo(source.getTipo());
+        return r;
     }
 
     public void setAutoDAO(AutoDAO autoDAO) {
         this.autoDAO = autoDAO;
     }
-
+    
     public void setServicioDAO(ServicioDAO servicioDAO) {
         this.servicioDAO = servicioDAO;
     }    

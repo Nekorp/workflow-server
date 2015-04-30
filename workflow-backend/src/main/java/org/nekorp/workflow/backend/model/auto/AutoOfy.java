@@ -35,7 +35,7 @@ import com.googlecode.objectify.annotation.Index;
  * MMMM esta duplicado el codigo de auto y las demas entidades que tienen anotaciones de objectify
  * @author Nekorp
  */
-@Entity
+@Entity(name="Auto")
 @Cache
 public class AutoOfy {
     @JsonIgnore // se ignora por que no se requiere mandar al cliente.

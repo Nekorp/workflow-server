@@ -30,7 +30,7 @@ import com.googlecode.objectify.annotation.Index;
  * @author Nekorp
  *
  */
-@Entity
+@Entity(name="Servicio")
 @Cache
 public class ServicioOfy {
     @Id

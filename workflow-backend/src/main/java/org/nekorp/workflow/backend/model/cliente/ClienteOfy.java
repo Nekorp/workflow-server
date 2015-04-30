@@ -34,7 +34,7 @@ import com.googlecode.objectify.annotation.Index;
  * @author Nekorp
  *
  */
-@Entity
+@Entity(name="Cliente")
 @Cache
 @Deprecated
 public class ClienteOfy {

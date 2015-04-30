@@ -33,7 +33,7 @@ import com.googlecode.objectify.annotation.Parent;
  * @author Nekorp
  *
  */
-@Entity
+@Entity(name="Evento")
 public class EventoOfy implements Comparable<EventoOfy> {
 
     @Parent

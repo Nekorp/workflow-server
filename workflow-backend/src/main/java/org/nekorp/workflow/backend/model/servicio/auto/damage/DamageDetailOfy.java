@@ -26,7 +26,7 @@ import com.googlecode.objectify.annotation.Parent;
 /**
  * @author Nekorp
  */
-@Entity
+@Entity(name="DamageDetail")
 public class DamageDetailOfy {
 
     @Parent

@@ -62,7 +62,7 @@
 		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	 -->
-	<bean id="ServicioIndexController" class="org.nekorp.workflow.backend.controller.imp.ServicioIndexControllerImp">
+	<bean id="IndexController" class="org.nekorp.workflow.backend.controller.imp.IndexControllerImp">
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="autoDAO" ref="autoDAO"/>
 		<property name="stringStandarizer" ref="stringStandarizer"/>
