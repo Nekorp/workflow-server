@@ -24,6 +24,7 @@ import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
 import org.nekorp.workflow.backend.model.auto.AutoOfy;
 
 import technology.tikal.gae.pagination.model.PaginationData;
+import technology.tikal.gae.service.template.RestControllerTemplate;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
@@ -32,7 +33,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 /**
  * @author Nekorp
  */
-public class AutoDAOImp implements AutoDAO {
+public class AutoDAOImp extends RestControllerTemplate implements AutoDAO {
     
     /* (non-Javadoc)
      * @see org.nekorp.workflow.backend.data.access.AutoDAO#getAutos(org.nekorp.workflow.backend.data.access.util.FiltroAuto, org.nekorp.workflow.backend.data.pagination.model.PaginationData)
@@ -64,6 +65,11 @@ public class AutoDAOImp implements AutoDAO {
             result.remove(pagination.getMaxResults());
         }
         return result;
+    }
+    
+    @Override
+    public void guardarNuevo(AutoOfy auto) {
+        this.guardar(auto);
     }
 
     /* (non-Javadoc)
@@ -100,5 +106,5 @@ public class AutoDAOImp implements AutoDAO {
     public Map<String, AutoOfy> consultaBatch(String[] ids, Class<?>... group) {
         Map<String, AutoOfy> ths = ofy().load().type(AutoOfy.class).ids(ids);
         return ths;
-    }
+    }   
 }

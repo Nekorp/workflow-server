@@ -45,6 +45,7 @@ public class ServicioOfy {
     private DatosCobranza cobranza;
     public ServicioOfy() {
         this.cobranza = new DatosCobranza();
+        this.metadata = new ServicioMetadataOfy();
     }
     public Long getId() {
         return id;

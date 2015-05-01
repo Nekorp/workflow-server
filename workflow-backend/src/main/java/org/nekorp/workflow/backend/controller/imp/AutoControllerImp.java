@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.nekorp.workflow.backend.controller.AutoController;
 import org.nekorp.workflow.backend.data.access.AutoDAO;
 import org.nekorp.workflow.backend.data.access.util.FiltroAuto;
@@ -85,12 +84,7 @@ public class AutoControllerImp extends RestControllerTemplate implements AutoCon
             throw new NotValidException(result);
         }
         preprocesaAuto(auto);
-        //Auto respuesta = this.autoDAO.consultar(auto.getNumeroSerie());
-        //if (respuesta != null) { //el auto ya existe
-            //response.setStatus(HttpStatus.BAD_REQUEST.value());
-            //return;
-        //}
-        this.autoDAO.guardar(auto);
+        this.autoDAO.guardarNuevo(auto);
         response.setHeader("Location", request.getRequestURI() + "/" + auto.getNumeroSerie());
     }
 
@@ -113,11 +107,17 @@ public class AutoControllerImp extends RestControllerTemplate implements AutoCon
         if (result.hasErrors()) {
             throw new NotValidException(result);
         }
-        autoDAO.consultar(this.stringStandarizer.standarize(numeroSerie));
-        //no me importa lo que manden lo que vale es lo que viene en el path
-        datos.setNumeroSerie(numeroSerie);
+        //TODO pasarlo a un update?
+        AutoOfy original = autoDAO.consultar(this.stringStandarizer.standarize(numeroSerie));
         preprocesaAuto(datos);
-        autoDAO.guardar(datos);
+        original.setColor(datos.getColor());
+        original.setEquipamiento(datos.getEquipamiento());
+        original.setMarca(datos.getMarca());
+        original.setModelo(datos.getModelo());
+        original.setPlacas(datos.getPlacas());
+        original.setTipo(datos.getTipo());
+        original.setVersion(datos.getVersion());
+        autoDAO.guardar(original);
     }
     
     /* (non-Javadoc)

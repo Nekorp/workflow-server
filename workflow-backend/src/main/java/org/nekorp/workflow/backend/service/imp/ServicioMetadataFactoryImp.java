@@ -51,7 +51,7 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
     @Override
     public ServicioMetadataOfy calcularMetadata(ServicioOfy servicio, List<EventoOfy> eventos) {
         ServicioMetadataOfy respuesta = new ServicioMetadataOfy();
-        respuesta.setCostoTotal(servicio.getMetadata().getCostoTotal());
+        respuesta.setCostoTotal(new Moneda(servicio.getMetadata().getCostoTotal().getValue()));
         if (eventos == null) {
             eventos = new LinkedList<EventoOfy>();
         }

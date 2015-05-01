@@ -11,13 +11,17 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
  
-	<mvc:annotation-driven>
+    <mvc:annotation-driven>
 		<mvc:message-converters register-defaults="true">
 			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 				<property name="objectMapper" ref="jacksonObjectMapper"/>
 			</bean>
     	</mvc:message-converters>
 	</mvc:annotation-driven>
+	<mvc:interceptors>
+	    <ref bean="servicioCacheController"/>
+	    <ref bean="autoCacheController"/>
+	</mvc:interceptors>
 	<!-- customizacion de jackson -->
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
 	<bean id="JacksonConfiguration" class="technology.tikal.gae.jackson.JacksonBasicConfiguration" init-method="init">

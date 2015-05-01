@@ -11,6 +11,60 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
         
+	<!-- aspectos para el http cache del servicio -->
+	<bean id="servicioCacheController" class="org.nekorp.workflow.backend.cache.http.ServicioCacheController">
+	    <property name="httpCacheQueryService" ref="httpCacheQueryService"/>
+    	<property name="cacheControl" value="private, stale-if-error=259200"/>
+    	<property name="resourceUri" value="/api/v1/index/servicio"/>
+    	<property name="updateUriPattern">
+    	    <list>
+    	        <value>/api/v1/servicios/\p{Alnum}*</value>
+    	        <value>/api/v1/servicios/\p{Alnum}*/bitacora</value>
+    	        <value>/api/v1/servicios/\p{Alnum}*/costo</value>
+    	    </list>
+    	</property>
+	</bean>
+	<aop:config>
+		<aop:aspect ref="servicioCacheController">
+		    <aop:pointcut id="createServicio-cache"
+        	    expression="execution(* org.nekorp.workflow.backend.data.access.ServicioDAO.guardarNuevo(..))"/>
+		    <aop:pointcut id="consultarServicio-cache" 
+        	    expression="execution(* org.nekorp.workflow.backend.data.access.ServicioDAO.consultar(..))"/>
+		    <aop:pointcut id="guardarServicio-cache" 
+        	    expression="execution(* org.nekorp.workflow.backend.data.access.ServicioDAO.guardar(..)) ||
+        	    			execution(* org.nekorp.workflow.backend.data.access.ServicioDAO.actualizarMetadata(..))"/>
+		    <aop:after-returning pointcut-ref="createServicio-cache" method="manageCreate"/>
+		    <aop:after-returning pointcut-ref="consultarServicio-cache" method="listenToBusqueda" returning="retVal"/>
+		    <aop:after-returning pointcut-ref="guardarServicio-cache" method="manageUpdate"/>
+		</aop:aspect>
+	</aop:config>
+	
+	<!-- aspectos para el http cache del auto -->
+	<bean id="autoCacheController" class="org.nekorp.workflow.backend.cache.http.AutoCacheController">
+	    <property name="httpCacheQueryService" ref="httpCacheQueryService"/>
+    	<property name="cacheControl" value="private, stale-if-error=259200"/>
+    	<property name="resourceUri" value="/api/v1/index/auto"/>
+    	<property name="updateUriPattern">
+    	    <list>
+    	        <value>/api/v1/autos/\p{Alnum}*</value>
+    	    </list>
+    	</property>
+	</bean>
+	<aop:config>
+		<aop:aspect ref="autoCacheController">
+		    <aop:pointcut id="createAuto-cache"
+        	    expression="execution(* org.nekorp.workflow.backend.data.access.AutoDAO.guardarNuevo(..))"/>
+		    <aop:pointcut id="consultarAuto-cache" 
+        	    expression="execution(* org.nekorp.workflow.backend.data.access.AutoDAO.consultar(..))"/>
+		    <aop:pointcut id="guardarAuto-cache" 
+        	    expression="execution(* org.nekorp.workflow.backend.data.access.AutoDAO.guardar(..))"/>
+		    <aop:after-returning pointcut-ref="createAuto-cache" method="manageCreate"/>
+		    <aop:after-returning pointcut-ref="consultarAuto-cache" method="listenToBusqueda" returning="retVal"/>
+		    <aop:after-returning pointcut-ref="guardarAuto-cache" method="manageUpdate"/>
+		</aop:aspect>    
+	</aop:config>
+	
+	<!-- aspectos para refrescar el metadata -->
 	<bean id="servicioMetadataAutoRefresh" class="org.nekorp.workflow.backend.service.imp.ServicioMetadataAutoRefreshImp">
 		<property name="servicioDAO" ref="servicioDAO"/>
 		<property name="servicioMetadataFactory" ref="servicioMetadataFactory"/>

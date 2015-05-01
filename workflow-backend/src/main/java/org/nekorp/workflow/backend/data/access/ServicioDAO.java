@@ -25,5 +25,6 @@ import technology.tikal.gae.pagination.model.PaginationData;
  * @author Nekorp
  */
 public interface ServicioDAO extends EntityDAO<ServicioOfy, Long, FiltroBusqueda, PaginationData<Long>> {
+    void guardarNuevo(ServicioOfy servicio);
     void actualizarMetadata(ServicioOfy servicio);
 }

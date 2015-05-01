@@ -100,6 +100,11 @@ public class ServicioDAOImp implements ServicioDAO {
             return result;
         }
     }
+    
+    @Override
+    public void guardarNuevo(ServicioOfy servicio) {
+        this.guardar(servicio);
+    }
 
     @Override
     public void guardar(ServicioOfy nuevo) {
@@ -151,4 +156,5 @@ public class ServicioDAOImp implements ServicioDAO {
     public void setIdFoliador(String idFoliador) {
         this.idFoliador = idFoliador;
     }
+   
 }

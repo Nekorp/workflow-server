@@ -27,5 +27,6 @@ import technology.tikal.gae.pagination.model.PaginationData;
  * @author Nekorp
  */
 public interface AutoDAO extends EntityDAO<AutoOfy, String, FiltroAuto, PaginationData<String>> {
+    void guardarNuevo(AutoOfy auto);
     Map<String, AutoOfy> consultaBatch(String[] ids, Class<?>... group);
 }

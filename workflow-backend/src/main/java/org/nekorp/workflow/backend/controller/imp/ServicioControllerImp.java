@@ -32,6 +32,7 @@ import org.nekorp.workflow.backend.model.servicio.ServicioOfy;
 import org.nekorp.workflow.backend.model.servicio.auto.damage.DamageDetailOfy;
 import org.nekorp.workflow.backend.model.servicio.bitacora.EventoOfy;
 import org.nekorp.workflow.backend.model.servicio.costo.RegistroCostoOfy;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import technology.tikal.gae.error.exceptions.MessageSourceResolvableException;
 import technology.tikal.gae.error.exceptions.NotValidException;
 import technology.tikal.gae.pagination.PaginationModelFactory;
 import technology.tikal.gae.pagination.model.Page;
@@ -84,7 +86,13 @@ public class ServicioControllerImp extends RestControllerTemplate implements Ser
         if (result.hasErrors()) {
             throw new NotValidException(result);
         }
-        this.servicioDAO.guardar(servicio);
+        if (servicio.getId() != null) {
+            throw new MessageSourceResolvableException(new DefaultMessageSourceResolvable(
+                new String[]{"IllegalId.ServicioControllerImp.crearServicio"}, 
+                new String[]{servicio.getId().toString()}, 
+                "Se espera que un nuevo servicio no tenga id"));
+        }
+        this.servicioDAO.guardarNuevo(servicio);
         //TODO el evento que marca la hora en la que se creo el servicio podria generarse aqui y no en el cliente.
         //bitacoraDAO.guardar(servicio.getId(), new LinkedList<Evento>());
         response.setHeader("Location", request.getRequestURI() + "/" + servicio.getId());
@@ -103,9 +111,13 @@ public class ServicioControllerImp extends RestControllerTemplate implements Ser
         if (result.hasErrors()) {
             throw new NotValidException(result);
         }
-        datos.setId(id);
-        servicioDAO.consultar(id);
-        servicioDAO.guardar(datos);
+        ServicioOfy original = servicioDAO.consultar(id);
+        original.setIdCliente(datos.getIdCliente());
+        original.setIdAuto(datos.getIdAuto());
+        original.setDescripcion(datos.getDescripcion());
+        original.setDatosAuto(datos.getDatosAuto());
+        original.setCobranza(datos.getCobranza());
+        servicioDAO.guardar(original);
     }
 
     @Override
