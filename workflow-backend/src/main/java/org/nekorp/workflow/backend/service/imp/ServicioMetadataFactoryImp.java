@@ -113,6 +113,7 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
             return;
         }
         MonedaHalfUpRound total = new MonedaHalfUpRound();
+        MonedaHalfUpRound iva = MonedaHalfUpRound.valueOf("0.16");
         for (RegistroCostoOfy x: registros) {
             MonedaHalfUpRound subtotal = null;
             if (StringUtils.equals("Insumo", x.getSubtipo())) {
@@ -121,6 +122,9 @@ public class ServicioMetadataFactoryImp implements ServicioMetadataFactory {
             } else {
                 MonedaHalfUpRound precioCliente = MonedaHalfUpRound.valueOf(x.getPrecioCliente().getValue());
                 subtotal = precioCliente.multiplica(x.getCantidad());
+            }
+            if (x.isSubtotalConIVA()) {
+                total = total.suma(subtotal.multiplica(iva));
             }
             total = total.suma(subtotal);
         }
