@@ -117,6 +117,7 @@ public class ServicioControllerImp extends RestControllerTemplate implements Ser
         original.setDescripcion(datos.getDescripcion());
         original.setDatosAuto(datos.getDatosAuto());
         original.setCobranza(datos.getCobranza());
+        original.setGruposCosto(datos.getGruposCosto());
         servicioDAO.guardar(original);
     }
 

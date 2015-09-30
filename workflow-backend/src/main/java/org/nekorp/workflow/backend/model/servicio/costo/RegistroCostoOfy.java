@@ -48,9 +48,14 @@ public class RegistroCostoOfy {
     private Moneda precioCliente;
     private boolean subtotalConIVA;
     private Date fechaCreacion;
+    private String grupo;
+    private boolean cotizado;
+    private boolean autorizado;
+    private Moneda precioCotizado;
     
     public RegistroCostoOfy() {
         fechaCreacion = new Date();
+        precioCotizado = new Moneda();
     }
     
     public Key<ServicioOfy> getParent() {
@@ -139,6 +144,38 @@ public class RegistroCostoOfy {
 
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+    
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
+    }
+
+    public boolean isCotizado() {
+        return cotizado;
+    }
+
+    public void setCotizado(boolean cotizado) {
+        this.cotizado = cotizado;
+    }    
+
+    public boolean isAutorizado() {
+        return autorizado;
+    }
+
+    public void setAutorizado(boolean autorizado) {
+        this.autorizado = autorizado;
+    }
+
+    public Moneda getPrecioCotizado() {
+        return precioCotizado;
+    }
+
+    public void setPrecioCotizado(Moneda precioCotizado) {
+        this.precioCotizado = precioCotizado;
     }
 
     @Override

@@ -15,6 +15,9 @@
  */
 package org.nekorp.workflow.backend.model.servicio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.nekorp.workflow.backend.model.servicio.metadata.ServicioMetadataOfy;
 
 import technology.tikal.taller.automotriz.model.cobranza.DatosCobranza;
@@ -43,9 +46,11 @@ public class ServicioOfy {
     private DatosAuto datosAuto;
     private ServicioMetadataOfy metadata;
     private DatosCobranza cobranza;
+    private List<String> gruposCosto;
     public ServicioOfy() {
         this.cobranza = new DatosCobranza();
         this.metadata = new ServicioMetadataOfy();
+        this.gruposCosto = new ArrayList<>();
     }
     public Long getId() {
         return id;
@@ -99,5 +104,19 @@ public class ServicioOfy {
     }
     public void setCobranza(DatosCobranza cobranza) {
         this.cobranza = cobranza;
+    }
+    public List<String> getGruposCosto() {
+        ArrayList<String> r = new ArrayList<>();
+        for (String x: this.gruposCosto) {
+            r.add(x);
+        }
+        return r;
+    }
+
+    public void setGruposCosto(List<String> gruposCosto) {
+        this.gruposCosto = new ArrayList<>();
+        for (String x: gruposCosto) {
+            this.gruposCosto.add(x);
+        }
     }
 }
